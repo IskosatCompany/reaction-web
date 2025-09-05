@@ -1,0 +1,70 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.sidenav-container {
+  height: 100%;
+
+  .sidenav {
+    width: 220px;
+    background-color: var(--neutral-black);
+
+    &__logo {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: 10px;
+
+      img {
+        width: 100px;
+      }
+    }
+
+    &__item {
+      & mat-icon {
+        margin-right: 8px;
+      }
+
+      & span,
+      & mat-icon {
+        color: var(--neutral-white);
+        font-size: 22px;
+      }
+
+      &:hover:not(.active),
+      &:focus:not(.active) {
+        background-color: var(--neutral-gray-500);
+      }
+
+      &.active {
+        background-color: var(--primary-red-400);
+      }
+
+      &:last-of-type {
+        margin-top: auto;
+      }
+    }
+  }
+}
+
+mat-toolbar span {
+  margin: auto;
+}
+
+:host ::ng-deep {
+  &.mdc-list-item__content span {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &.mat-mdc-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: calc(100% - 126px); // 16px (padding) 110px (logo)
+    overflow: hidden;
+  }
+}
