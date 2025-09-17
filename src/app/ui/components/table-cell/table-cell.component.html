@@ -1,0 +1,5 @@
+@if (template(); as template) {
+  <ng-template [cdkPortalOutlet]="template" />
+} @else {
+  <span>{{ value() }}</span>
+}

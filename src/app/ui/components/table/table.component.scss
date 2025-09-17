@@ -1,0 +1,16 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+  border: 1px solid var(--neutral-black);
+  @include mat.table-overrides(
+    (
+      row-item-outline-color: var(--neutral-gray-700),
+      background-color: var(--neutral-gray-100)
+    )
+  );
+}
+
+th {
+  background-color: var(--neutral-gray-300) !important;
+}
