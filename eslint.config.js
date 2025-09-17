@@ -18,7 +18,7 @@ module.exports = tseslint.config(
     },
     rules: {
       // Prettier
-      'prettier/prettier': 'error',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
 
       // TypeScript
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
