@@ -6,11 +6,14 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IS_MOBILE } from '../../../core/tokens/mobile.token';
+import { UserRole } from '../../../features/authentication/models/login.interface';
+import { AuthenticationService } from '../../../features/authentication/services/authentication.service';
 
 export interface SideMenuItem {
   label: string;
   route: string;
   icon: string;
+  role?: UserRole;
 }
 
 @Component({
@@ -32,6 +35,7 @@ export class SideMenuComponent {
   menuItems = input.required<SideMenuItem[]>();
 
   isMobile = inject(IS_MOBILE);
+  userRole = inject(AuthenticationService).userRole;
   isMenuOpen = signal(false);
 
   constructor() {

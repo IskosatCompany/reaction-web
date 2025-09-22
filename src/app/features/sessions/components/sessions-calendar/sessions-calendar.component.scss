@@ -1,0 +1,83 @@
+:host {
+  display: flex;
+  height: 100%;
+
+  & ::ng-deep {
+    &.fc-toolbar-chunk {
+      display: flex;
+      align-items: center;
+    }
+
+    &.fc-scroller {
+      overflow: auto !important;
+    }
+
+    &.btn-primary {
+      background-color: var(--blue);
+      border-color: var(--blue);
+
+      &:hover:not(.active) {
+        background-color: var(--light-blue);
+        border-color: var(--light-blue);
+      }
+
+      &:active,
+      &.active {
+        background-color: var(--dark-blue);
+      }
+    }
+  }
+}
+
+.calendar {
+  width: 100%;
+  padding-top: 4px;
+}
+
+.float-button {
+  position: absolute;
+  right: 70px;
+  bottom: 60px;
+  z-index: 1;
+  border-radius: 40px;
+
+  &--mobile {
+    right: 20px;
+    bottom: 20px;
+  }
+}
+
+mat-spinner {
+  align-self: center;
+  margin: auto;
+}
+
+mat-drawer-container {
+  width: 100%;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-top: 20px;
+
+  &.mobile {
+    padding: 0;
+  }
+}
+
+mat-drawer {
+  width: fit-content;
+  left: 0;
+}
+
+mat-drawer-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.calendar-title {
+  text-align: center;
+}
+
+:host ::ng-deep .upsert-container > mat-bottom-sheet-container {
+  padding: 16px;
+}

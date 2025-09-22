@@ -3,8 +3,8 @@ import {
   ApplicationConfig,
   inject,
   isDevMode,
+  LOCALE_ID,
   provideAppInitializer,
-  provideBrowserGlobalErrorListeners,
   provideZonelessChangeDetection
 } from '@angular/core';
 import { DateFnsAdapter, MAT_DATE_FNS_FORMATS } from '@angular/material-date-fns-adapter';
@@ -22,7 +22,6 @@ import { AuthenticationService } from './features/authentication/services/authen
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),
     provideHttpClient(withInterceptors([authenticationInterceptor])),
     provideZonelessChangeDetection(),
     provideRouter(routes),
@@ -33,6 +32,7 @@ export const appConfig: ApplicationConfig = {
     provideAppInitializer(() => inject(AuthenticationService).initialize()),
     { provide: IS_MOBILE, useFactory: () => inject(LayoutService).isMobile },
     { provide: API_URL, useValue: environment.apiUrl },
+    { provide: LOCALE_ID, useValue: 'pt-PT' },
     { provide: MAT_DATE_LOCALE, useValue: pt },
     { provide: DateAdapter, useClass: DateFnsAdapter, deps: [MAT_DATE_LOCALE] },
     { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_FORMATS }

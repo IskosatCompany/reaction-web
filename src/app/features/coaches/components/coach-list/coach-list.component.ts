@@ -1,27 +1,26 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TableComponent } from '../../../../ui/components/table/table.component';
-import { CoachApiService } from '../../api/coach-api.service';
-import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { Router } from '@angular/router';
 import {
   PaginatedTableDataSource,
   TableColumn,
   TableRowAction
 } from '../../../../ui/components/table/table.model';
-import { Coach, CoachForm } from '../../models/coach.model';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { CoachFormComponent } from '../coach-form/coach-form.component';
+import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
+import { Coach, CoachForm } from '../../models/coach.model';
+import { CoachFormComponent } from '../coach-form/coach-form.component';
 
 @Component({
   selector: 'app-coach-list',
   imports: [TableComponent, CardComponent, AsyncPipe, MatButtonModule, MatIconModule],
-  providers: [CoachApiService],
   templateUrl: './coach-list.component.html',
   styleUrl: './coach-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

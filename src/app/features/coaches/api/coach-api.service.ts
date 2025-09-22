@@ -1,10 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Coach, CoachForm } from '../models/coach.model';
 import { API_URL } from '../../../core/tokens/api-url.token';
+import { Coach, CoachForm } from '../models/coach.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CoachApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);

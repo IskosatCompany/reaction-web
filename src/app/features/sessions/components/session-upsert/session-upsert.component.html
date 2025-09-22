@@ -1,0 +1,68 @@
+<div class="header">
+  <h2>{{ title }}</h2>
+  <div class="header__actions">
+    @if (isEditing) {
+      <button mat-icon-button matSuffix type="button" (click)="deleteSession()">
+        <mat-icon>delete</mat-icon>
+      </button>
+    }
+
+    <button mat-icon-button matSuffix type="button" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
+
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-label>Data de início</mat-label>
+    <input matInput [matDatepicker]="datepicker" formControlName="startDate" />
+    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+    <mat-datepicker #datepicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Hora de início</mat-label>
+    <input matInput [matTimepicker]="timepicker" formControlName="startTime" />
+    <mat-timepicker-toggle matIconSuffix [for]="timepicker" />
+    <mat-timepicker #timepicker />
+  </mat-form-field>
+
+  <div class="duration">
+    <mat-label class="title">Duração</mat-label>
+    <mat-radio-group formControlName="duration">
+      <mat-radio-button [value]="30">30 minutos</mat-radio-button>
+      <mat-radio-button [value]="60">1 hora</mat-radio-button>
+    </mat-radio-group>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Descrição</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Cliente</mat-label>
+    <mat-select formControlName="clientId">
+      @for (client of clients(); track $index) {
+        <mat-option [value]="client.id">{{ client.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Treinador</mat-label>
+    <mat-select formControlName="coachId">
+      @for (coach of coaches(); track $index) {
+        <mat-option [value]="coach.id">{{ coach.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</form>
+
+<div class="footer">
+  <button matButton (click)="close()">Cancelar</button>
+  <button matButton="filled" (click)="confirm()" [disabled]="form.invalid">
+    {{ isEditing ? 'Guardar' : 'Criar' }}
+  </button>
+</div>
