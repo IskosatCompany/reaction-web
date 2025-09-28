@@ -1,1 +1,11 @@
-<app-table [dataSource]="dataSource" [columns]="columns" [rowActions]="actions" />
+@if (isMobile()) {
+  @for (client of dataSource.data$ | async; track client) {
+    <app-card (click)="onClientClick(client.id)">
+      <h1>{{ client.name }}</h1>
+      <span>{{ client.email }}</span>
+      <span>{{ client.phoneNumber }}</span>
+    </app-card>
+  }
+} @else {
+  <app-table [dataSource]="dataSource" [columns]="columns" [rowActions]="actions" />
+}

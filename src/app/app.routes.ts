@@ -27,8 +27,7 @@ export const routes: Routes = [
   {
     path: RoutesPaths.clients,
     data: { title: 'Clientes' },
-    loadComponent: () =>
-      import('./features/clients/components/clients-list/clients-list').then((m) => m.ClientsList)
+    loadChildren: () => import('./features/clients/clients.routes').then((m) => m.routes)
   },
   {
     path: RoutesPaths.team,

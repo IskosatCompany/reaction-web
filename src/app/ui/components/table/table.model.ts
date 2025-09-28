@@ -25,7 +25,7 @@ export type TableData<T> = {
 export interface TableRowAction<T> {
   id: string;
   icon: string;
-  callback?: (row: T) => void;
+  callback: (row: T) => void;
   isDisabled?: (row: T) => boolean;
   tooltip?: (row: T) => boolean;
   iconColor?: (row: T) => string;

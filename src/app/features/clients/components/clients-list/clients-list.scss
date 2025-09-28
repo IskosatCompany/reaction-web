@@ -1,3 +1,11 @@
-app-table {
+app-table,
+app-card {
   margin: 12px;
+}
+
+app-card h1 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-bottom: 8px;
 }
