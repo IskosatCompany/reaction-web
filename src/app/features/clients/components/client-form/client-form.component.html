@@ -1,0 +1,49 @@
+<h1>{{ title }}</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Name</mat-label>
+    <input matInput formControlName="name" />
+    @if (form.get('name')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" />
+    @if (form.get('email')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
+    @if (form.get('email')?.hasError('email')) {
+      <mat-error> Introduza um email válido! </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Contacto</mat-label>
+    <input matInput formControlName="phoneNumber" />
+    @if (form.get('phoneNumber')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Morada</mat-label>
+    <input matInput formControlName="address" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Data de nascimento</mat-label>
+    <input matInput formControlName="birthDate" [matDatepicker]="datepicker" />
+    <mat-datepicker-toggle matIconSuffix [for]="datepicker" />
+    <mat-datepicker #datepicker>
+      <mat-datepicker-actions>
+        <button matButton="tonal" matDatepickerCancel>Cancelar</button>
+        <button matButton="elevated" matDatepickerApply>Selecionar</button>
+      </mat-datepicker-actions>
+    </mat-datepicker>
+  </mat-form-field>
+  <div class="actions">
+    <button matButton="tonal" (click)="onCancel()">Cancelar</button>
+    <button matButton="filled" type="submit" [disabled]="form.invalid">{{ confirmBtnText }}</button>
+  </div>
+</form>

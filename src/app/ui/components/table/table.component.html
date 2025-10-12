@@ -15,7 +15,7 @@
 
   @if (rowActions(); as rowActions) {
     <ng-container matColumnDef="table-actions">
-      <th mat-header-cell *matHeaderCellDef [style.width.px]="rowActionsCellWidth()">Actions</th>
+      <th mat-header-cell *matHeaderCellDef [style.width.px]="rowActionsCellWidth()">Ações</th>
       <td mat-cell *matCellDef="let element" [style.width.px]="rowActionsCellWidth()">
         <app-table-actions-cell [element]="element" [rowActions]="rowActions" />
       </td>
@@ -27,4 +27,12 @@
 
   <!-- Table Rows -->
   <tr mat-row *matRowDef="let element; columns: displayedColumns()"></tr>
+
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" colspan="4">
+      <div class="empty-state">
+        <p>Sem resultados</p>
+      </div>
+    </td>
+  </tr>
 </table>

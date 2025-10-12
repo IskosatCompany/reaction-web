@@ -37,10 +37,7 @@ export const routes: Routes = [
     path: RoutesPaths.team,
     canActivate: [authenticationGuard],
     data: { title: 'Equipa' },
-
-    // TODO: change component
-    loadComponent: () =>
-      import('./features/clients/components/clients-list/clients-list').then((m) => m.ClientsList)
+    loadChildren: () => import('./features/coaches/coaches.routes').then((m) => m.routes)
   },
   {
     path: RoutesPaths.settings,

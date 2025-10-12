@@ -1,3 +1,7 @@
 @for (action of actions(); track action.id) {
-  <mat-icon [fontIcon]="action.icon" (click)="action.callback(element())"></mat-icon>
+  <mat-icon
+    [fontIcon]="action.icon"
+    [matTooltip]="action.tooltip?.(element())"
+    (click)="action.callback(element())"
+  />
 }

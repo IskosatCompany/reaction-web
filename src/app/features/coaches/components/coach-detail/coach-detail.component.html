@@ -1,0 +1,11 @@
+<app-card>
+  <header>
+    <h1>{{ coach()?.name }}</h1>
+    <button matMiniFab (click)="onCoachEdit()">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </header>
+  <span><span>Email:</span>{{ coach()?.email }}</span>
+  <span><span>Nº de telemóvel:</span> {{ coach()?.phoneNumber }}</span>
+  <span><span>Especialidade:</span> {{ coach()?.expertise }}</span>
+</app-card>

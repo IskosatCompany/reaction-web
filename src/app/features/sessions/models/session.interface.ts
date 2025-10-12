@@ -1,5 +1,5 @@
 import { Client } from '../../clients/models/client.interface';
-import { Coach } from '../../coaches/models/coach.interface';
+import { Coach } from '../../coaches/models/coach.model';
 
 export interface Session {
   id: string;

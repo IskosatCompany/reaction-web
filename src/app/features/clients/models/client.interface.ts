@@ -4,5 +4,15 @@ export interface Client {
   email: string;
   phoneNumber: string;
   address: string;
-  birthDate: Date;
+  birthDate: string;
 }
+
+export interface ClientForm {
+  name: string | null;
+  email: string | null;
+  phoneNumber: string | null;
+  address: string | null;
+  birthDate: Date | null;
+}
+
+export type ClientCreate = Omit<ClientForm, 'birthDate'> & { birthDate: string | null };

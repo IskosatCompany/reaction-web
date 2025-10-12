@@ -1,0 +1,44 @@
+<h1>{{ title }}</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Nome</mat-label>
+    <input matInput id="name" type="text" formControlName="name" />
+    @if (form.get('name')?.invalid && form.get('name')?.touched) {
+      <mat-error>Nome é obrigatório!</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Email</mat-label>
+    <input matInput id="email" type="email" formControlName="email" />
+    @if (form.get('email')?.errors?.['required'] && form.get('email')?.touched) {
+      <mat-error>Email é obrigatório!</mat-error>
+    }
+    @if (form.get('email')?.errors?.['email'] && form.get('email')?.touched) {
+      <mat-error>Introduza um email válido.</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Número de telemóvel</mat-label>
+    <input matInput id="phoneNumber" type="tel" formControlName="phoneNumber" />
+    @if (form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) {
+      <mat-error>Número de telemóvel é obrigatório!</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field appearance="outline" class="form-field">
+    <mat-label>Especialidade</mat-label>
+    <mat-select formControlName="expertise">
+      @for (expertise of data.expertiseOptions | async; track expertise) {
+        <mat-option [value]="expertise">{{ expertise }}</mat-option>
+      }
+    </mat-select>
+    @if (form.get('expertise')?.invalid && form.get('expertise')?.touched) {
+      <mat-error>Especialidade é obrigatória!</mat-error>
+    }
+  </mat-form-field>
+  <div class="actions">
+    <button matButton="tonal" (click)="onCancel()">Cancelar</button>
+    <button matButton="filled" type="submit" [disabled]="form.invalid">{{ confirmBtnText }}</button>
+  </div>
+</form>

@@ -27,6 +27,6 @@ export interface TableRowAction<T> {
   icon: string;
   callback: (row: T) => void;
   isDisabled?: (row: T) => boolean;
-  tooltip?: (row: T) => boolean;
+  tooltip?: (row: T) => string;
   iconColor?: (row: T) => string;
 }

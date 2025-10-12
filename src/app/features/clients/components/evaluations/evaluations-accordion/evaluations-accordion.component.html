@@ -1,0 +1,19 @@
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      {{ evaluation().title }}
+    </mat-panel-title>
+    <mat-panel-description> {{ evaluation().date | date: 'dd/MM/yyyy' }} </mat-panel-description>
+  </mat-expansion-panel-header>
+
+  <ng-template matExpansionPanelContent>
+    <section>
+      <span>
+        {{ evaluation().description }}
+      </span>
+      <button matMiniFab (click)="onEvaluationEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </section>
+  </ng-template>
+</mat-expansion-panel>

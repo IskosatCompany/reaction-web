@@ -1,15 +1,46 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Client, ClientCreate, ClientForm } from '../models/client.interface';
 import { API_URL } from '../../../core/tokens/api-url.token';
-import { Client } from '../models/client.interface';
+import { format } from 'date-fns';
 
 @Injectable()
 export class ClientsApiService {
   readonly #http = inject(HttpClient);
-  readonly #url = inject(API_URL);
+  readonly #apiUrl = inject(API_URL);
 
   getClients(): Observable<Client[]> {
-    return this.#http.get<Client[]>(`${this.#url}/client`);
+    return this.#http.get<Client[]>(`${this.#apiUrl}/client`);
+  }
+
+  createClient(client: Partial<ClientForm>): Observable<Client> {
+    const clientCreateRequest: Partial<ClientCreate> = {
+      address: client.address,
+      email: client.email,
+      name: client.name,
+      phoneNumber: client.phoneNumber,
+      birthDate: client.birthDate ? format(client.birthDate, 'dd/MM/yyyy') : null
+    };
+    return this.#http.post<Client>(`${this.#apiUrl}/client`, clientCreateRequest);
+  }
+
+  deleteClient(clientId: string): Observable<void> {
+    return this.#http.delete<void>(`${this.#apiUrl}/client/${clientId}`);
+  }
+
+  editClient(clientId: string, payload: Partial<ClientForm>): Observable<Client> {
+    const clientCreateRequest: Partial<ClientCreate> = {
+      address: payload.address,
+      email: payload.email,
+      name: payload.name,
+      phoneNumber: payload.phoneNumber,
+      birthDate: payload.birthDate ? format(payload.birthDate, 'dd/MM/yyyy') : null
+    };
+    return this.#http.put<Client>(`${this.#apiUrl}/client/${clientId}`, clientCreateRequest);
+  }
+
+  getClientDetails(clientId: string): Observable<Client> {
+    return this.#http.get<Client>(`${this.#apiUrl}/client/${clientId}`);
   }
 }

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TableData, TableRowAction } from '../table/table.model';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-table-actions-cell',
-  imports: [MatIconModule],
+  imports: [MatIconModule, MatTooltipModule],
   templateUrl: './table-actions-cell.component.html',
   styleUrl: './table-actions-cell.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,0 +1,41 @@
+<h1>Nova avaliação</h1>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Título</mat-label>
+    <input matInput formControlName="title" />
+    @if (form.get('title')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Data</mat-label>
+    <input matInput formControlName="date" [matDatepicker]="datepicker" />
+    <mat-datepicker-toggle matIconSuffix [for]="datepicker" />
+    <mat-datepicker #datepicker>
+      <mat-datepicker-actions>
+        <button matButton="tonal" matDatepickerCancel>Cancelar</button>
+        <button matButton="elevated" matDatepickerApply>Selecionar</button>
+      </mat-datepicker-actions>
+    </mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Treinador</mat-label>
+    <mat-select formControlName="coachId">
+      @for (coach of coaches(); track coach.id) {
+        <mat-option [value]="coach.id">{{ coach.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Descrição</mat-label>
+    <textarea matInput formControlName="description"></textarea>
+  </mat-form-field>
+
+  <div class="actions">
+    <button matButton="tonal" (click)="onCancel()">Cancelar</button>
+    <button matButton="filled" type="submit" [disabled]="form.invalid">Submeter</button>
+  </div>
+</form>

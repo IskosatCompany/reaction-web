@@ -2,15 +2,11 @@
 
 :host {
   display: block;
-  border: 1px solid var(--neutral-black);
-  @include mat.table-overrides(
-    (
-      row-item-outline-color: var(--neutral-gray-700),
-      background-color: var(--neutral-gray-100)
-    )
-  );
+  border: 1px solid var(--black);
 }
 
-th {
-  background-color: var(--neutral-gray-300) !important;
+.empty-state {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+  margin: 2rem 0;
 }

@@ -1,1 +1,24 @@
-<p>client-detail works!</p>,
+<app-card>
+  <header>
+    <h1>{{ client()?.name }}</h1>
+    <div class="actions">
+      <button matMiniFab (click)="onClientEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+      <button matMiniFab (click)="onEvaluationAdd()">
+        <mat-icon>summarize</mat-icon>
+      </button>
+    </div>
+  </header>
+  <span><span>Email:</span> {{ client()?.email }}</span>
+  <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
+</app-card>
+<h1>Avaliações</h1>
+<mat-accordion>
+  @for (evaluation of evaluations(); track evaluation.id) {
+    <app-evaluations-accordion
+      [evaluation]="evaluation"
+      (refreshEvaluations)="refreshEvaluationsSubject$.next()"
+    />
+  }
+</mat-accordion>
