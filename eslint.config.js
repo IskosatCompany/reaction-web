@@ -25,7 +25,24 @@ module.exports = tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/member-ordering': 'warn',
+      '@typescript-eslint/member-ordering': [
+        'warn',
+        {
+          default: [
+            'private-static-field',
+            'public-static-field',
+            '#private-instance-field',
+            'private-instance-field',
+            'public-instance-field',
+            'constructor',
+            'public-static-method',
+            'public-instance-method',
+            'private-static-method',
+            '#private-instance-method',
+            'private-instance-method'
+          ]
+        }
+      ],
 
       // Angular
       '@angular-eslint/no-empty-lifecycle-method': 'warn',

@@ -1,3 +1,4 @@
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {
   ApplicationConfig,
   inject,
@@ -7,21 +8,24 @@ import {
 } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { LayoutService } from './core/services/layout.service';
+import { API_URL } from './core/tokens/api-url.token';
 import { IS_MOBILE } from './core/tokens/mobile.token';
-import { provideHttpClient } from '@angular/common/http';
+import { authenticationInterceptor } from './features/authentication/interceptors/authentication.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([authenticationInterceptor])),
     provideZonelessChangeDetection(),
     provideRouter(routes, withComponentInputBinding()),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    { provide: IS_MOBILE, useFactory: () => inject(LayoutService).isMobile }
+    { provide: IS_MOBILE, useFactory: () => inject(LayoutService).isMobile },
+    { provide: API_URL, useValue: environment.apiUrl }
   ]
 };

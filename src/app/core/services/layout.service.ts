@@ -5,9 +5,9 @@ import { map } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LayoutService {
-  readonly isMobile: Signal<boolean>;
-
   readonly #breakpointObserver = inject(BreakpointObserver);
+
+  readonly isMobile: Signal<boolean>;
 
   constructor() {
     const observer$ = this.#breakpointObserver

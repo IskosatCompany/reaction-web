@@ -1,7 +1,7 @@
 export enum RoutesPaths {
   login = 'login',
   logout = 'logout',
-  scheduler = 'scheduler',
+  sessions = 'sessions',
   clients = 'clients',
   team = 'team',
   settings = 'settings'

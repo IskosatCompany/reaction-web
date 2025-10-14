@@ -1,3 +1,4 @@
+import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +8,6 @@ import {
   ViewContainerRef
 } from '@angular/core';
 import { TableColumn, TableData } from '../table/table.model';
-import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 
 @Component({
   selector: 'app-table-cell',
@@ -20,6 +20,8 @@ import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
   }
 })
 export class TableCellComponent<T> {
+  readonly #viewContainerRef = inject(ViewContainerRef);
+
   column = input.required<TableColumn<T>>();
   item = input.required<TableData<T>>();
 
@@ -47,6 +49,4 @@ export class TableCellComponent<T> {
     }
     return `${this.item()[column.id]}`;
   });
-
-  #viewContainerRef = inject(ViewContainerRef);
 }
