@@ -1,0 +1,77 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to deploy'
+        required: true
+        default: 'main'
+      version:
+        description: 'Increment version'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+      create_tag:
+        description: 'Create tag after deploy?'
+        required: true
+        default: 'Yes'
+        type: choice
+        options:
+          - 'Yes'
+          - 'No'
+      deploy_version:
+        description: Specific deploy version (e.g. 1.2.2)
+        required: false
+
+jobs:
+  deploy:
+    name: Deploy application
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set deploy mode
+        id: deploy_mode
+        run: |
+          if [ -n "${{ github.event.inputs.deploy_version }}" ]; then
+            echo "Deploying version ${{ github.event.inputs.deploy_version }}"
+            git checkout "refs/tags/${{ github.event.inputs.deploy_version }}"
+            echo "rollback=true" >> $GITHUB_OUTPUT
+          else
+            git checkout ${{ github.event.inputs.branch }}
+            echo "rollback=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Prepare
+        uses: ./.github/actions/prepare
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build:production
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+
+      - name: Deploy to S3
+        run: aws s3 sync ./dist/reaction-web/browser s3://reaction-web-app --delete
+
+      - name: Update version and create tag
+        if: steps.deploy_mode.outputs.rollback == 'false' && github.event.inputs.create_tag == 'Yes'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/version-and-tag.js ${{ github.event.inputs.version }} ${{ github.event.inputs.branch }}
