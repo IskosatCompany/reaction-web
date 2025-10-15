@@ -1,0 +1,105 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: flex;
+  height: 100%;
+
+  @include mat.form-field-overrides(
+    (
+      outlined-caret-color: white,
+      outlined-focus-label-text-color: white,
+      outlined-focus-outline-color: white,
+      outlined-hover-label-text-color: white,
+      outlined-hover-outline-color: white,
+      outlined-input-text-color: white,
+      outlined-input-text-placeholder-color: white,
+      outlined-label-text-color: white,
+      outlined-outline-color: white
+    )
+  );
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  background-color: #f2f2f2;
+  padding: 60px;
+
+  &--mobile {
+    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
+    justify-content: unset;
+    align-items: unset;
+
+    .login__card {
+      max-width: none;
+      border-radius: 0;
+      padding-top: 100px;
+    }
+  }
+
+  &__card {
+    width: 100%;
+    max-width: 400px;
+    background-color: #000000;
+    color: white;
+    align-items: center;
+    padding: 40px;
+  }
+
+  &__logo {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+
+  &__submit {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 14px;
+    color: white;
+
+    &:not(:disabled) {
+      background-color: red !important;
+
+      &:hover {
+        background-color: #ff4141 !important;
+      }
+    }
+
+    &:disabled {
+      background-color: rgb(126, 124, 124, 1);
+    }
+  }
+
+  &__recover-password {
+    color: #adadad;
+    font-size: 16px;
+
+    a {
+      text-decoration: none;
+      margin-left: 4px;
+      color: red;
+
+      &:hover {
+        color: #ff4141;
+      }
+    }
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  color: white;
+
+  button {
+    color: white;
+  }
+}
+
+.mat-mdc-input-element {
+  color: white !important;
+}

@@ -15,6 +15,7 @@ import {
 import { filter } from 'rxjs';
 import { RoutesPaths } from './core/models/routes-paths.enum';
 import { IS_MOBILE } from './core/tokens/mobile.token';
+import { AuthenticationService } from './features/authentication/services/authentication.service';
 
 interface MenuItem {
   label: string;
@@ -38,8 +39,10 @@ interface MenuItem {
   styleUrl: './app.scss'
 })
 export class App {
+  readonly #router = inject(Router);
+
   menuItems: MenuItem[] = [
-    { label: 'Agenda', route: `/${RoutesPaths.scheduler}`, icon: 'calendar_today' },
+    { label: 'Agenda', route: `/${RoutesPaths.sessions}`, icon: 'calendar_today' },
     { label: 'Clientes', route: `/${RoutesPaths.clients}`, icon: 'fitness_center' },
     { label: 'Equipa', route: `/${RoutesPaths.team}`, icon: 'groups' },
     { label: 'Perfil', route: `/${RoutesPaths.settings}`, icon: 'person' },
@@ -47,10 +50,9 @@ export class App {
   ];
 
   isMobile = inject(IS_MOBILE);
+  isAuthenticated = inject(AuthenticationService).isAuthenticated;
   isMenuOpen = signal(false);
   pageTitle = signal('');
-
-  readonly #router = inject(Router);
 
   constructor() {
     effect(() => {

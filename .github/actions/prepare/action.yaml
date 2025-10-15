@@ -1,0 +1,15 @@
+name: Prepare CI Pipeline
+description: Prepare CI Pipeline workflow jobs
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 22
+        cache: 'npm'
+
+    - uses: actions/cache@v4
+      with:
+        path: node_modules
+        key: node-modules-${{ hashFiles('package-lock.json') }}

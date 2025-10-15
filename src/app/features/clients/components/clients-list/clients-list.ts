@@ -1,17 +1,17 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { of } from 'rxjs';
+import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TableComponent } from '../../../../ui/components/table/table.component';
 import {
   PaginatedTableDataSource,
   TableColumn,
   TableRowAction
 } from '../../../../ui/components/table/table.model';
-import { CardComponent } from '../../../../ui/components/card/card.component';
-import { AsyncPipe } from '@angular/common';
-import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { Client } from '../../models/client.interface';
 import { ClientsApiService } from '../../api/clients-api.service';
-import { Router } from '@angular/router';
+import { Client } from '../../models/client.interface';
 
 @Component({
   selector: 'app-clients-list',

@@ -1,0 +1,29 @@
+<div class="login" [class.login--mobile]="isMobile()">
+  <mat-card class="login__card">
+    <img class="login__logo" src="assets/login_logo.png" alt="Rection Logo" />
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Palavra-passe</mat-label>
+        <input matInput [type]="passwordInputType()" formControlName="password" />
+        <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+          <mat-icon>{{ passwordInputIcon() }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button matButton="filled" class="login__submit" type="submit" [disabled]="form.invalid">
+        Entrar
+      </button>
+    </form>
+
+    <div class="login__recover-password">
+      <!-- TODO: implement recover password -->
+      Esqueceu a senha? <a href="">Recuperar</a>
+    </div>
+  </mat-card>
+</div>
