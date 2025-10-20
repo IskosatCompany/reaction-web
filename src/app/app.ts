@@ -1,47 +1,17 @@
-import { Component, effect, inject, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import {
-  RouteConfigLoadEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterOutlet
-} from '@angular/router';
-import { filter } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { RoutesPaths } from './core/models/routes-paths.enum';
-import { IS_MOBILE } from './core/tokens/mobile.token';
 import { AuthenticationService } from './features/authentication/services/authentication.service';
-
-interface MenuItem {
-  label: string;
-  route: string;
-  icon: string;
-}
+import { SideMenuComponent, SideMenuItem } from './ui/components/side-menu/side-menu.component';
 
 @Component({
   selector: 'app-root',
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatListModule,
-    MatButtonModule,
-    RouterLinkActive
-  ],
+  imports: [RouterOutlet, SideMenuComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  readonly #router = inject(Router);
-
-  menuItems: MenuItem[] = [
+  menuItems: SideMenuItem[] = [
     { label: 'Agenda', route: `/${RoutesPaths.sessions}`, icon: 'calendar_today' },
     { label: 'Clientes', route: `/${RoutesPaths.clients}`, icon: 'fitness_center' },
     { label: 'Equipa', route: `/${RoutesPaths.team}`, icon: 'groups' },
@@ -49,31 +19,5 @@ export class App {
     { label: 'Sair', route: `/${RoutesPaths.logout}`, icon: 'logout' }
   ];
 
-  isMobile = inject(IS_MOBILE);
   isAuthenticated = inject(AuthenticationService).isAuthenticated;
-  isMenuOpen = signal(false);
-  pageTitle = signal('');
-
-  constructor() {
-    effect(() => {
-      if (this.isMobile()) {
-        this.isMenuOpen.set(false);
-      }
-    });
-
-    this.#router.events
-      .pipe(
-        takeUntilDestroyed(),
-        filter((item) => item instanceof RouteConfigLoadEnd)
-      )
-      .subscribe((item) => this.pageTitle.set(item.route.data?.['title'] ?? ''));
-  }
-
-  toggleSideMenu(value: boolean): void {
-    if (!this.isMobile()) {
-      return;
-    }
-
-    this.isMenuOpen.set(value);
-  }
 }

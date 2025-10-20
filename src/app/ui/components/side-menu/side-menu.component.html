@@ -1,0 +1,41 @@
+<mat-sidenav-container>
+  <mat-sidenav
+    #drawer
+    [mode]="isMobile() ? 'over' : 'side'"
+    [opened]="!isMobile() ? true : isMenuOpen()"
+    (closed)="toggle(false)"
+    (openedStart)="toggle(true)"
+  >
+    <div class="logo">
+      <img src="assets/logo.png" alt="logo" />
+    </div>
+
+    <mat-nav-list>
+      @for (item of menuItems(); track $index) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          (click)="toggle(false)"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    @if (isMobile()) {
+      <mat-toolbar color="primary">
+        <button mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </mat-toolbar>
+    }
+
+    <div>
+      <ng-content />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
