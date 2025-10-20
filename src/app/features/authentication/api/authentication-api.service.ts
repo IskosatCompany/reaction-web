@@ -10,7 +10,7 @@ export class AuthenticationApiService {
   readonly #url = inject(API_URL);
 
   login(request: LoginRequest): Observable<LoginResponse> {
-    return this.#http.post<LoginResponse>(`${this.#url}/login`, request);
+    return this.#http.post<LoginResponse>(`${this.#url}/auth/login`, request);
   }
 
   // logout(): Observable<unknown> {}

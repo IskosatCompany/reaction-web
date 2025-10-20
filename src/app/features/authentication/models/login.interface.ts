@@ -9,6 +9,6 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  jwt: string;
+  authToken: string;
   role: UserRole;
 }
