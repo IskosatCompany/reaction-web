@@ -4,41 +4,23 @@
 // Learn more about theming and how to use it for your application's
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+@use './theme-colors' as reaction-theme;
 
 :root {
-  /* 🔴 Primary Red Scale */
-  --primary-red-100: #ffe5e5;
-  --primary-red-200: #fbb8b8;
-  --primary-red-300: #f36b6b;
-  --primary-red-400: #e73636;
-  --primary-red: #df1313;
-  --primary-red-600: #c01111;
-  --primary-red-700: #a30f0f;
-  --primary-red-800: #870d0d;
-  --primary-red-900: #6c0a0a;
-
-  /* ⚫ Neutral Scale */
-  --neutral-black: #0e0e0e;
-  --neutral-dark-gray: #2c2c2c;
-  --neutral-gray-900: #1a1a1a;
-  --neutral-gray-700: #4f4f4f;
-  --neutral-gray-500: #8a8a8a;
-  --neutral-gray-300: #cccccc;
-  --neutral-gray-100: #f5f5f5;
-  --neutral-white: #ffffff;
-
-  /* 🔆 Accent Colors */
-  --accent-gold: #ffd700;
-  --accent-blue: #0057ff;
-  --card-hover: #eeeeee;
+  --white: #ffffff;
+  --off-white: #dceaf3;
+  --light-blue: #a4cce3;
+  --blue: #4b9bc3;
+  --dark-blue: #2c5464;
+  --black: #040505;
 }
 
 html {
   @include mat.theme(
     (
       color: (
-        primary: mat.$rose-palette,
-        tertiary: mat.$red-palette
+        primary: reaction-theme.$primary-palette,
+        tertiary: reaction-theme.$tertiary-palette
       ),
       typography: Roboto,
       density: 0
@@ -47,22 +29,11 @@ html {
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
-  color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
   background-color: var(--mat-sys-surface);
   color: var(--mat-sys-on-surface);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
   margin: 0;
 }
-/* You can add global styles to this file, and also import other style files */
 
 html,
 body {
