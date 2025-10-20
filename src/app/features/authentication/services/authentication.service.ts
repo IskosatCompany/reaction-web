@@ -21,8 +21,8 @@ export class AuthenticationService {
     // TODO: handle invalid credentials (handle API error)
     return this.#apiService.login({ email, password }).pipe(
       catchError((error) => throwError(() => error)),
-      tap(({ jwt }) => {
-        localStorage.setItem(TOKEN_KEY, jwt);
+      tap(({ authToken }) => {
+        localStorage.setItem(TOKEN_KEY, authToken);
         this.isAuthenticated.set(true);
       })
     );
