@@ -1,29 +1,35 @@
-<div class="login" [class.login--mobile]="isMobile()">
-  <mat-card class="login__card">
-    <img class="login__logo" src="assets/login_logo.png" alt="Rection Logo" />
+<app-auth-container>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" type="email" />
 
-    <form [formGroup]="form" (ngSubmit)="submit()">
-      <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput formControlName="email" type="email" />
-      </mat-form-field>
+      @if (form.controls.email.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
 
-      <mat-form-field appearance="outline">
-        <mat-label>Palavra-passe</mat-label>
-        <input matInput [type]="passwordInputType()" formControlName="password" />
-        <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
-          <mat-icon>{{ passwordInputIcon() }}</mat-icon>
-        </button>
-      </mat-form-field>
+      @if (form.controls.email.hasError('email')) {
+        <mat-error>Email inválido</mat-error>
+      }
+    </mat-form-field>
 
-      <button matButton="filled" class="login__submit" type="submit" [disabled]="form.invalid">
-        Entrar
+    <mat-form-field appearance="fill">
+      <mat-label>Senha</mat-label>
+      <input matInput [type]="passwordInputType()" formControlName="password" />
+      <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()">
+        <mat-icon>{{ passwordInputIcon() }}</mat-icon>
       </button>
-    </form>
 
-    <div class="login__recover-password">
-      <!-- TODO: implement recover password -->
-      Esqueceu a senha? <a href="">Recuperar</a>
-    </div>
-  </mat-card>
-</div>
+      @if (form.controls.email.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <button matButton="filled" type="submit">Entrar</button>
+  </form>
+
+  <div>
+    Esqueceu a senha?
+    <a matButton="text" routerLink="/{{ routesPaths.recoverPassword }}">Recuperar</a>
+  </div>
+</app-auth-container>

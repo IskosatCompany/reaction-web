@@ -14,3 +14,23 @@ export const logoutRoutes: Route[] = [
       import('./components/logout/logout.component').then((m) => m.LogoutComponent)
   }
 ];
+
+export const recoverPasswordRoutes: Route[] = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./components/recover-password/recover-password.component').then(
+        (m) => m.RecoverPasswordComponent
+      )
+  }
+];
+
+export const resetPasswordRoutes: Route[] = [
+  {
+    path: '',
+    loadComponent: () =>
+      import('./components/reset-password/reset-password.component').then(
+        (m) => m.ResetPasswordComponent
+      )
+  }
+];

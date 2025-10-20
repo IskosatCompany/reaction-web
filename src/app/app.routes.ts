@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { RoutesPaths } from './core/models/routes-paths.enum';
 import { authenticationGuard } from './features/authentication/guards/authentication.guard';
+import { loginGuard } from './features/authentication/guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -10,8 +11,19 @@ export const routes: Routes = [
   },
   {
     path: RoutesPaths.login,
+    canActivate: [loginGuard],
     loadChildren: () =>
       import('./features/authentication/authentication.routes').then((m) => m.loginRoutes)
+  },
+  {
+    path: RoutesPaths.recoverPassword,
+    loadChildren: () =>
+      import('./features/authentication/authentication.routes').then((m) => m.recoverPasswordRoutes)
+  },
+  {
+    path: RoutesPaths.resetPassword,
+    loadChildren: () =>
+      import('./features/authentication/authentication.routes').then((m) => m.resetPasswordRoutes)
   },
   {
     path: RoutesPaths.logout,
