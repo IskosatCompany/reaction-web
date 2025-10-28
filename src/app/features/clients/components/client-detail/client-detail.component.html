@@ -1,6 +1,6 @@
 <app-card>
   <header>
-    <h1>{{ client()?.name }}</h1>
+    <h1>{{ client()?.name }} - #{{ client()?.clientNumber }}</h1>
     <div class="actions">
       <button matMiniFab (click)="onClientEdit()">
         <mat-icon>edit</mat-icon>
@@ -12,6 +12,7 @@
   </header>
   <span><span>Email:</span> {{ client()?.email }}</span>
   <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
+  <span><span>NIF:</span> {{ client()?.nif }}</span>
 </app-card>
 <h1>Avaliações</h1>
 <mat-accordion>

@@ -20,7 +20,8 @@ export class ClientsApiService {
       email: client.email,
       name: client.name,
       phoneNumber: client.phoneNumber,
-      birthDate: client.birthDate ? format(client.birthDate, 'dd/MM/yyyy') : null
+      nif: client.nif,
+      birthDate: client.birthDate?.getTime() ?? undefined
     };
     return this.#http.post<Client>(`${this.#apiUrl}/client`, clientCreateRequest);
   }
@@ -35,7 +36,8 @@ export class ClientsApiService {
       email: payload.email,
       name: payload.name,
       phoneNumber: payload.phoneNumber,
-      birthDate: payload.birthDate ? format(payload.birthDate, 'dd/MM/yyyy') : null
+      nif: payload.nif,
+      birthDate: payload.birthDate?.getTime() ?? undefined
     };
     return this.#http.put<Client>(`${this.#apiUrl}/client/${clientId}`, clientCreateRequest);
   }

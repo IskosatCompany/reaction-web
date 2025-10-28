@@ -32,7 +32,8 @@ export class ClientFormComponent {
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl<string | null>(null, [Validators.required]),
     address: new FormControl<string | null>(null),
-    birthDate: new FormControl<Date | null>(null)
+    birthDate: new FormControl<Date | null>(null),
+    nif: new FormControl<string | null>(null)
   });
 
   constructor() {
@@ -50,7 +51,8 @@ export class ClientFormComponent {
       email: model.email,
       phoneNumber: model.phoneNumber,
       address: model.address,
-      birthDate: parse(model.birthDate, 'dd/MM/yyyy', new Date())
+      birthDate: model.birthDate ? new Date(model.birthDate) : undefined,
+      nif: model.nif
     });
   }
 
