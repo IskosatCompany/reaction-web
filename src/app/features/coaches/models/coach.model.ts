@@ -6,14 +6,22 @@ export interface Coach {
   phoneNumber: string;
   expertise: string;
   color: string;
+  nif: string;
+  professionalCardNumber: string;
+  civilInsurance: string;
+  workInsurance: string;
+  address: string;
+  employeeNumber: number;
 }
-
-export type CoachUpSert = Omit<Coach, 'id' | 'color'>;
 
 export interface CoachForm {
   name: string | null;
   email: string | null;
   phoneNumber: string | null;
   expertise: string | null;
-  color: string | null;
+  nif: string | null;
+  professionalCardNumber: string | null;
+  civilInsurance: string | null;
+  workInsurance: string | null;
+  address: string | null;
 }

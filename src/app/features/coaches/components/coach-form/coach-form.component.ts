@@ -33,7 +33,12 @@ export class CoachFormComponent {
     name: new FormControl<string | null>(null, [Validators.required]),
     email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl<string | null>(null, [Validators.required]),
-    expertise: new FormControl<string | null>(null, [Validators.required])
+    expertise: new FormControl<string | null>(null, [Validators.required]),
+    nif: new FormControl<string | null>(null),
+    professionalCardNumber: new FormControl<string | null>(null),
+    civilInsurance: new FormControl<string | null>(null),
+    workInsurance: new FormControl<string | null>(null),
+    address: new FormControl<string | null>(null)
   });
 
   constructor() {
@@ -50,7 +55,12 @@ export class CoachFormComponent {
       name: model.name,
       email: model.email,
       phoneNumber: model.phoneNumber,
-      expertise: model.expertise
+      expertise: model.expertise,
+      nif: model.nif,
+      professionalCardNumber: model.professionalCardNumber,
+      civilInsurance: model.civilInsurance,
+      workInsurance: model.workInsurance,
+      address: model.address
     });
   }
 

@@ -1,5 +1,3 @@
-import { Coach } from '../../coaches/models/coach.model';
-
 export interface Evaluation {
   id: string;
   title: string;
