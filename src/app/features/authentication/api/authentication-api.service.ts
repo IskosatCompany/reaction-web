@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable, timer } from 'rxjs';
 import { API_URL } from '../../../core/tokens/api-url.token';
 import { LoginRequest, LoginResponse } from '../models/login.interface';
 
@@ -13,7 +13,12 @@ export class AuthenticationApiService {
     return this.#http.post<LoginResponse>(`${this.#url}/auth/login`, request);
   }
 
-  // logout(): Observable<unknown> {}
+  refresh(): Observable<LoginResponse> {
+    return this.#http.post<LoginResponse>(`${this.#url}/auth/refresh`, {});
+  }
 
-  // refresh(): Observable<unknown> {}
+  // TODO
+  validate(token: string): Observable<boolean> {
+    return timer(2000).pipe(map(() => true));
+  }
 }
