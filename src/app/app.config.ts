@@ -7,11 +7,9 @@ import {
   provideAppInitializer,
   provideZonelessChangeDetection
 } from '@angular/core';
-import { DateFnsAdapter, MAT_DATE_FNS_FORMATS } from '@angular/material-date-fns-adapter';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { pt } from 'date-fns/locale';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
 import { LayoutService } from './core/services/layout.service';
@@ -24,17 +22,16 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(withInterceptors([authenticationInterceptor])),
     provideZonelessChangeDetection(),
-    provideRouter(routes),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000'
     }),
+    provideRouter(routes),
     provideAppInitializer(() => inject(AuthenticationService).initialize()),
+    provideNativeDateAdapter(),
     { provide: IS_MOBILE, useFactory: () => inject(LayoutService).isMobile },
     { provide: API_URL, useValue: environment.apiUrl },
     { provide: LOCALE_ID, useValue: 'pt-PT' },
-    { provide: MAT_DATE_LOCALE, useValue: pt },
-    { provide: DateAdapter, useClass: DateFnsAdapter, deps: [MAT_DATE_LOCALE] },
-    { provide: MAT_DATE_FORMATS, useValue: MAT_DATE_FNS_FORMATS }
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-PT' }
   ]
 };
