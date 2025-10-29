@@ -47,11 +47,8 @@ export const routes: Routes = [
     loadChildren: () => import('./features/coaches/coaches.routes').then((m) => m.routes)
   },
   {
-    path: RoutesPaths.settings,
+    path: RoutesPaths.profile,
     canActivate: [authenticationGuard],
-
-    // TODO: change component
-    loadComponent: () =>
-      import('./features/clients/components/clients-list/clients-list').then((m) => m.ClientsList)
+    loadChildren: () => import('./features/profile/profile.routes').then((m) => m.routes)
   }
 ];

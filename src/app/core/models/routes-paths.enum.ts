@@ -6,5 +6,5 @@ export enum RoutesPaths {
   sessions = 'sessions',
   clients = 'clients',
   team = 'team',
-  settings = 'settings'
+  profile = 'profile'
 }
