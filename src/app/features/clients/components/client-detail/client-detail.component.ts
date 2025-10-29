@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Client, ClientForm } from '../../models/client.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClientsApiService } from '../../api/clients-api.service';
@@ -18,6 +18,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { ClientFormComponent } from '../client-form/client-form.component';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
+import { UserRole } from '../../../authentication/models/login.interface';
 
 @Component({
   selector: 'app-client-detail',
@@ -41,11 +43,13 @@ export class ClientDetailComponent {
   snackBarService = inject(MatSnackBar);
   clientApiService = inject(ClientsApiService);
   evaluationApiService = inject(EvaluationApiService);
+  authService = inject(AuthenticationService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   isValid = signal(false);
   editClientSubject$ = new Subject<void>();
   addEvaluationSubject$ = new Subject<void>();
+  userRole = signal<UserRole>(this.authService.userRole());
   formValue?: Partial<ClientForm>;
   clientId: string = this.route.snapshot.params['id'];
   refreshClientSubject$ = new Subject<void>();
@@ -63,6 +67,8 @@ export class ClientDetailComponent {
       switchMap(() => this.evaluationApiService.getEvaluations(this.clientId))
     )
   );
+
+  canEdit = computed(() => this.userRole() === UserRole.admin);
 
   constructor() {
     this.addEvaluationSubject$

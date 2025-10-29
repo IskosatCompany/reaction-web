@@ -11,9 +11,11 @@
       <span>
         {{ evaluation().description }}
       </span>
-      <button matMiniFab (click)="onEvaluationEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
+      @if (canEdit()) {
+        <button matMiniFab (click)="onEvaluationEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      }
     </section>
   </ng-template>
 </mat-expansion-panel>

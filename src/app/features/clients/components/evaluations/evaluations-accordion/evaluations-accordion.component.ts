@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal
+} from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
 import { DatePipe } from '@angular/common';
@@ -8,6 +16,8 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EvaluationFormComponent } from '../evaluation-form/evaluation-form.component';
 import { filter, Observable, Subject, switchMap } from 'rxjs';
 import { EvaluationApiService } from '../../../api/evaluation-api.service';
+import { AuthenticationService } from '../../../../authentication/services/authentication.service';
+import { UserRole } from '../../../../authentication/models/login.interface';
 
 @Component({
   selector: 'app-evaluations-accordion',
@@ -21,8 +31,12 @@ export class EvaluationsAccordionComponent {
   evaluation = input.required<Evaluation>();
   bottomSheet = inject(MatBottomSheet);
   evaluationApiService = inject(EvaluationApiService);
+  authService = inject(AuthenticationService);
+  userRole = signal<UserRole>(this.authService.userRole());
   evaluationEditSubject$ = new Subject<void>();
   refreshEvaluations = output<void>();
+
+  canEdit = computed(() => this.userRole() === UserRole.admin);
 
   constructor() {
     this.evaluationEditSubject$

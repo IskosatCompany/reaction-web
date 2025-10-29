@@ -1,14 +1,16 @@
 <app-card>
   <header>
-    <h1>{{ client()?.name }} - #{{ client()?.clientNumber }}</h1>
-    <div class="actions">
-      <button matMiniFab (click)="onClientEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-      <button matMiniFab (click)="onEvaluationAdd()">
-        <mat-icon>summarize</mat-icon>
-      </button>
-    </div>
+    <h1>{{ client()?.name - #{{ client()?.clientNumber}}</h1>
+    @if (canEdit()) {
+      <div class="actions">
+        <button matMiniFab (click)="onClientEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button matMiniFab (click)="onEvaluationAdd()">
+          <mat-icon>summarize</mat-icon>
+        </button>
+      </div>
+    }
   </header>
   <span><span>Email:</span> {{ client()?.email }}</span>
   <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
