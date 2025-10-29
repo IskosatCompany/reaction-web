@@ -5,7 +5,7 @@ export interface Session {
   id: string;
   client: Client;
   coach: Coach;
-  startDate: Date;
-  endDate: Date;
+  startDate: number;
+  endDate: number;
   description?: string;
 }

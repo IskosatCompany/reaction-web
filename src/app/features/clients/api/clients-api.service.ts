@@ -5,7 +5,7 @@ import { Client, ClientCreate, ClientForm } from '../models/client.interface';
 import { API_URL } from '../../../core/tokens/api-url.token';
 import { format } from 'date-fns';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ClientsApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);

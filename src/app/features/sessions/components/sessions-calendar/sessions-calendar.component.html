@@ -1,0 +1,28 @@
+<mat-drawer-container [class.mobile]="isMobile()">
+  <mat-drawer mode="over" [opened]="filtersOpen()" (closed)="filtersOpen.set(false)">
+    <app-sessions-filters
+      [clients]="clients()"
+      [coaches]="coaches()"
+      (filtersChanged)="applyFilters($event)"
+    />
+  </mat-drawer>
+  <mat-drawer-content>
+    @if (isLoadingCalendarData()) {
+      <mat-spinner />
+    } @else {
+      <h2 class="calendar-title">{{ calendarTitle() }}</h2>
+      <full-calendar #calendar class="calendar" [options]="calendarOptions" />
+    }
+  </mat-drawer-content>
+</mat-drawer-container>
+
+@if (!isLoadingCalendarData()) {
+  <button
+    matFab
+    class="float-button"
+    [class.float-button--mobile]="isMobile()"
+    (click)="createNewSession()"
+  >
+    <mat-icon>add</mat-icon>
+  </button>
+}

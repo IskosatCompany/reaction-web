@@ -5,6 +5,8 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 @use './theme-colors' as reaction-theme;
+@use 'bootstrap/dist/css/bootstrap.css';
+@use 'bootstrap-icons/font/bootstrap-icons.css';
 
 :root {
   --white: #ffffff;

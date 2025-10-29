@@ -7,7 +7,8 @@ import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
   imports: [MatCardModule],
   templateUrl: './container.component.html',
   styleUrl: './container.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { '[class.mobile]': 'isMobile()' }
 })
 export class AuthenticationContainerComponent {
   readonly isMobile = inject(IS_MOBILE);

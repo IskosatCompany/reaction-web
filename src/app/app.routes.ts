@@ -27,34 +27,28 @@ export const routes: Routes = [
   },
   {
     path: RoutesPaths.logout,
+    canActivate: [authenticationGuard],
     loadChildren: () =>
       import('./features/authentication/authentication.routes').then((m) => m.logoutRoutes)
   },
   {
     path: RoutesPaths.sessions,
     canActivate: [authenticationGuard],
-    data: { title: 'Agenda' },
-
-    // TODO: change component
-    loadComponent: () =>
-      import('./features/clients/components/clients-list/clients-list').then((m) => m.ClientsList)
+    loadChildren: () => import('./features/sessions/sessions.routes').then((m) => m.routes)
   },
   {
     path: RoutesPaths.clients,
     canActivate: [authenticationGuard],
-    data: { title: 'Clientes' },
     loadChildren: () => import('./features/clients/clients.routes').then((m) => m.routes)
   },
   {
     path: RoutesPaths.team,
     canActivate: [authenticationGuard],
-    data: { title: 'Equipa' },
     loadChildren: () => import('./features/coaches/coaches.routes').then((m) => m.routes)
   },
   {
     path: RoutesPaths.settings,
     canActivate: [authenticationGuard],
-    data: { title: 'Perfil' },
 
     // TODO: change component
     loadComponent: () =>

@@ -1,22 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { CoachApiService } from '../../api/coach-api.service';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Coach, CoachForm } from '../../models/coach.model';
 import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
-import { CoachFormComponent } from '../coach-form/coach-form.component';
-import { MatButtonModule } from '@angular/material/button';
+import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
-import { MatIconModule } from '@angular/material/icon';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
+import { Coach, CoachForm } from '../../models/coach.model';
+import { CoachFormComponent } from '../coach-form/coach-form.component';
 
 @Component({
   selector: 'app-coach-detail',
   imports: [MatButtonModule, CardComponent, MatIconModule],
-  providers: [CoachApiService],
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

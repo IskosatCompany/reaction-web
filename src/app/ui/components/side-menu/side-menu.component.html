@@ -12,15 +12,17 @@
 
     <mat-nav-list>
       @for (item of menuItems(); track $index) {
-        <a
-          mat-list-item
-          [routerLink]="item.route"
-          routerLinkActive="active"
-          (click)="toggle(false)"
-        >
-          <mat-icon>{{ item.icon }}</mat-icon>
-          <span>{{ item.label }}</span>
-        </a>
+        @if (!item.role || item.role === userRole()) {
+          <a
+            mat-list-item
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            (click)="toggle(false)"
+          >
+            <mat-icon>{{ item.icon }}</mat-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        }
       }
     </mat-nav-list>
   </mat-sidenav>
@@ -34,7 +36,7 @@
       </mat-toolbar>
     }
 
-    <div>
+    <div class="content">
       <ng-content />
     </div>
   </mat-sidenav-content>

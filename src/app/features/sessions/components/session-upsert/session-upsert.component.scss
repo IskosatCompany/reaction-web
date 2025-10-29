@@ -1,0 +1,54 @@
+:host {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-label.title {
+  font-size: 18px;
+}
+
+.duration {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-report-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+.report-section {
+  display: flex;
+  gap: 8px;
+
+  mat-form-field:first-child {
+    width: 35%;
+  }
+}
+
+mat-expansion-panel {
+  margin-bottom: 20px;
+}
+
+.footer {
+  display: flex;
+  width: 50%;
+  margin-left: auto;
+  gap: 6px;
+
+  button {
+    flex: 1;
+  }
+}

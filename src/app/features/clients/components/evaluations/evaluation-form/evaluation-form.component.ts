@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
 import { Coach } from '../../../../coaches/models/coach.model';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
-import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-evaluation-form',
@@ -21,7 +21,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatButtonModule
   ],
-  providers: [CoachApiService],
   templateUrl: './evaluation-form.component.html',
   styleUrl: './evaluation-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
