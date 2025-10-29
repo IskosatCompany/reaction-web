@@ -27,7 +27,7 @@ export class AuthenticationService {
       return EMPTY;
     }
 
-    return this.#apiService.validate(token).pipe(
+    return this.#apiService.validate().pipe(
       tap((isValid) => {
         if (!isValid) {
           localStorage.removeItem(TOKEN_KEY);

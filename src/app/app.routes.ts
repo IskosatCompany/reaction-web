@@ -17,11 +17,13 @@ export const routes: Routes = [
   },
   {
     path: RoutesPaths.recoverPassword,
+    canActivate: [loginGuard],
     loadChildren: () =>
       import('./features/authentication/authentication.routes').then((m) => m.recoverPasswordRoutes)
   },
   {
     path: RoutesPaths.resetPassword,
+    canActivate: [loginGuard],
     loadChildren: () =>
       import('./features/authentication/authentication.routes').then((m) => m.resetPasswordRoutes)
   },
