@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { Client, ClientForm } from '../../models/client.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClientsApiService } from '../../api/clients-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, Observable, startWith, Subject, switchMap, map } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EvaluationApiService } from '../../api/evaluation-api.service';
 import { Evaluation, EvaluationForm } from '../../models/evaluation.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { CardComponent } from '../../../../ui/components/card/card.component';
@@ -18,7 +19,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { ClientFormComponent } from '../client-form/client-form.component';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
+import { UserRole } from '../../../authentication/models/login.interface';
+import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
+import { SessionsAccordion } from '../../../sessions/components/sessions-accordion/sessions-accordion';
 import { DatePipe } from '@angular/common';
+import { CoachApiService } from '../../../coaches/api/coach-api.service';
+import { Session } from '../../../sessions/models/session.interface';
 
 @Component({
   selector: 'app-client-detail',
@@ -29,10 +36,11 @@ import { DatePipe } from '@angular/common';
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
+    MatTabsModule,
     EvaluationsAccordionComponent,
+    SessionsAccordion,
     DatePipe
   ],
-  providers: [ClientsApiService, EvaluationApiService],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,13 +51,17 @@ export class ClientDetailComponent {
   snackBarService = inject(MatSnackBar);
   clientApiService = inject(ClientsApiService);
   evaluationApiService = inject(EvaluationApiService);
+  sessionsApiService = inject(SessionsApiService);
+  coachesApiService = inject(CoachApiService);
+  authService = inject(AuthenticationService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+
   isValid = signal(false);
-  editClientSubject$ = new Subject<void>();
-  addEvaluationSubject$ = new Subject<void>();
   formValue?: Partial<ClientForm>;
   clientId: string = this.route.snapshot.params['id'];
+  editClientSubject$ = new Subject<void>();
+  addEvaluationSubject$ = new Subject<void>();
   refreshClientSubject$ = new Subject<void>();
   refreshEvaluationsSubject$ = new Subject<void>();
 
@@ -65,6 +77,36 @@ export class ClientDetailComponent {
       switchMap(() => this.evaluationApiService.getEvaluations(this.clientId))
     )
   );
+
+  sessionsDto$ = this.sessionsApiService.getSessions({
+    clientId: this.clientId
+  });
+
+  coaches$ = this.coachesApiService.getCoaches();
+
+  sessions = toSignal<Session[]>(
+    combineLatest([this.sessionsDto$, this.coaches$]).pipe(
+      map(([sessionsDto, coaches]) =>
+        sessionsDto.map((sessionDto) => {
+          const coach = coaches.find((c) => c.id === sessionDto.coachId);
+          if (!coach) {
+            throw new Error(`Coach with id ${sessionDto.coachId} not found`);
+          }
+          return {
+            id: sessionDto.id,
+            client: this.client(),
+            coach: coach,
+            startDate: sessionDto.startDate,
+            endDate: sessionDto.endDate,
+            report: sessionDto.report,
+            status: sessionDto.status
+          } as Session;
+        })
+      )
+    )
+  );
+
+  canEdit = computed(() => this.authService.userRole() === UserRole.admin);
 
   constructor() {
     this.addEvaluationSubject$

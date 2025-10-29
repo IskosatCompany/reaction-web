@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Client, ClientCreate, ClientForm } from '../models/client.interface';
 import { API_URL } from '../../../core/tokens/api-url.token';
-import { format } from 'date-fns';
 
 @Injectable({ providedIn: 'root' })
 export class ClientsApiService {
