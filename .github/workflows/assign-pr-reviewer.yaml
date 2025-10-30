@@ -14,9 +14,15 @@ jobs:
     steps:
       - name: Assign reviewer
         run: |
+          if [ ${{ github.event.pull_request.user.login }} = "BrunoMendes27" ]; then
+            REVIEWER="RafaelFaria98"
+          else
+            REVIEWER="BrunoMendes27"
+          fi
+
           gh api \
             repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers \
             --method POST \
-            --input <(echo '{"reviewers":["BrunoMendes27"]}')
+            --input <(echo "{\"reviewers\":[\"$REVIEWER\"]}")
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
