@@ -107,6 +107,9 @@ export class ResetPasswordComponent {
           return EMPTY;
         })
       )
-      .subscribe(() => this.#router.navigateByUrl(`/${RoutesPaths.login}`));
+      .subscribe(() => {
+        this.#snackBar.open('Senha atualizada com sucesso');
+        this.#router.navigateByUrl(`/${RoutesPaths.login}`);
+      });
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { map, Observable, timer } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { API_URL } from '../../../core/tokens/api-url.token';
 import { LoginRequest, LoginResponse } from '../models/login.interface';
 
@@ -17,8 +17,10 @@ export class AuthenticationApiService {
     return this.#http.post<LoginResponse>(`${this.#url}/auth/refresh`, {});
   }
 
-  // TODO
-  validate(token: string): Observable<boolean> {
-    return timer(2000).pipe(map(() => true));
+  validate(): Observable<boolean> {
+    return this.#http.get<{ valid: boolean }>(`${this.#url}/auth/validate`).pipe(
+      map((item) => item.valid),
+      catchError(() => of(false))
+    );
   }
 }

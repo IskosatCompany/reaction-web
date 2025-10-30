@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import {
   FormControl,
   NonNullableFormBuilder,
@@ -8,8 +8,9 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { catchError, EMPTY } from 'rxjs';
+import { catchError, EMPTY, finalize } from 'rxjs';
 import { PasswordApiService } from '../../api/password-api.service';
 import { AuthenticationContainerComponent } from '../container/container.component';
 
@@ -24,6 +25,7 @@ interface RecoverPasswordForm {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     AuthenticationContainerComponent
   ],
   templateUrl: './recover-password.component.html',
@@ -35,6 +37,7 @@ export class RecoverPasswordComponent {
   readonly #passwordApiService = inject(PasswordApiService);
   readonly #snackBar = inject(MatSnackBar);
 
+  isLoading = signal(false);
   form = this.#formBuilder.group<RecoverPasswordForm>({
     email: this.#formBuilder.control<string>('', [Validators.required, Validators.email])
   });
@@ -46,13 +49,15 @@ export class RecoverPasswordComponent {
     }
 
     const { email } = this.form.getRawValue();
+    this.isLoading.set(true);
     this.#passwordApiService
       .recoverPassword(email)
       .pipe(
         catchError(() => {
           this.#snackBar.open('Ocorreu um erro, tente novamente mais tarde');
           return EMPTY;
-        })
+        }),
+        finalize(() => this.isLoading.set(false))
       )
       .subscribe(() => {
         this.#snackBar.open(
