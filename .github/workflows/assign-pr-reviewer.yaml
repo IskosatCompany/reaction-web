@@ -1,0 +1,17 @@
+name: Assign PR Reviewer
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Assign reviewer automatically
+        uses: peter-evans/assign-reviewers@v2
+        with:
+          reviewers: BrunoMendes27
