@@ -1,0 +1,7 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <app-password-input label="Senha atual" formControlName="currentPassword" />
+  <app-password-input label="Nova senha" formControlName="newPassword" />
+  <app-password-input label="Confirmar nova senha" formControlName="confirmNewPassword" />
+
+  <button matButton="filled" type="submit" [disabled]="form.invalid">Atualizar senha</button>
+</form>

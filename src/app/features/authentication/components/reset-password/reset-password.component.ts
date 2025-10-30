@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -17,6 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
+import { PasswordInputComponent } from '../../../../ui/components/password-input/password-input.component';
 import { PasswordApiService } from '../../api/password-api.service';
 import { AuthenticationContainerComponent } from '../container/container.component';
 
@@ -33,7 +34,8 @@ interface ResetPasswordForm {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    AuthenticationContainerComponent
+    AuthenticationContainerComponent,
+    PasswordInputComponent
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
@@ -44,20 +46,6 @@ export class ResetPasswordComponent {
   readonly #router = inject(Router);
   readonly #passwordApiService = inject(PasswordApiService);
   readonly #snackBar = inject(MatSnackBar);
-
-  readonly showPassword = signal(false);
-  readonly passwordInputType = computed(() => (this.showPassword() ? 'text' : 'password'));
-  readonly passwordInputIcon = computed(() =>
-    this.showPassword() ? 'visibility' : 'visibility_off'
-  );
-
-  readonly showConfirmPassword = signal(false);
-  readonly confirmPasswordInputType = computed(() =>
-    this.showConfirmPassword() ? 'text' : 'password'
-  );
-  readonly confirmPasswordInputIcon = computed(() =>
-    this.showConfirmPassword() ? 'visibility' : 'visibility_off'
-  );
 
   token!: string;
   form!: FormGroup<ResetPasswordForm>;
@@ -103,14 +91,6 @@ export class ResetPasswordComponent {
 
     return { passwordsMismatch: true };
   };
-
-  togglePasswordVisibility(): void {
-    this.showPassword.update((value) => !value);
-  }
-
-  toggleConfirmPasswordVisibility(): void {
-    this.showConfirmPassword.update((value) => !value);
-  }
 
   submit() {
     if (!this.form.valid) {

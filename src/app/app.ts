@@ -16,7 +16,7 @@ export class App {
     { label: 'Agenda', route: `/${RoutesPaths.sessions}`, icon: 'calendar_today' },
     { label: 'Clientes', route: `/${RoutesPaths.clients}`, icon: 'fitness_center' },
     { label: 'Equipa', route: `/${RoutesPaths.team}`, icon: 'groups', role: UserRole.admin },
-    { label: 'Perfil', route: `/${RoutesPaths.settings}`, icon: 'person' },
+    { label: 'Perfil', route: `/${RoutesPaths.profile}`, icon: 'person' },
     { label: 'Sair', route: `/${RoutesPaths.logout}`, icon: 'logout' }
   ];
 
