@@ -1,3 +1,5 @@
+import { SessionStatus } from '../session.interface';
+
 export interface SessionDto {
   id: string;
   clientId: string;
@@ -5,5 +7,6 @@ export interface SessionDto {
   startDate: number;
   endDate: number;
   description?: string;
-  reportId?: string;
+  report?: string;
+  status: SessionStatus;
 }
