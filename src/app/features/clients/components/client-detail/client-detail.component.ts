@@ -11,6 +11,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { EvaluationApiService } from '../../api/evaluation-api.service';
 import { Evaluation, EvaluationForm } from '../../models/evaluation.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { CardComponent } from '../../../../ui/components/card/card.component';
@@ -20,6 +21,9 @@ import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluati
 import { ClientFormComponent } from '../client-form/client-form.component';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { UserRole } from '../../../authentication/models/login.interface';
+import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
+import { SessionDto } from '../../../sessions/models/http/session-dto.interface';
+import { SessionsAccordion } from '../../../sessions/components/sessions-accordion/sessions-accordion';
 
 @Component({
   selector: 'app-client-detail',
@@ -30,9 +34,10 @@ import { UserRole } from '../../../authentication/models/login.interface';
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
-    EvaluationsAccordionComponent
+    MatTabsModule,
+    EvaluationsAccordionComponent,
+    SessionsAccordion
   ],
-  providers: [ClientsApiService, EvaluationApiService],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,15 +48,17 @@ export class ClientDetailComponent {
   snackBarService = inject(MatSnackBar);
   clientApiService = inject(ClientsApiService);
   evaluationApiService = inject(EvaluationApiService);
+  sessionsApiService = inject(SessionsApiService);
   authService = inject(AuthenticationService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+
   isValid = signal(false);
-  editClientSubject$ = new Subject<void>();
-  addEvaluationSubject$ = new Subject<void>();
   userRole = signal<UserRole>(this.authService.userRole());
   formValue?: Partial<ClientForm>;
   clientId: string = this.route.snapshot.params['id'];
+  editClientSubject$ = new Subject<void>();
+  addEvaluationSubject$ = new Subject<void>();
   refreshClientSubject$ = new Subject<void>();
   refreshEvaluationsSubject$ = new Subject<void>();
 
@@ -66,6 +73,11 @@ export class ClientDetailComponent {
       startWith(undefined),
       switchMap(() => this.evaluationApiService.getEvaluations(this.clientId))
     )
+  );
+  sessions = toSignal<SessionDto[]>(
+    this.sessionsApiService.getSessions({
+      clientId: this.clientId
+    })
   );
 
   canEdit = computed(() => this.userRole() === UserRole.admin);

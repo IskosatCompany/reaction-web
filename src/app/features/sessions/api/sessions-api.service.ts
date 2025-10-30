@@ -13,8 +13,13 @@ export class SessionsApiService {
 
   getSessions(request: SessionsRequest): Observable<SessionDto[]> {
     let params = new HttpParams();
-    params = params.append('startDate', request.startDate);
-    params = params.append('endDate', request.endDate);
+    if (request.startDate) {
+      params = params.append('startDate', request.startDate);
+    }
+
+    if (request.endDate) {
+      params = params.append('endDate', request.endDate);
+    }
 
     if (request.clientId) {
       params = params.append('clientId', request.clientId);

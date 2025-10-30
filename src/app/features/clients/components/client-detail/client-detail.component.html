@@ -1,6 +1,6 @@
 <app-card>
   <header>
-    <h1>{{ client()?.name - #{{ client()?.clientNumber}}</h1>
+    <h1>{{ client()?.name }} - #{{ client()?.clientNumber }}</h1>
     @if (canEdit()) {
       <div class="actions">
         <button matMiniFab (click)="onClientEdit()">
@@ -16,12 +16,26 @@
   <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
   <span><span>NIF:</span> {{ client()?.nif }}</span>
 </app-card>
-<h1>Avaliações</h1>
-<mat-accordion>
-  @for (evaluation of evaluations(); track evaluation.id) {
-    <app-evaluations-accordion
-      [evaluation]="evaluation"
-      (refreshEvaluations)="refreshEvaluationsSubject$.next()"
-    />
-  }
-</mat-accordion>
+<mat-tab-group>
+  <mat-tab label="Avaliações">
+    <ng-template matTabContent>
+      <mat-accordion>
+        @for (evaluation of evaluations(); track evaluation.id) {
+          <app-evaluations-accordion
+            [evaluation]="evaluation"
+            (refreshEvaluations)="refreshEvaluationsSubject$.next()"
+          />
+        }
+      </mat-accordion>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Sessões">
+    <ng-template matTabContent>
+      <mat-accordion>
+        @for (session of sessions(); track session.id) {
+          <app-sessions-accordion [session]="session" />
+        }
+      </mat-accordion>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
