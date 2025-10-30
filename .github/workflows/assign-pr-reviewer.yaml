@@ -1,0 +1,20 @@
+name: Assign PR Reviewer
+
+on:
+  pull_request:
+    types: [opened, ready_for_review]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  assign-reviewer:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-assign PR reviewer
+        run: |
+          gh api repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/requested_reviewers \
+            --method POST \
+            --raw-field reviewers='["BrunoMendes27"]'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
