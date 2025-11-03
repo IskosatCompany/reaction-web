@@ -67,7 +67,7 @@ export class CoachListComponent {
   }
 
   onCoachClick(coachId: string): void {
-    this.router.navigate(['coaches', coachId]);
+    this.router.navigate(['team', coachId]);
   }
 
   createCoach(): void {

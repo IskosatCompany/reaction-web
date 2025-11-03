@@ -1,9 +1,9 @@
 @if (isMobile()) {
-  @for (client of dataSource.data$ | async; track client) {
-    <app-card (click)="onCoachClick(client.id)">
-      <h1>{{ client.name }}</h1>
-      <span>{{ client.email }}</span>
-      <span>{{ client.phoneNumber }}</span>
+  @for (coach of dataSource.data$ | async; track coach) {
+    <app-card (click)="onCoachClick(coach.id)">
+      <h1>{{ coach.name }}</h1>
+      <span><span>Email:</span> {{ coach.email }}</span>
+      <span><span>Nº de telemóvel:</span> {{ coach.phoneNumber }}</span>
     </app-card>
   }
 } @else {

@@ -7,6 +7,12 @@
 
 app-card {
   margin: 12px;
+  span {
+    font-size: 16px;
+    span {
+      font-weight: 700;
+    }
+  }
 
   h1 {
     overflow: hidden;

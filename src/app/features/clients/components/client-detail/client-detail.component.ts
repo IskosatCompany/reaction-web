@@ -18,6 +18,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { ClientFormComponent } from '../client-form/client-form.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-client-detail',
@@ -28,7 +29,8 @@ import { ClientFormComponent } from '../client-form/client-form.component';
     MatExpansionModule,
     MatIconModule,
     MatFormFieldModule,
-    EvaluationsAccordionComponent
+    EvaluationsAccordionComponent,
+    DatePipe
   ],
   providers: [ClientsApiService, EvaluationApiService],
   templateUrl: './client-detail.component.html',

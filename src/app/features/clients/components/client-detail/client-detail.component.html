@@ -12,7 +12,9 @@
   </header>
   <span><span>Email:</span> {{ client()?.email }}</span>
   <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
+  <span><span>Data de nascimento:</span> {{ client()?.birthDate | date: 'dd/MM/yyyy' }}</span>
   <span><span>NIF:</span> {{ client()?.nif }}</span>
+  <span><span>Morada:</span> {{ client()?.address }}</span>
 </app-card>
 <h1>Avaliações</h1>
 <mat-accordion>
