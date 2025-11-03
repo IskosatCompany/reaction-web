@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8080', // TODO: replace with PRODUCTION url
+  apiUrl: 'http://34.240.61.165:8080',
   name: 'production'
 };
