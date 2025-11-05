@@ -6,7 +6,6 @@ export interface SessionDto {
   coachId: string;
   startDate: number;
   endDate: number;
-  description?: string;
   report?: string;
   status: SessionStatus;
 }
