@@ -4,7 +4,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Client, ClientForm } from '../../models/client.interface';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { parse } from 'date-fns';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -29,8 +28,8 @@ export class ClientFormComponent {
   confirmBtnText = this.data ? 'Atualizar' : 'Criar';
   form = new FormGroup({
     name: new FormControl<string | null>(null, [Validators.required]),
-    email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
-    phoneNumber: new FormControl<string | null>(null, [Validators.required]),
+    email: new FormControl<string | null>(null, [Validators.email]),
+    phoneNumber: new FormControl<string | null>(null),
     address: new FormControl<string | null>(null),
     birthDate: new FormControl<Date | null>(null),
     nif: new FormControl<string | null>(null)

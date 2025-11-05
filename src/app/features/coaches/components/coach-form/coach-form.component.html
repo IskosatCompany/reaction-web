@@ -11,9 +11,6 @@
   <mat-form-field appearance="outline" class="form-field">
     <mat-label>Email</mat-label>
     <input matInput id="email" type="email" formControlName="email" />
-    @if (form.get('email')?.errors?.['required'] && form.get('email')?.touched) {
-      <mat-error>Email é obrigatório!</mat-error>
-    }
     @if (form.get('email')?.errors?.['email'] && form.get('email')?.touched) {
       <mat-error>Introduza um email válido.</mat-error>
     }
@@ -22,9 +19,6 @@
   <mat-form-field appearance="outline" class="form-field">
     <mat-label>Número de telemóvel</mat-label>
     <input matInput id="phoneNumber" type="tel" formControlName="phoneNumber" />
-    @if (form.get('phoneNumber')?.invalid && form.get('phoneNumber')?.touched) {
-      <mat-error>Número de telemóvel é obrigatório!</mat-error>
-    }
   </mat-form-field>
   <mat-form-field appearance="outline" class="form-field">
     <mat-label>NIF</mat-label>
