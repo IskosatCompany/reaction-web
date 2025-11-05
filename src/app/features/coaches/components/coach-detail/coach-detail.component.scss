@@ -13,10 +13,20 @@ app-card {
     }
   }
 
-  header {
+  .coach,
+  div {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+
+    .coach__color {
+      border-radius: 50%;
+      height: 24px;
+      width: 24px;
+      border: 1px solid var(--light-blue);
+    }
 
     h1 {
       line-height: 32px;

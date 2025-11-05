@@ -1,6 +1,9 @@
 <app-card>
-  <header>
-    <h1>{{ coach()?.name }} - #{{ coach()?.employeeNumber }}</h1>
+  <header class="coach">
+    <div>
+      <div class="coach__color" [style.background-color]="coach()?.color"></div>
+      <h1>{{ coach()?.name }} - #{{ coach()?.employeeNumber }}</h1>
+    </div>
     <button matMiniFab (click)="onCoachEdit()">
       <mat-icon>edit</mat-icon>
     </button>

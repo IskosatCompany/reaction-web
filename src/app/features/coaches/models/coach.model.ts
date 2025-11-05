@@ -24,4 +24,5 @@ export interface CoachForm {
   civilInsurance: string | null;
   workInsurance: string | null;
   address: string | null;
+  color: string | null;
 }

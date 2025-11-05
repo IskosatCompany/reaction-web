@@ -42,11 +42,11 @@ export class TableCellComponent<T> {
     return undefined;
   });
 
-  value = computed<string | undefined>(() => {
+  value = computed<string>(() => {
     const column = this.column();
     if (column.template || column.id === 'table-actions') {
-      return undefined;
+      return '-';
     }
-    return `${this.item()[column.id]}`;
+    return `${this.item()[column.id] ?? '-'}`;
   });
 }

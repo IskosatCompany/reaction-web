@@ -38,7 +38,8 @@ export class CoachFormComponent {
     professionalCardNumber: new FormControl<string | null>(null),
     civilInsurance: new FormControl<string | null>(null),
     workInsurance: new FormControl<string | null>(null),
-    address: new FormControl<string | null>(null)
+    address: new FormControl<string | null>(null),
+    color: new FormControl<string | null>('#2c5464')
   });
 
   constructor() {
@@ -60,7 +61,8 @@ export class CoachFormComponent {
       professionalCardNumber: model.professionalCardNumber,
       civilInsurance: model.civilInsurance,
       workInsurance: model.workInsurance,
-      address: model.address
+      address: model.address,
+      color: model.color
     });
   }
 

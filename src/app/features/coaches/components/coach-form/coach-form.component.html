@@ -25,7 +25,7 @@
     <input matInput formControlName="nif" />
   </mat-form-field>
   <mat-form-field appearance="outline" class="form-field">
-    <mat-label>Nº do cartão profissional</mat-label>
+    <mat-label>Nº da cédula profissional</mat-label>
     <input matInput formControlName="professionalCardNumber" />
   </mat-form-field>
   <mat-form-field appearance="outline" class="form-field">
@@ -50,6 +50,10 @@
     @if (form.get('expertise')?.invalid && form.get('expertise')?.touched) {
       <mat-error>Especialidade é obrigatória!</mat-error>
     }
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Cor</mat-label>
+    <input matInput type="color" formControlName="color" />
   </mat-form-field>
   <div class="actions">
     <button matButton="tonal" (click)="onCancel()">Cancelar</button>

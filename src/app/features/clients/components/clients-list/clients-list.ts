@@ -43,6 +43,7 @@ export class ClientsList {
   addClientSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   columns: TableColumn<Client>[] = [
+    { id: 'clientNumber', label: 'Número de Cliente', width: 200 },
     { id: 'name', label: 'Nome' },
     { id: 'email', label: 'Email' },
     { id: 'phoneNumber', label: 'Telefone' }

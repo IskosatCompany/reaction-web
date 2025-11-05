@@ -33,6 +33,7 @@ export class CoachListComponent {
   createCoachSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   columns: TableColumn<Coach>[] = [
+    { id: 'employeeNumber', label: 'Número de Treinador', width: 200 },
     { id: 'name', label: 'Nome' },
     { id: 'email', label: 'Email' },
     { id: 'phoneNumber', label: 'Telefone' }
