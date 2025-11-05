@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
@@ -21,6 +22,7 @@ import {
   isBefore,
   roundToNearestMinutes
 } from 'date-fns';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { Session } from '../../models/session.interface';
@@ -46,7 +48,8 @@ interface SessionUpsertForm {
     MatSelectModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './session-upsert.component.html',
   styleUrl: './session-upsert.component.scss',
@@ -62,8 +65,38 @@ export class SessionUpsertComponent {
   form: FormGroup<SessionUpsertForm>;
 
   readonly sessionDetailsExpanded = signal(false);
+
+  // Clients
   readonly clients = this.#sessionsStore.clients;
+  readonly clientFilterCtrl = new FormControl('');
+  readonly clientFilter = toSignal(this.clientFilterCtrl.valueChanges, { initialValue: '' });
+  readonly filteredClients = computed(() => {
+    const search = this.clientFilter()?.toLowerCase();
+    if (!search?.trim()) {
+      return this.clients();
+    }
+
+    return this.clients().filter(
+      (item) =>
+        item.name.toLowerCase().includes(search) || item.clientNumber.toString().includes(search)
+    );
+  });
+
+  // Coaches
   readonly coaches = this.#sessionsStore.coaches;
+  readonly coachFilterCtrl = new FormControl('');
+  readonly coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
+  readonly filteredCoaches = computed(() => {
+    const search = this.coachFilter()?.toLowerCase();
+    if (!search?.trim()) {
+      return this.coaches();
+    }
+
+    return this.coaches().filter(
+      (item) =>
+        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
+    );
+  });
 
   get isEditing(): boolean {
     return !!this.#session.id;

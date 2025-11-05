@@ -1,25 +1,33 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
-import { Coach } from '../../../../coaches/models/coach.model';
 import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
 
 @Component({
   selector: 'app-evaluation-form',
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
-    MatButtonModule
+    MatButtonModule,
+    NgxMatSelectSearchModule
   ],
   templateUrl: './evaluation-form.component.html',
   styleUrl: './evaluation-form.component.scss',
@@ -39,8 +47,21 @@ export class EvaluationFormComponent {
     coachId: new FormControl<string | null>(null, [Validators.required]),
     clientId: new FormControl<string | null>(null, [Validators.required])
   });
+  coachFilterCtrl = new FormControl('');
 
-  coaches = toSignal<Coach[]>(this.coachApiService.getCoaches());
+  coaches = toSignal(this.coachApiService.getCoaches(), { initialValue: [] });
+  coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
+  filteredCoaches = computed(() => {
+    const search = this.coachFilter()?.toLowerCase();
+    if (!search?.trim()) {
+      return this.coaches();
+    }
+
+    return this.coaches().filter(
+      (item) =>
+        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
+    );
+  });
 
   constructor() {
     effect(() => {
