@@ -81,7 +81,6 @@ export class SessionsCalendarComponent {
           id: sessionDto.id,
           startDate: sessionDto.startDate,
           endDate: sessionDto.endDate,
-          description: sessionDto.description,
           client: this.#sessionsStore.getClientById(sessionDto.clientId),
           coach: this.#sessionsStore.getCoachById(sessionDto.coachId)
         })

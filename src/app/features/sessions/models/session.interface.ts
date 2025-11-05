@@ -12,7 +12,6 @@ export interface Session {
   coach: Coach;
   startDate: number;
   endDate: number;
-  description?: string;
   report?: string;
   status: SessionStatus;
 }

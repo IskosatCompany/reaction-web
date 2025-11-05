@@ -31,7 +31,6 @@ interface SessionUpsertForm {
   startDate: FormControl<Date>;
   startTime: FormControl<Date>;
   duration: FormControl<number>; // 30 minutes or 60 minutes -> default 60 minutes
-  description: FormControl<string>;
   clientId: FormControl<string>;
   coachId: FormControl<string>;
 }
@@ -81,7 +80,7 @@ export class SessionUpsertComponent {
 
   constructor() {
     const defaultStartDateTime = this.#getDefaultStartDateTime();
-    const { client, coach, description, startDate, endDate } = this.#session;
+    const { client, coach, startDate, endDate } = this.#session;
 
     this.form = this.#formBuilder.group<SessionUpsertForm>({
       startDate: this.#formBuilder.control<Date>({
@@ -94,10 +93,6 @@ export class SessionUpsertComponent {
       }),
       duration: this.#formBuilder.control<number>({
         value: startDate && endDate ? differenceInMinutes(endDate, startDate) : 60,
-        disabled: this.hasSessionStarted
-      }),
-      description: this.#formBuilder.control<string>({
-        value: description ?? '',
         disabled: this.hasSessionStarted
       }),
       clientId: this.#formBuilder.control<string>({
@@ -116,8 +111,7 @@ export class SessionUpsertComponent {
   }
 
   confirm(): void {
-    const { clientId, coachId, description, duration, startDate, startTime } =
-      this.form.getRawValue();
+    const { clientId, coachId, duration, startDate, startTime } = this.form.getRawValue();
 
     const sessionStartDateTime = this.#getSessionStartDateTime(startDate, startTime);
 
@@ -125,7 +119,6 @@ export class SessionUpsertComponent {
       this.#upsertSessionService.editSession(this.#session.id, {
         clientId,
         coachId,
-        description,
         startDate: sessionStartDateTime.getTime(),
         endDate: addMinutes(sessionStartDateTime, duration).getTime()
       });
@@ -133,7 +126,6 @@ export class SessionUpsertComponent {
       this.#upsertSessionService.createSession({
         clientId,
         coachId,
-        description,
         startDate: sessionStartDateTime.getTime(),
         endDate: addMinutes(sessionStartDateTime, duration).getTime()
       });
