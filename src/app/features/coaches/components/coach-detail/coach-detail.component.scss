@@ -23,9 +23,23 @@ app-card {
 
     .coach__color {
       border-radius: 50%;
-      height: 24px;
-      width: 24px;
+      height: 1vw;
+      width: 1vw;
       border: 1px solid var(--light-blue);
+    }
+
+    @media (max-width: 1366px) {
+      .coach__color {
+        width: 3vw;
+        height: 3vw;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .coach__color {
+        width: 12vw;
+        height: 6vw;
+      }
     }
 
     h1 {
