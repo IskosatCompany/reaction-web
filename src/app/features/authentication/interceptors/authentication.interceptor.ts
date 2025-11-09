@@ -15,6 +15,7 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
   const router = inject(Router);
 
   const isRefreshRequest = req.url.includes('refresh');
+  const isLoginRequest = req.url.includes('login');
   const token = isRefreshRequest
     ? authenticationService.getRefreshToken()
     : authenticationService.getAuthToken();
@@ -23,27 +24,26 @@ export const authenticationInterceptor: HttpInterceptorFn = (req, next) => {
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      // Invalid/expired token
-      // TODO: check with BE the HTTP error for this use case
-      if (
-        !isRefreshRequest &&
-        (error.status === HttpStatusCode.Unauthorized || error.status === HttpStatusCode.Forbidden)
-      ) {
-        return authenticationService.refresh().pipe(
-          switchMap(() => {
-            const newAuthToken = authenticationService.getAuthToken();
-            const newReq = setRequestAuthorizationHeader(req, newAuthToken!);
-            return next(newReq);
-          }),
-          catchError(() => {
-            authenticationService.logout();
-            router.navigateByUrl(`/${RoutesPaths.login}`);
-            return throwError(() => error);
-          })
-        );
-      }
+      if (error.status === HttpStatusCode.Unauthorized) {
+        if (isLoginRequest) {
+          return throwError(() => error);
+        }
 
-      if (isRefreshRequest) {
+        if (!isRefreshRequest) {
+          return authenticationService.refresh().pipe(
+            switchMap(() => {
+              const newAuthToken = authenticationService.getAuthToken();
+              const newReq = setRequestAuthorizationHeader(req, newAuthToken!);
+              return next(newReq);
+            }),
+            catchError(() => {
+              authenticationService.logout();
+              router.navigateByUrl(`/${RoutesPaths.login}`);
+              return throwError(() => error);
+            })
+          );
+        }
+
         authenticationService.logout();
         router.navigateByUrl(`/${RoutesPaths.login}`);
       }
