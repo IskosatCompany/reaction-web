@@ -3,6 +3,7 @@
   <mat-form-field appearance="outline">
     <mat-label>Título</mat-label>
     <input matInput formControlName="title" />
+
     @if (form.get('title')?.hasError('required')) {
       <mat-error> Campo obrigatório! </mat-error>
     }
@@ -18,13 +19,23 @@
         <button matButton="elevated" matDatepickerApply>Selecionar</button>
       </mat-datepicker-actions>
     </mat-datepicker>
+
+    @if (form.get('date')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Treinador</mat-label>
-    <mat-select formControlName="coachId">
-      @for (coach of coaches(); track coach.id) {
-        <mat-option [value]="coach.id">{{ coach.name }}</mat-option>
+    <mat-select formControlName="coachId" panelClass="searchable-mat-select">
+      <mat-option>
+        <ngx-mat-select-search
+          placeholderLabel="Pesquisar treinador"
+          [formControl]="coachFilterCtrl"
+        />
+      </mat-option>
+      @for (coach of filteredCoaches(); track coach.id) {
+        <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
       }
     </mat-select>
   </mat-form-field>

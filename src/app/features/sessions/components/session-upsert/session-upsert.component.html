@@ -38,18 +38,30 @@
 
   <mat-form-field appearance="outline">
     <mat-label>Cliente</mat-label>
-    <mat-select formControlName="clientId">
-      @for (client of clients(); track $index) {
-        <mat-option [value]="client.id">{{ client.name }}</mat-option>
+    <mat-select formControlName="clientId" panelClass="searchable-mat-select">
+      <mat-option>
+        <ngx-mat-select-search
+          placeholderLabel="Pesquisar cliente"
+          [formControl]="clientFilterCtrl"
+        />
+      </mat-option>
+      @for (client of filteredClients(); track client.id) {
+        <mat-option [value]="client.id">{{ client.name }} - #{{ client.clientNumber }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Treinador</mat-label>
-    <mat-select formControlName="coachId">
-      @for (coach of coaches(); track $index) {
-        <mat-option [value]="coach.id">{{ coach.name }}</mat-option>
+    <mat-select formControlName="coachId" panelClass="searchable-mat-select">
+      <mat-option>
+        <ngx-mat-select-search
+          placeholderLabel="Pesquisar treinador"
+          [formControl]="coachFilterCtrl"
+        />
+      </mat-option>
+      @for (coach of filteredCoaches(); track coach.id) {
+        <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
