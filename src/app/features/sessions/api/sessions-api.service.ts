@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../../core/tokens/api-url.token';
+import { CloseSessionRequest } from '../models/http/close-session-request.interface';
 import { SessionDto } from '../models/http/session-dto.interface';
 import { SessionUpsertRequest } from '../models/http/session-upsert-request.interface';
 import { SessionsRequest } from '../models/http/sessions-request.interface';
@@ -29,6 +30,10 @@ export class SessionsApiService {
       params = params.append('coachId', request.coachId);
     }
 
+    if (request.status) {
+      params = params.append('status', request.status);
+    }
+
     return this.#http.get<SessionDto[]>(`${this.#url}/session`, { params });
   }
 
@@ -44,7 +49,7 @@ export class SessionsApiService {
     return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}`, payload);
   }
 
-  closeSession(sessionId: string, payload: SessionUpsertRequest): Observable<SessionDto> {
+  closeSession(sessionId: string, payload: CloseSessionRequest): Observable<SessionDto> {
     return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}/report`, payload);
   }
 

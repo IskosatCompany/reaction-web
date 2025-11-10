@@ -18,7 +18,7 @@ import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
-import { SessionsFilters } from '../../models/sessions-filters.interface';
+import { CalendarFilters } from '../../models/calendar-filters.interface';
 import { CalendarService } from '../../services/calendar.service';
 import { UpsertSessionService } from '../../services/upsert-session.service';
 import { SessionsStore } from '../../store/sessions.store';
@@ -82,9 +82,7 @@ export class SessionsCalendarComponent {
           startDate: sessionDto.startDate,
           endDate: sessionDto.endDate,
           client: this.#sessionsStore.getClientById(sessionDto.clientId),
-          coach: this.#sessionsStore.getCoachById(sessionDto.coachId),
-          report: sessionDto.report,
-          status: sessionDto.status
+          coach: this.#sessionsStore.getCoachById(sessionDto.coachId)
         })
       );
 
@@ -97,7 +95,7 @@ export class SessionsCalendarComponent {
       .subscribe(({ title }) => this.calendarTitle.set(title));
   }
 
-  applyFilters(filters: SessionsFilters): void {
+  applyFilters(filters: CalendarFilters): void {
     this.#calendarService.applyFilters(filters);
   }
 

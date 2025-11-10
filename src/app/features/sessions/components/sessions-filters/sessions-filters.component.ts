@@ -14,7 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Client } from '../../../clients/models/client.interface';
 import { Coach } from '../../../coaches/models/coach.model';
-import { SessionsFilters } from '../../models/sessions-filters.interface';
+import { CalendarFilters } from '../../models/calendar-filters.interface';
 
 interface SessionsFiltersForm {
   date: FormControl<Date | undefined>;
@@ -43,7 +43,7 @@ export class SessionsFiltersComponent {
 
   clients = input<Client[]>([]);
   coaches = input<Coach[]>([]);
-  filtersChanged = output<SessionsFilters>();
+  filtersChanged = output<CalendarFilters>();
 
   form: FormGroup<SessionsFiltersForm>;
 

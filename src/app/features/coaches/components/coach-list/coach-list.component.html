@@ -1,6 +1,6 @@
 <app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
 @if (isMobile()) {
-  @for (coach of dataSource.data$ | async; track coach) {
+  @for (coach of tableConfig.data$ | async; track coach.id) {
     <app-card (click)="onCoachClick(coach.id)">
       <h1>{{ coach.name }}</h1>
       <span><span>Email:</span> {{ coach.email }}</span>
@@ -9,7 +9,7 @@
   }
 } @else {
   <section>
-    <app-table [dataSource]="dataSource" [columns]="columns" [rowActions]="actions" />
+    <app-table [config]="tableConfig" />
   </section>
 }
 <button matFab class="float-button" (click)="createCoach()">

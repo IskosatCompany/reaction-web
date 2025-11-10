@@ -1,38 +1,46 @@
-<table mat-table multiTemplateDataRows [dataSource]="tableData()">
-  @for (column of columns(); track column.id) {
-    <ng-container [matColumnDef]="column.id">
-      <th mat-header-cell *matHeaderCellDef [style.width.px]="column.width">{{ column.label }}</th>
-      <td
-        mat-cell
-        *matCellDef="let element"
-        [style.width.px]="column.width"
-        [style.height.px]="headerHeight()"
-      >
-        <app-table-cell [column]="column" [item]="element" />
+@if (isLoading()) {
+  <mat-spinner diameter="40"></mat-spinner>
+}
+
+<table mat-table [dataSource]="data()">
+  @for (col of config().columns; track $index) {
+    <ng-container [matColumnDef]="col.key">
+      <!-- header -->
+      <th mat-header-cell *matHeaderCellDef [style.width.px]="col.width">{{ col.header }}</th>
+
+      <!-- cell -->
+      <td mat-cell *matCellDef="let row">
+        <!-- custom template -->
+        @if (col.template) {
+          <ng-container
+            [ngTemplateOutlet]="col.template"
+            [ngTemplateOutletContext]="{ $implicit: row }"
+          />
+        } @else {
+          <!-- actions column -->
+          @if (col.actions?.length) {
+            @for (action of col.actions; track $index) {
+              <button
+                mat-icon-button
+                (click)="action.callback(row)"
+                [disabled]="action.isDisabled ? action.isDisabled(row) : false"
+                [matTooltip]="action.tooltip"
+              >
+                <mat-icon>{{ action.icon }}</mat-icon>
+              </button>
+            }
+          } @else {
+            <!-- normal text cell -->
+            {{ col.cellFn ? col.cellFn(row) : row[col.key] }}
+          }
+        }
       </td>
     </ng-container>
   }
 
-  @if (rowActions(); as rowActions) {
-    <ng-container matColumnDef="table-actions">
-      <th mat-header-cell *matHeaderCellDef [style.width.px]="rowActionsCellWidth()">Ações</th>
-      <td mat-cell *matCellDef="let element" [style.width.px]="rowActionsCellWidth()">
-        <app-table-actions-cell [element]="element" [rowActions]="rowActions" />
-      </td>
-    </ng-container>
-  }
+  <!-- header rows -->
+  <tr mat-header-row *matHeaderRowDef="columns()"></tr>
 
-  <!-- Table Header -->
-  <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
-
-  <!-- Table Rows -->
-  <tr mat-row *matRowDef="let element; columns: displayedColumns()"></tr>
-
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" colspan="4">
-      <div class="empty-state">
-        <p>Sem resultados</p>
-      </div>
-    </td>
-  </tr>
+  <!-- data rows -->
+  <tr mat-row *matRowDef="let row; columns: columns()"></tr>
 </table>

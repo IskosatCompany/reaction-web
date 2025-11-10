@@ -5,6 +5,11 @@
 
 .content {
   height: 100%;
+  padding: 20px;
+
+  &--mobile {
+    padding: 0;
+  }
 }
 
 mat-sidenav-container {

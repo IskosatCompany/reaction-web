@@ -1,0 +1,24 @@
+@if (isLoadingClientsAndCoaches()) {
+  <mat-spinner />
+} @else {
+  @if (isMobile()) {
+    <button matButton="filled" (click)="openFilters()">Filtros</button>
+
+    @for (session of tableConfig.data$ | async; track session.id) {
+      <app-card (click)="completeSession(session.id)">
+        <span><span>Cliente:</span> {{ session.client | formatClient }}</span>
+        <span><span>Treinador:</span> {{ session.coach | formatCoach }}</span>
+        <span><span>Data:</span> {{ session.startDate | date: 'dd-MM-yyyy hh:mm' }}</span>
+        <span><span>Estado:</span> {{ sessionStatusLabel[session.status] }}</span>
+      </app-card>
+    }
+  } @else {
+    <app-sessions-list-filters
+      [defaultRequest]="defaultRequest"
+      [isAbleToFilterByCoach]="isAbleToFilterByCoach()"
+      (filtersChanged)="handleFiltersChanged($event)"
+    />
+
+    <app-table [config]="tableConfig" />
+  }
+}

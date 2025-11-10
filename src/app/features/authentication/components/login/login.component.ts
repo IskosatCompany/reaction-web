@@ -75,6 +75,6 @@ export class LoginComponent {
           return EMPTY;
         })
       )
-      .subscribe(() => this.#router.navigateByUrl(`/${RoutesPaths.sessions}`));
+      .subscribe(() => this.#router.navigateByUrl(`/${RoutesPaths.calendar}`));
   }
 }

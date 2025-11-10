@@ -3,7 +3,8 @@ import { Route } from '@angular/router';
 export const routes: Route[] = [
   {
     path: '',
-    loadComponent: () => import('./components/clients-list/clients-list').then((m) => m.ClientsList)
+    loadComponent: () =>
+      import('./components/clients-list/clients-list.component').then((m) => m.ClientsListComponent)
   },
   {
     path: ':id',

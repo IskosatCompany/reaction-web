@@ -1,0 +1,73 @@
+@if (withinBottomSheet()) {
+  <div class="header">
+    <button mat-icon-button matSuffix type="button" (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+}
+
+<form [formGroup]="filtersForm" [class.inline]="!withinBottomSheet()">
+  <mat-form-field appearance="outline">
+    <mat-label>Data</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate formControlName="startDate" />
+      <input matEndDate formControlName="endDate" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-date-range-picker #picker></mat-date-range-picker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Cliente</mat-label>
+    <mat-select formControlName="clientId" panelClass="searchable-mat-select">
+      <mat-option>
+        <ngx-mat-select-search
+          placeholderLabel="Pesquisar cliente"
+          [formControl]="clientFilterCtrl"
+        />
+      </mat-option>
+      <mat-option [value]="null">-</mat-option>
+      @for (client of filteredClients(); track client.id) {
+        <mat-option [value]="client.id">
+          {{ client.name }} - #{{ client.clientNumber }}
+        </mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  @if (isAbleToFilterByCoach()) {
+    <mat-form-field appearance="outline">
+      <mat-label>Treinador</mat-label>
+      <mat-select formControlName="coachId" panelClass="searchable-mat-select">
+        <mat-option>
+          <ngx-mat-select-search
+            placeholderLabel="Pesquisar treinador"
+            [formControl]="coachFilterCtrl"
+          />
+        </mat-option>
+        <mat-option [value]="null">-</mat-option>
+        @for (coach of filteredCoaches(); track coach.id) {
+          <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+  }
+
+  <mat-form-field appearance="outline">
+    <mat-label>Estado</mat-label>
+    <mat-select formControlName="status">
+      <mat-option [value]="null">-</mat-option>
+      <mat-option [value]="sessionStatus.Pending">
+        {{ sessionStatusLabel[sessionStatus.Pending] }}
+      </mat-option>
+      <mat-option [value]="sessionStatus.Completed">
+        {{ sessionStatusLabel[sessionStatus.Completed] }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="buttons">
+    <button mat-button (click)="reset()">Limpar</button>
+    <button matButton="filled" (click)="apply()">Aplicar</button>
+  </div>
+</form>

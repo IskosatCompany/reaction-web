@@ -26,7 +26,7 @@ import {
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
-import { Session, SessionStatus } from '../../models/session.interface';
+import { Session } from '../../models/session.interface';
 import { UpsertSessionService } from '../../services/upsert-session.service';
 import { SessionsStore } from '../../store/sessions.store';
 
@@ -36,7 +36,6 @@ interface SessionUpsertForm {
   duration: FormControl<number>; // 30 minutes or 60 minutes -> default 60 minutes
   clientId: FormControl<string>;
   coachId: FormControl<string>;
-  report: FormControl<string>;
 }
 
 type Action = 'create' | 'edit' | 'duplicate';
@@ -127,7 +126,7 @@ export class SessionUpsertComponent {
 
   constructor() {
     const defaultStartDateTime = this.#getDefaultStartDateTime();
-    const { client, coach, startDate, endDate, report, status } = this.#session;
+    const { client, coach, startDate, endDate } = this.#session;
 
     this.form = this.#formBuilder.group<SessionUpsertForm>({
       startDate: this.#formBuilder.control<Date>({
@@ -149,10 +148,6 @@ export class SessionUpsertComponent {
       coachId: this.#formBuilder.control<string>({
         value: coach?.id ?? '',
         disabled: this.hasSessionStarted || this.#authService.userRole() === UserRole.coach
-      }),
-      report: this.#formBuilder.control<string>({
-        value: report ?? '',
-        disabled: !this.hasSessionStarted || status === SessionStatus.Completed
       })
     });
   }
@@ -177,20 +172,9 @@ export class SessionUpsertComponent {
   }
 
   confirm(): void {
-    const { clientId, coachId, duration, startDate, startTime, report } = this.form.getRawValue();
+    const { clientId, coachId, duration, startDate, startTime } = this.form.getRawValue();
 
     const sessionStartDateTime = this.#getSessionStartDateTime(startDate, startTime);
-
-    if (this.hasSessionStarted && this.#session.id) {
-      this.#upsertSessionService.closeSession(this.#session.id, {
-        report,
-        clientId,
-        coachId,
-        startDate: sessionStartDateTime.getTime(),
-        endDate: addMinutes(sessionStartDateTime, duration).getTime()
-      });
-      return;
-    }
 
     if (this.action() === 'edit' && this.#session.id) {
       this.#upsertSessionService.editSession(this.#session.id, {
