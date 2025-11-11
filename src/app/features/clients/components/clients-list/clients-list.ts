@@ -15,9 +15,10 @@ import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-s
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Client, ClientForm } from '../../models/client.interface';
-import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { ClientFormComponent } from '../client-form/client-form.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { SearchComponent } from '../../../../ui/components/search/search.component';
 
 @Component({
   selector: 'app-clients-list',
@@ -29,7 +30,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     AsyncPipe,
     MatBottomSheetModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    SearchComponent
   ],
   providers: [ClientsApiService],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,6 +44,7 @@ export class ClientsList {
   clientsApiService = inject(ClientsApiService);
   addClientSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
+  searchSubject$ = new Subject<string>();
   columns: TableColumn<Client>[] = [
     { id: 'clientNumber', label: 'Número de Cliente', width: 200 },
     { id: 'name', label: 'Nome' },
@@ -50,10 +53,10 @@ export class ClientsList {
   ];
 
   dataSource: PaginatedTableDataSource<Client> = {
-    data$: this.refreshSubject$.pipe(
-      startWith(null),
-      switchMap(() => this.clientsApiService.getClients())
-    )
+    data$: combineLatest([
+      this.searchSubject$.pipe(startWith('')),
+      this.refreshSubject$.pipe(startWith(null))
+    ]).pipe(switchMap(([searchTerm, _]) => this.clientsApiService.getClients(searchTerm)))
   };
 
   actions: TableRowAction<Client>[] = [

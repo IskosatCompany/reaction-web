@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_URL } from '../../../core/tokens/api-url.token';
@@ -9,8 +9,12 @@ export class CoachApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getCoaches(): Observable<Coach[]> {
-    return this.#http.get<Coach[]>(`${this.#apiUrl}/coach`);
+  getCoaches(searchTerm?: string): Observable<Coach[]> {
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('name', searchTerm);
+    }
+    return this.#http.get<Coach[]>(`${this.#apiUrl}/coach`, { params });
   }
 
   getCoachDetails(coachId: string): Observable<Coach> {

@@ -1,0 +1,9 @@
+<mat-form-field>
+  <input
+    matInput
+    placeholder="Pesquisar"
+    [(ngModel)]="inputValue"
+    (ngModelChange)="searchTerm$.next($event)"
+  />
+  <mat-icon matSuffix>search</mat-icon>
+</mat-form-field>

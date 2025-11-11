@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Client, ClientCreate, ClientForm } from '../models/client.interface';
@@ -9,8 +9,12 @@ export class ClientsApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getClients(): Observable<Client[]> {
-    return this.#http.get<Client[]>(`${this.#apiUrl}/client`);
+  getClients(searchTerm?: string): Observable<Client[]> {
+    let params = new HttpParams();
+    if (searchTerm) {
+      params = params.set('name', searchTerm);
+    }
+    return this.#http.get<Client[]>(`${this.#apiUrl}/client`, { params });
   }
 
   createClient(client: Partial<ClientForm>): Observable<Client> {

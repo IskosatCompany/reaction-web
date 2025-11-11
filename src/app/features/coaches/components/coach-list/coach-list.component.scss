@@ -1,12 +1,16 @@
+:host {
+  display: block;
+  margin: 12px;
+}
+
 .float-button {
-  position: absolute;
+  position: fixed;
   z-index: 1;
   right: 20px;
   bottom: 20px;
 }
 
 app-card {
-  margin: 12px;
   span {
     font-size: 16px;
     span {
@@ -20,4 +24,8 @@ app-card {
     text-overflow: ellipsis;
     padding-bottom: 8px;
   }
+}
+
+.search-mobile {
+  --search-input-mobile-width: 100%;
 }

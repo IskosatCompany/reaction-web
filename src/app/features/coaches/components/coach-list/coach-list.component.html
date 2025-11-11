@@ -1,3 +1,4 @@
+<app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
 @if (isMobile()) {
   @for (coach of dataSource.data$ | async; track coach) {
     <app-card (click)="onCoachClick(coach.id)">

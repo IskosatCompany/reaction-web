@@ -35,7 +35,6 @@ export class TableComponent<T> {
     { initialValue: [] }
   );
   headerHeight = signal(0);
-  searchTerm = signal('');
 
   displayedColumns = computed<string[]>(() => {
     let columns = this.columns().map((col) => col.id);
