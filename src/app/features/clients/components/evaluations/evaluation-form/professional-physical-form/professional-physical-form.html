@@ -1,0 +1,27 @@
+<form [formGroup]="professionalPhysicalForm">
+  <ng-template matStepLabel>Dados profissionais e físicos</ng-template>
+  <mat-form-field>
+    <mat-label>Profissão</mat-label>
+    <input matInput formControlName="profession" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Peso (kg)</mat-label>
+    <input matInput type="number" formControlName="weight" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Altura (m)</mat-label>
+    <input matInput type="number" formControlName="height" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>IMC</mat-label>
+    <input matInput type="number" formControlName="bmi" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Atividade física</mat-label>
+    <textarea matInput rows="5" formControlName="physicalActivity"></textarea>
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Atividade regular</mat-label>
+    <textarea matInput rows="5" formControlName="regularActivity"></textarea>
+  </mat-form-field>
+</form>

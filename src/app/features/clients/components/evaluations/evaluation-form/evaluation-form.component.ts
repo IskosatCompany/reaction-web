@@ -1,21 +1,41 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  output,
+  signal
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatStepperModule } from '@angular/material/stepper';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
-import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
+import { ProfessionalPhysicalForm } from './professional-physical-form/professional-physical-form';
+import { ClinicalHistoryForm } from './clinical-history-form/clinical-history-form';
+import { MainComplaintsFormComponent } from './main-complaints-form/main-complaints-form';
+import { WellBeingFormComponent } from './well-being-form/well-being-form';
+import { DiagnosisTreatmentFormComponent } from './diagnosis-treatment-form/diagnosis-treatment-form';
+import { AuthorizationFormComponent } from './authorization-form/authorization-form';
+import { ActivatedRoute } from '@angular/router';
+import { GeneralInfoFormComponent } from './general-info-form/general-info-form';
+import { ClinicalEvaluationFormComponent } from './clinical-evaluation-form/clinical-evaluation-form';
+import { Authorization } from '../../../models/evaluation/authorization.model';
+import { ClinicalEvaluation } from '../../../models/evaluation/clinical-evaluation.model';
+import { ClinicalHistory } from '../../../models/evaluation/clinical-history.model';
+import { DiagnosisAndTreatment } from '../../../models/evaluation/diagnosis-treatment.model';
+import { EvaluationGeneralInfo } from '../../../models/evaluation/general-info.model';
+import { MainComplaints } from '../../../models/evaluation/main-complaints.model';
+import { ProfessionalAndPhysicalData } from '../../../models/evaluation/professional-physical.model';
+import { WellBeing } from '../../../models/evaluation/well-being.model';
+import { Evaluation } from '../../../models/evaluation/evaluation.model';
+import { IS_MOBILE } from '../../../../../core/tokens/mobile.token';
 
 @Component({
   selector: 'app-evaluation-form',
@@ -23,32 +43,40 @@ import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
+    MatStepperModule,
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
     MatButtonModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    ProfessionalPhysicalForm,
+    ClinicalHistoryForm,
+    MainComplaintsFormComponent,
+    WellBeingFormComponent,
+    DiagnosisTreatmentFormComponent,
+    AuthorizationFormComponent,
+    GeneralInfoFormComponent,
+    ClinicalEvaluationFormComponent
   ],
   templateUrl: './evaluation-form.component.html',
   styleUrl: './evaluation-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EvaluationFormComponent {
-  bottomSheetRef =
-    inject<
-      MatBottomSheetRef<{ evaluation?: Evaluation; clientId: string }, Partial<EvaluationForm>>
-    >(MatBottomSheetRef);
-  data = inject<{ evaluation?: Evaluation; clientId: string }>(MAT_BOTTOM_SHEET_DATA);
+  isMobile = inject(IS_MOBILE);
   coachApiService = inject(CoachApiService);
-  form = new FormGroup({
-    title: new FormControl<string | null>(null, [Validators.required]),
-    date: new FormControl<Date | null>(null, [Validators.required]),
-    description: new FormControl<string | null>(null),
-    coachId: new FormControl<string | null>(null, [Validators.required]),
-    clientId: new FormControl<string | null>(null, [Validators.required])
+  route = inject(ActivatedRoute);
+  model = input<Evaluation>();
+
+  evaluationCreate = output<Partial<Evaluation>>();
+
+  clinicalEvaluationForm = new FormGroup({
+    systems: new FormControl<string | null>(null)
   });
   coachFilterCtrl = new FormControl('');
+  evaluation?: Partial<Evaluation>;
 
+  isValid = signal(false);
   coaches = toSignal(this.coachApiService.getCoaches(), { initialValue: [] });
   coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
   filteredCoaches = computed(() => {
@@ -63,23 +91,47 @@ export class EvaluationFormComponent {
     );
   });
 
-  constructor() {
-    effect(() => {
-      this.form.patchValue({
-        clientId: this.data.clientId ?? this.data.evaluation?.clientId,
-        title: this.data.evaluation?.title ?? null,
-        date: this.data.evaluation?.date ?? null,
-        description: this.data.evaluation?.description ?? null,
-        coachId: this.data.evaluation?.coachId ?? null
-      });
-    });
+  onStepOneChange(event: ProfessionalAndPhysicalData) {
+    this.evaluation = { ...this.evaluation, professionalAndPhysicalData: event };
+  }
+
+  onStepTwoChange(data: ClinicalHistory) {
+    this.evaluation = { ...this.evaluation, clinicalHistory: data };
+  }
+
+  onStepThreeChange(data: MainComplaints) {
+    this.evaluation = { ...this.evaluation, mainComplaints: data };
+  }
+
+  onStepFourChange(data: WellBeing) {
+    this.evaluation = { ...this.evaluation, routineAndWellBeing: data };
+  }
+
+  onStepFiveChange(data: DiagnosisAndTreatment) {
+    this.evaluation = { ...this.evaluation, diagnosisAndTreatment: data };
+  }
+
+  onStepSixChange(data: Authorization) {
+    this.evaluation = { ...this.evaluation, authorization: data };
+  }
+
+  onStepSevenChange(data: EvaluationGeneralInfo) {
+    this.evaluation = {
+      ...this.evaluation,
+      notes: data.notes,
+      date: data.date,
+      coachId: data.coachId,
+      clientId: this.route.snapshot.params['id']
+    };
+  }
+
+  onClinicalEvaluationChange(data: ClinicalEvaluation) {
+    this.evaluation = { ...this.evaluation, clinicalEvaluation: data };
   }
 
   onSubmit(): void {
-    this.bottomSheetRef.dismiss(this.form.value);
-  }
-
-  onCancel(): void {
-    this.bottomSheetRef.dismiss();
+    if (this.evaluation) {
+      this.evaluationCreate.emit(this.evaluation);
+    }
   }
 }

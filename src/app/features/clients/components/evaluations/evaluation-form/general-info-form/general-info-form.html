@@ -1,0 +1,48 @@
+<form [formGroup]="evaluationGeneralInfoForm" class="general-info-form">
+  <div class="info">
+    <mat-form-field appearance="fill">
+      <mat-label>Treinador</mat-label>
+      <mat-select formControlName="coachId" panelClass="searchable-mat-select">
+        <mat-option>
+          <ngx-mat-select-search
+            [formControl]="coachFilterCtrl"
+            placeholderLabel="Pesquisar treinador"
+            noEntriesFoundLabel="Nenhum treinador encontrado"
+          />
+        </mat-option>
+        @for (coach of filteredCoaches(); track coach.id) {
+          <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
+        }
+      </mat-select>
+      @if (evaluationGeneralInfoForm.get('coachId')?.hasError('required')) {
+        <mat-error>Coach é obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Data da Avaliação</mat-label>
+      <input
+        matInput
+        [matDatepicker]="datepicker"
+        formControlName="date"
+        placeholder="Selecione a data"
+      />
+      <mat-datepicker-toggle matIconSuffix [for]="datepicker"></mat-datepicker-toggle>
+      <mat-datepicker #datepicker>
+        <mat-datepicker-actions>
+          <button matButton="tonal" matDatepickerCancel>Cancelar</button>
+          <button matButton="filled" matDatepickerApply>Confirmar</button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="fill">
+    <mat-label>Notas</mat-label>
+    <textarea
+      matInput
+      formControlName="notes"
+      rows="4"
+      placeholder="Adicione notas adicionais sobre a avaliação"
+    ></textarea>
+  </mat-form-field>
+</form>

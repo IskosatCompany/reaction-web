@@ -34,12 +34,11 @@ import { ClientsApiService } from '../../api/clients-api.service';
 import { EvaluationApiService } from '../../api/evaluation-api.service';
 import { ExportApiService } from '../../api/export-api.service';
 import { Client, ClientForm } from '../../models/client.interface';
-import { Evaluation, EvaluationForm } from '../../models/evaluation.interface';
 import { ExportPdfRequest } from '../../models/export-pdf-request.interface';
 import { ClientFormComponent } from '../client-form/client-form.component';
-import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { ExportReportComponent } from '../export-report/export-report.component';
+import { Evaluation } from '../../models/evaluation/evaluation.model';
 
 enum SessionFilter {
   Last30Days = 'Últimos 30 dias',
@@ -98,7 +97,6 @@ export class ClientDetailComponent {
     this.sessionFilters[SessionFilter.Last30Days]
   );
   editClientSubject$ = new Subject<void>();
-  addEvaluationSubject$ = new Subject<void>();
   refreshClientSubject$ = new Subject<void>();
   refreshEvaluationsSubject$ = new Subject<void>();
 
@@ -151,14 +149,6 @@ export class ClientDetailComponent {
   canEdit = this.authService.isAdmin;
 
   constructor() {
-    this.addEvaluationSubject$
-      .pipe(
-        switchMap(() => this.openEvaluationBottomSheet()),
-        filter((evaluation) => !!evaluation),
-        switchMap((evaluation) => this.evaluationApiService.addEvaluation(evaluation))
-      )
-      .subscribe(() => this.refreshEvaluationsSubject$.next());
-
     this.editClientSubject$
       .pipe(
         switchMap(() => this.openEditClientBottomSheet()),
@@ -176,7 +166,7 @@ export class ClientDetailComponent {
   }
 
   onEvaluationAdd(): void {
-    this.addEvaluationSubject$.next();
+    this.router.navigate(['/clients', this.clientId, 'evaluation']);
   }
 
   openEditClientBottomSheet(): Observable<Partial<ClientForm> | undefined> {
@@ -187,17 +177,17 @@ export class ClientDetailComponent {
       .afterDismissed();
   }
 
-  openEvaluationBottomSheet(): Observable<Partial<EvaluationForm> | undefined> {
-    return this.bottomSheet
-      .open<
-        EvaluationFormComponent,
-        { clientId: string; evaluation?: Evaluation },
-        Partial<EvaluationForm>
-      >(EvaluationFormComponent, {
-        data: { clientId: this.clientId }
-      })
-      .afterDismissed();
-  }
+  // openEvaluationBottomSheet(): Observable<Partial<EvaluationForm> | undefined> {
+  //   return this.bottomSheet
+  //     .open<
+  //       EvaluationFormComponent,
+  //       { clientId: string; evaluation?: Evaluation },
+  //       Partial<EvaluationForm>
+  //     >(EvaluationFormComponent, {
+  //       data: { clientId: this.clientId }
+  //     })
+  //     .afterDismissed();
+  // }
 
   onSessionFilterChanged(event: MatRadioChange<SessionFilterDate>): void {
     this.selectedSessionFilterSubject$.next(event.value);

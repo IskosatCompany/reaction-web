@@ -1,52 +1,92 @@
 <h1>Nova avaliação</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="outline">
-    <mat-label>Título</mat-label>
-    <input matInput formControlName="title" />
-
-    @if (form.get('title')?.hasError('required')) {
-      <mat-error> Campo obrigatório! </mat-error>
+<mat-stepper [linear]="false" #stepper>
+  <mat-step>
+    <ng-template matStepLabel>Dados profissionais e físicos</ng-template>
+    @if (isMobile()) {
+      <h2>Dados profissionais e físicos</h2>
     }
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Data</mat-label>
-    <input matInput formControlName="date" [matDatepicker]="datepicker" />
-    <mat-datepicker-toggle matIconSuffix [for]="datepicker" />
-    <mat-datepicker #datepicker>
-      <mat-datepicker-actions>
-        <button matButton="tonal" matDatepickerCancel>Cancelar</button>
-        <button matButton="elevated" matDatepickerApply>Selecionar</button>
-      </mat-datepicker-actions>
-    </mat-datepicker>
-
-    @if (form.get('date')?.hasError('required')) {
-      <mat-error> Campo obrigatório! </mat-error>
+    <app-professional-physical-form (value)="onStepOneChange($event)" />
+    <button matButton="elevated" matStepperNext>Seguinte</button>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Histórico Clínico</ng-template>
+    @if (isMobile()) {
+      <h2>Histórico Clínico</h2>
     }
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Treinador</mat-label>
-    <mat-select formControlName="coachId" panelClass="searchable-mat-select">
-      <mat-option>
-        <ngx-mat-select-search
-          placeholderLabel="Pesquisar treinador"
-          [formControl]="coachFilterCtrl"
-        />
-      </mat-option>
-      @for (coach of filteredCoaches(); track coach.id) {
-        <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Descrição</mat-label>
-    <textarea matInput formControlName="description"></textarea>
-  </mat-form-field>
-
-  <div class="actions">
-    <button matButton="tonal" (click)="onCancel()">Cancelar</button>
-    <button matButton="filled" type="submit" [disabled]="form.invalid">Submeter</button>
-  </div>
-</form>
+    <app-clinical-history-form (value)="onStepTwoChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Queixas Principais</ng-template>
+    @if (isMobile()) {
+      <h2>Queixas Principais</h2>
+    }
+    <app-main-complaints-form (value)="onStepThreeChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Rotina e bem estar</ng-template>
+    @if (isMobile()) {
+      <h2>Rotina e bem estar</h2>
+    }
+    <app-well-being-form (value)="onStepFourChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Avaliação Clínica</ng-template>
+    @if (isMobile()) {
+      <h2>Avaliação Clínica</h2>
+    }
+    <app-clinical-evaluation-form (value)="onClinicalEvaluationChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Diagnóstico e tratamento</ng-template>
+    @if (isMobile()) {
+      <h2>Diagnóstico e tratamento</h2>
+    }
+    <app-diagnosis-treatment-form (value)="onStepFiveChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Autorização</ng-template>
+    @if (isMobile()) {
+      <h2>Autorização</h2>
+    }
+    <app-authorization-form (value)="onStepSixChange($event)" />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Conclusão</ng-template>
+    @if (isMobile()) {
+      <h2>Conclusão</h2>
+    }
+    <app-general-info-form
+      [coaches]="coaches()"
+      (value)="onStepSevenChange($event)"
+      (isValid)="isValid.set($event)"
+    />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="filled" [disabled]="!isValid()" (click)="onSubmit()">Submeter</button>
+    </div>
+  </mat-step>
+</mat-stepper>

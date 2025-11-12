@@ -4,11 +4,10 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
-import { filter, Observable, Subject, switchMap } from 'rxjs';
+import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../../authentication/services/authentication.service';
 import { EvaluationApiService } from '../../../api/evaluation-api.service';
-import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
-import { EvaluationFormComponent } from '../evaluation-form/evaluation-form.component';
+import { Evaluation } from '../../../models/evaluation/evaluation.model';
 
 @Component({
   selector: 'app-evaluations-accordion',
@@ -29,24 +28,24 @@ export class EvaluationsAccordionComponent {
   canEdit = this.authService.isAdmin;
 
   constructor() {
-    this.evaluationEditSubject$
-      .pipe(
-        switchMap(() => this.onEvaluationEditBottomSheet()),
-        filter((evaluationForm) => !!evaluationForm),
-        switchMap((evaluationForm) =>
-          this.evaluationApiService.editEvaluation(this.evaluation()?.id, evaluationForm)
-        )
-      )
-      .subscribe(() => this.refreshEvaluations.emit());
+    // this.evaluationEditSubject$
+    //   .pipe(
+    //     switchMap(() => this.onEvaluationEditBottomSheet()),
+    //     filter((evaluationForm) => !!evaluationForm),
+    //     switchMap((evaluationForm) =>
+    //       this.evaluationApiService.editEvaluation(this.evaluation()?.id, evaluationForm)
+    //     )
+    //   )
+    //   .subscribe(() => this.refreshEvaluations.emit());
   }
 
-  onEvaluationEditBottomSheet(): Observable<Partial<EvaluationForm> | undefined> {
-    return this.bottomSheet
-      .open(EvaluationFormComponent, {
-        data: { evaluation: this.evaluation() }
-      })
-      .afterDismissed();
-  }
+  // onEvaluationEditBottomSheet(): Observable<Partial<EvaluationForm> | undefined> {
+  //   return this.bottomSheet
+  //     .open(EvaluationFormComponent, {
+  //       data: { evaluation: this.evaluation() }
+  //     })
+  //     .afterDismissed();
+  // }
 
   onEvaluationEdit() {
     this.evaluationEditSubject$.next();

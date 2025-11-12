@@ -1,0 +1,69 @@
+<form [formGroup]="mainComplaintsForm">
+  <mat-label>Nível de dor (0-10)</mat-label>
+  <div class="pain-level">
+    <mat-slider [max]="10" [min]="1" [step]="1">
+      <input matSliderThumb [formControl]="mainComplaintsForm.controls.painLevel" #slider />
+    </mat-slider>
+    <span>{{ mainComplaintsForm.controls.painLevel.value }}</span>
+  </div>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Queixas Principais</mat-label>
+    <textarea
+      matInput
+      formControlName="mainComplaints"
+      rows="5"
+      placeholder="Descreva as principais queixas"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Tipo de dor</mat-label>
+    <textarea matInput formControlName="painType" rows="5" placeholder="Tipo de dor"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Localização da dor</mat-label>
+    <textarea matInput formControlName="painLocation" rows="5" placeholder="Zona da dor"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Início da progressão</mat-label>
+    <textarea
+      matInput
+      rows="5"
+      formControlName="onsetProgression"
+      placeholder="Início da progressão"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Condições de alívio</mat-label>
+    <textarea
+      matInput
+      formControlName="reliefConditions"
+      rows="5"
+      placeholder="O que alivia a dor?"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Agravamento</mat-label>
+    <textarea
+      matInput
+      formControlName="aggravation"
+      rows="5"
+      placeholder="O que agrava os sintomas?"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Manifestações associadas</mat-label>
+    <textarea
+      matInput
+      formControlName="associatedManifestations"
+      rows="5"
+      placeholder="Manifestações associadas"
+    ></textarea>
+  </mat-form-field>
+</form>

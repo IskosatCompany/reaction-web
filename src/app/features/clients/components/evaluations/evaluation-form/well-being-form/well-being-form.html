@@ -1,0 +1,38 @@
+<form [formGroup]="wellBeingForm">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Estado geral</mat-label>
+    <textarea
+      matInput
+      formControlName="generalState"
+      rows="5"
+      placeholder="Descreva o estado geral do paciente"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Padrão de sono</mat-label>
+    <textarea matInput formControlName="sleepPattern" rows="5"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Horas de sono</mat-label>
+    <input
+      matInput
+      type="number"
+      formControlName="sleepHours"
+      min="0"
+      max="24"
+      placeholder="Horas por noite"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Padrão diário de dor</mat-label>
+    <textarea
+      matInput
+      formControlName="dailyPainPattern"
+      rows="5"
+      placeholder="Descreva variações da dor ao longo do tempo"
+    ></textarea>
+  </mat-form-field>
+</form>

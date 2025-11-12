@@ -1,0 +1,35 @@
+:host {
+  padding: 8px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .strengths {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 8px;
+
+    .form-row {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+
+      button {
+        margin-bottom: 20px;
+      }
+
+      mat-form-field:last-of-type {
+        padding-right: 8px;
+      }
+    }
+  }
+}

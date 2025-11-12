@@ -1,0 +1,91 @@
+<form [formGroup]="clinicalHistoryForm">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Alergias</mat-label>
+    <textarea
+      matInput
+      formControlName="allergies"
+      rows="3"
+      placeholder="Descreva alguma alergia(s)"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Contra indicações</mat-label>
+    <textarea
+      matInput
+      formControlName="contraindications"
+      rows="3"
+      placeholder="Contra indicações"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Medicação</mat-label>
+    <textarea
+      matInput
+      formControlName="medication"
+      rows="3"
+      placeholder="Medicação atual"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Antecedentes pessoais</mat-label>
+    <textarea
+      matInput
+      formControlName="personalHistory"
+      rows="3"
+      placeholder="Antecedentes pessoais"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Antecedentes cirúgicos</mat-label>
+    <textarea
+      matInput
+      formControlName="surgicalHistory"
+      rows="3"
+      placeholder="Cirugias efetuadas"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Hospitalizações</mat-label>
+    <textarea
+      matInput
+      formControlName="hospitalizations"
+      rows="3"
+      placeholder="Hospitalizações"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Exames</mat-label>
+    <textarea matInput formControlName="exams" rows="3" placeholder="Exames relevantes"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Lesões similares</mat-label>
+    <textarea
+      matInput
+      formControlName="similarInjuries"
+      rows="3"
+      placeholder="Histórico de lesões"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Fraturas</mat-label>
+    <textarea matInput formControlName="fractures" rows="3" placeholder="Fraturas"></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Acidentes</mat-label>
+    <textarea
+      matInput
+      formControlName="accidents"
+      rows="3"
+      placeholder="Acidentes e detalhes"
+    ></textarea>
+  </mat-form-field>
+</form>

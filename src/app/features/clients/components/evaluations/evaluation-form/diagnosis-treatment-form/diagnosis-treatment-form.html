@@ -1,0 +1,51 @@
+<form [formGroup]="diagnosisTreatmentForm">
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Cadeia de lesão</mat-label>
+    <textarea
+      matInput
+      formControlName="lesionChain"
+      rows="3"
+      placeholder="Descreva a cadeia de lesão"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Diagnóstico</mat-label>
+    <textarea
+      matInput
+      formControlName="diagnosis"
+      rows="3"
+      placeholder="Diagnóstico clínico"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Tratamento</mat-label>
+    <textarea
+      matInput
+      formControlName="treatment"
+      rows="3"
+      placeholder="Plano de tratamento"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Recomendações</mat-label>
+    <textarea
+      matInput
+      formControlName="counseling"
+      rows="3"
+      placeholder="Recomendações ao paciente"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" class="full-width">
+    <mat-label>Próximo atendimento</mat-label>
+    <textarea
+      matInput
+      formControlName="nextTreatment"
+      rows="2"
+      placeholder="Notas para próximo atendimento"
+    ></textarea>
+  </mat-form-field>
+</form>
