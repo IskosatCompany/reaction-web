@@ -1,0 +1,24 @@
+<h2>Exportar relatório</h2>
+
+<form [formGroup]="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Data de início</mat-label>
+    <input matInput [matDatepicker]="startDatepicker" formControlName="startDate" />
+    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #startDatepicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Data de fim</mat-label>
+    <input matInput [matDatepicker]="endDatepicker" formControlName="endDate" />
+    <mat-datepicker-toggle matSuffix [for]="endDatepicker"></mat-datepicker-toggle>
+    <mat-datepicker #endDatepicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-checkbox formControlName="withSessions">Incluir sessões de treino?</mat-checkbox>
+</form>
+
+<div class="footer">
+  <button matButton (click)="dismiss()">Cancelar</button>
+  <button matButton="filled" (click)="export()">Exportar</button>
+</div>

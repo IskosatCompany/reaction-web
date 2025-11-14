@@ -1,31 +1,36 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { Client, ClientForm } from '../../models/client.interface';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { ClientsApiService } from '../../api/clients-api.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, filter, Observable, startWith, Subject, switchMap, map } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { EvaluationApiService } from '../../api/evaluation-api.service';
-import { Evaluation, EvaluationForm } from '../../models/evaluation.interface';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
-import { CardComponent } from '../../../../ui/components/card/card.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
-import { ClientFormComponent } from '../client-form/client-form.component';
-import { AuthenticationService } from '../../../authentication/services/authentication.service';
+import { ActivatedRoute, Router } from '@angular/router';
+import { format } from 'date-fns';
+import { saveAs } from 'file-saver';
+import { combineLatest, filter, map, Observable, startWith, Subject, switchMap } from 'rxjs';
+import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { CardComponent } from '../../../../ui/components/card/card.component';
 import { UserRole } from '../../../authentication/models/login.interface';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
+import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
 import { SessionsAccordion } from '../../../sessions/components/sessions-accordion/sessions-accordion';
-import { DatePipe } from '@angular/common';
-import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { Session } from '../../../sessions/models/session.interface';
+import { ClientsApiService } from '../../api/clients-api.service';
+import { EvaluationApiService } from '../../api/evaluation-api.service';
+import { ExportApiService } from '../../api/export-api.service';
+import { Client, ClientForm } from '../../models/client.interface';
+import { Evaluation, EvaluationForm } from '../../models/evaluation.interface';
+import { ExportPdfRequest } from '../../models/export-pdf-request.interface';
+import { ClientFormComponent } from '../client-form/client-form.component';
+import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
+import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
+import { ExportReportComponent } from '../export-report/export-report.component';
 
 @Component({
   selector: 'app-client-detail',
@@ -56,6 +61,7 @@ export class ClientDetailComponent {
   authService = inject(AuthenticationService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  exportApiService = inject(ExportApiService);
 
   isValid = signal(false);
   formValue?: Partial<ClientForm>;
@@ -155,5 +161,41 @@ export class ClientDetailComponent {
         data: { clientId: this.clientId }
       })
       .afterDismissed();
+  }
+
+  exportReport(): void {
+    this.bottomSheet
+      .open<ExportReportComponent, undefined, Partial<ExportPdfRequest>>(ExportReportComponent)
+      .afterDismissed()
+      .pipe(
+        filter((item) => !!item),
+        switchMap((request) =>
+          this.exportApiService
+            .exportPdf({
+              ...request,
+              clientId: this.clientId,
+              withSessions: request.withSessions as boolean
+            })
+            .pipe(
+              map((file) => ({
+                file,
+                startDate: request.startDate,
+                endDate: request.endDate
+              }))
+            )
+        )
+      )
+      .subscribe((response) => {
+        let fileName = this.client()?.name ?? `${this.clientId}`;
+        if (response.startDate) {
+          fileName += `-${format(response.startDate, 'dd-MM-yyyy')}`;
+        }
+
+        if (response.endDate) {
+          fileName += `-${format(response.endDate, 'dd-MM-yyyy')}`;
+        }
+
+        saveAs(response.file, fileName);
+      });
   }
 }
