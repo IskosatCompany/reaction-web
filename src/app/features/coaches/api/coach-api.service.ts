@@ -12,7 +12,7 @@ export class CoachApiService {
   getCoaches(searchTerm?: string): Observable<Coach[]> {
     let params = new HttpParams();
     if (searchTerm) {
-      params = params.set('name', searchTerm);
+      params = params.set('search', searchTerm);
     }
     return this.#http.get<Coach[]>(`${this.#apiUrl}/coach`, { params });
   }

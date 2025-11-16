@@ -12,7 +12,7 @@ export class ClientsApiService {
   getClients(searchTerm?: string): Observable<Client[]> {
     let params = new HttpParams();
     if (searchTerm) {
-      params = params.set('name', searchTerm);
+      params = params.set('search', searchTerm);
     }
     return this.#http.get<Client[]>(`${this.#apiUrl}/client`, { params });
   }
