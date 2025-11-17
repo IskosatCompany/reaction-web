@@ -53,4 +53,11 @@ export class UpsertSessionService {
       this.closeBottomSheet();
     });
   }
+
+  closeSession(sessionId: string, payload: SessionUpsertRequest): void {
+    this.#apiService.closeSession(sessionId, payload).subscribe((sessionDto) => {
+      this.#calendarService.updateSession(sessionDto);
+      this.closeBottomSheet();
+    });
+  }
 }

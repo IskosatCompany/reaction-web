@@ -3,4 +3,5 @@ export interface SessionUpsertRequest {
   coachId: string;
   startDate: number;
   endDate: number;
+  report?: string;
 }

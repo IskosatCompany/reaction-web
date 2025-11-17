@@ -44,6 +44,10 @@ export class SessionsApiService {
     return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}`, payload);
   }
 
+  closeSession(sessionId: string, payload: SessionUpsertRequest): Observable<SessionDto> {
+    return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}/report`, payload);
+  }
+
   deleteSession(sessionId: string): Observable<unknown> {
     return this.#http.delete(`${this.#url}/session/${sessionId}`);
   }

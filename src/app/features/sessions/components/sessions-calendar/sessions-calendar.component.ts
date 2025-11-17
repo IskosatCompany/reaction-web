@@ -82,7 +82,9 @@ export class SessionsCalendarComponent {
           startDate: sessionDto.startDate,
           endDate: sessionDto.endDate,
           client: this.#sessionsStore.getClientById(sessionDto.clientId),
-          coach: this.#sessionsStore.getCoachById(sessionDto.coachId)
+          coach: this.#sessionsStore.getCoachById(sessionDto.coachId),
+          report: sessionDto.report,
+          status: sessionDto.status
         })
       );
 
