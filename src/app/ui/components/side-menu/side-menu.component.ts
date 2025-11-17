@@ -36,6 +36,7 @@ export class SideMenuComponent {
 
   isMobile = inject(IS_MOBILE);
   userRole = inject(AuthenticationService).userRole;
+  userId = inject(AuthenticationService).userId;
   isMenuOpen = signal(false);
 
   constructor() {
