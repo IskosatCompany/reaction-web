@@ -10,10 +10,12 @@ updatePackageJson(newVersion);
 createReleaseTag(newVersion);
 
 function getNewVersion() {
-  let lastTag = execSync('git fetch --tags && git tag --sort=-v:refname').toString().trim();
-  if (lastTag.length <= 0) {
-    lastTag = '0.0.0';
-  }
+  // Get sorted tags (last tag will be the first element)
+  const tags = execSync('git fetch --tags && git tag --sort=-v:refname')
+    .toString()
+    .trim()
+    .split('\n');
+  const lastTag = tags.length > 0 ? tags[0] : '0.0.0';
 
   const [major, minor, patch] = lastTag.split('.').map(Number);
   switch (incrementType) {
@@ -31,10 +33,13 @@ function updatePackageJson(version) {
   packageJsonFile.version = version;
   fs.writeFileSync('package.json', JSON.stringify(packageJsonFile, null, 2) + '\n', 'utf8');
 
+  // Update package-lock
+  execSync('npm install');
+
   // Commit changes
   execSync('git config user.name "github-actions[bot]"');
   execSync('git config user.email "github-actions[bot]@users.noreply.github.com"');
-  execSync(`git add package.json`);
+  execSync('git add package.json package-lock.json');
   execSync(`git commit -m "chore: release ${version}"`);
   execSync(`git push origin HEAD:${branch}`);
 }
