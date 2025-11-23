@@ -14,6 +14,13 @@
   }
 }
 
+.session-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
 mat-accordion {
   display: flex;
   flex-direction: column;

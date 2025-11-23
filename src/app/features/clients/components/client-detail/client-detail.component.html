@@ -36,6 +36,24 @@
   </mat-tab>
   <mat-tab label="Sessões">
     <ng-template matTabContent>
+      <mat-radio-group class="session-filters">
+        <mat-radio-button
+          [checked]="true"
+          [value]="sessionFilters[sessionFilterEnum.Last30Days]"
+          (change)="onSessionFilterChanged($event)"
+          >{{ sessionFilterEnum.Last30Days }}</mat-radio-button
+        >
+        <mat-radio-button
+          [value]="sessionFilters[sessionFilterEnum.Last60Days]"
+          (change)="onSessionFilterChanged($event)"
+          >{{ sessionFilterEnum.Last60Days }}</mat-radio-button
+        >
+        <mat-radio-button
+          [value]="sessionFilters[sessionFilterEnum.AllSessions]"
+          (change)="onSessionFilterChanged($event)"
+          >{{ sessionFilterEnum.AllSessions }}</mat-radio-button
+        >
+      </mat-radio-group>
       <mat-accordion>
         @for (session of sessions(); track session.id) {
           <app-sessions-accordion [session]="session" />

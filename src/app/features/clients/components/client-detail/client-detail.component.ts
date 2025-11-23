@@ -10,9 +10,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { format } from 'date-fns';
+import { format, subDays } from 'date-fns';
 import { saveAs } from 'file-saver';
-import { combineLatest, filter, map, Observable, startWith, Subject, switchMap } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  filter,
+  map,
+  Observable,
+  startWith,
+  Subject,
+  switchMap
+} from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { UserRole } from '../../../authentication/models/login.interface';
@@ -31,6 +40,18 @@ import { ClientFormComponent } from '../client-form/client-form.component';
 import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { ExportReportComponent } from '../export-report/export-report.component';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
+
+enum SessionFilter {
+  Last30Days = 'Últimos 30 dias',
+  Last60Days = 'Últimos 60 dias',
+  AllSessions = 'Todas as sessões'
+}
+
+interface SessionFilterDate {
+  startDate?: Date;
+  endDate?: Date;
+}
 
 @Component({
   selector: 'app-client-detail',
@@ -42,6 +63,7 @@ import { ExportReportComponent } from '../export-report/export-report.component'
     MatIconModule,
     MatFormFieldModule,
     MatTabsModule,
+    MatRadioModule,
     EvaluationsAccordionComponent,
     SessionsAccordion,
     DatePipe
@@ -66,6 +88,16 @@ export class ClientDetailComponent {
   isValid = signal(false);
   formValue?: Partial<ClientForm>;
   clientId: string = this.route.snapshot.params['id'];
+  todayDate = new Date();
+  sessionFilterEnum = SessionFilter;
+  sessionFilters: Record<SessionFilter, SessionFilterDate> = {
+    [SessionFilter.Last30Days]: { startDate: subDays(this.todayDate, 30), endDate: this.todayDate },
+    [SessionFilter.Last60Days]: { startDate: subDays(this.todayDate, 60), endDate: this.todayDate },
+    [SessionFilter.AllSessions]: { endDate: this.todayDate }
+  };
+  selectedSessionFilterSubject$ = new BehaviorSubject<SessionFilterDate>(
+    this.sessionFilters[SessionFilter.Last30Days]
+  );
   editClientSubject$ = new Subject<void>();
   addEvaluationSubject$ = new Subject<void>();
   refreshClientSubject$ = new Subject<void>();
@@ -84,10 +116,15 @@ export class ClientDetailComponent {
     )
   );
 
-  sessionsDto$ = this.sessionsApiService.getSessions({
-    clientId: this.clientId
-  });
-
+  sessionsDto$ = this.selectedSessionFilterSubject$.pipe(
+    switchMap((range) =>
+      this.sessionsApiService.getSessions({
+        clientId: this.clientId,
+        startDate: range.startDate?.getTime(),
+        endDate: range.endDate?.getTime()
+      })
+    )
+  );
   coaches$ = this.coachesApiService.getCoaches();
 
   sessions = toSignal<Session[]>(
@@ -165,6 +202,10 @@ export class ClientDetailComponent {
         data: { clientId: this.clientId }
       })
       .afterDismissed();
+  }
+
+  onSessionFilterChanged(event: MatRadioChange<SessionFilterDate>): void {
+    this.selectedSessionFilterSubject$.next(event.value);
   }
 
   exportReport(): void {
