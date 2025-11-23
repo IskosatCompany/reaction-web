@@ -3,13 +3,13 @@
     <h1>{{ client()?.name }} - #{{ client()?.clientNumber }}</h1>
     @if (canEdit()) {
       <div class="actions">
-        <button matMiniFab (click)="onClientEdit()">
+        <button matMiniFab matTooltip="Editar Cliente" (click)="onClientEdit()">
           <mat-icon>edit</mat-icon>
         </button>
-        <button matMiniFab (click)="onEvaluationAdd()">
+        <button matMiniFab matTooltip="Adicionar Avaliação" (click)="onEvaluationAdd()">
           <mat-icon>summarize</mat-icon>
         </button>
-        <button matMiniFab (click)="exportReport()">
+        <button matMiniFab matTooltip="Exportar PDF" (click)="exportReport()">
           <mat-icon>download</mat-icon>
         </button>
       </div>

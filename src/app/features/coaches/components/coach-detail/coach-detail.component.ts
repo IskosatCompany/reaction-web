@@ -12,10 +12,11 @@ import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-coach-detail',
-  imports: [MatButtonModule, CardComponent, MatIconModule],
+  imports: [MatButtonModule, CardComponent, MatIconModule, MatTooltipModule],
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
