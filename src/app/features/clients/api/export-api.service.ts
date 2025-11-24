@@ -12,7 +12,8 @@ export class ExportApiService {
   exportPdf(request: ExportPdfRequest): Observable<Blob> {
     let params = new HttpParams()
       .append('clientId', request.clientId)
-      .append('withSessions', request.withSessions);
+      .append('withSessions', request.withSessions)
+      .append('withTreatments', request.withTreatments);
 
     if (request.startDate) {
       params = params.append('startDate', request.startDate);

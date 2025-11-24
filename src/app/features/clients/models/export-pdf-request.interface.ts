@@ -3,4 +3,5 @@ export interface ExportPdfRequest {
   startDate?: number;
   endDate?: number;
   withSessions: boolean;
+  withTreatments: boolean;
 }

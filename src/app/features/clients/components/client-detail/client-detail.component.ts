@@ -178,7 +178,8 @@ export class ClientDetailComponent {
             .exportPdf({
               ...request,
               clientId: this.clientId,
-              withSessions: request.withSessions as boolean
+              withSessions: request.withSessions as boolean,
+              withTreatments: request.withTreatments as boolean
             })
             .pipe(
               map((file) => ({

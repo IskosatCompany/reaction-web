@@ -12,6 +12,7 @@ interface ExportPdfForm {
   startDate: FormControl<Date | null>;
   endDate: FormControl<Date | null>;
   withSessions: FormControl<boolean>;
+  withTreatments: FormControl<boolean>;
 }
 
 @Component({
@@ -36,7 +37,8 @@ export class ExportReportComponent {
   readonly form = this.#formBuilder.group<ExportPdfForm>({
     startDate: this.#formBuilder.control<Date | null>(null),
     endDate: this.#formBuilder.control<Date | null>(null),
-    withSessions: this.#formBuilder.control<boolean>(true)
+    withSessions: this.#formBuilder.control<boolean>(true),
+    withTreatments: this.#formBuilder.control<boolean>(true)
   });
 
   dismiss(): void {
@@ -44,11 +46,12 @@ export class ExportReportComponent {
   }
 
   export(): void {
-    const { startDate, endDate, withSessions } = this.form.getRawValue();
+    const { startDate, endDate, withSessions, withTreatments } = this.form.getRawValue();
     this.#bottomSheetRef.dismiss({
       startDate: startDate?.getTime(),
       endDate: endDate?.getTime(),
-      withSessions
+      withSessions,
+      withTreatments
     });
   }
 }
