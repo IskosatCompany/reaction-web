@@ -32,7 +32,7 @@ interface ExportPdfForm {
 export class ExportReportComponent {
   readonly #formBuilder = inject(NonNullableFormBuilder);
   readonly #bottomSheetRef =
-    inject<MatBottomSheetRef<unknown, Partial<ExportPdfRequest>>>(MatBottomSheetRef);
+    inject<MatBottomSheetRef<unknown, Omit<ExportPdfRequest, 'clientId'>>>(MatBottomSheetRef);
 
   readonly form = this.#formBuilder.group<ExportPdfForm>({
     startDate: this.#formBuilder.control<Date | null>(null),

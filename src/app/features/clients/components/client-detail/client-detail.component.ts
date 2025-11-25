@@ -169,25 +169,20 @@ export class ClientDetailComponent {
 
   exportReport(): void {
     this.bottomSheet
-      .open<ExportReportComponent, undefined, Partial<ExportPdfRequest>>(ExportReportComponent)
+      .open<ExportReportComponent, undefined, Omit<ExportPdfRequest, 'clientId'>>(
+        ExportReportComponent
+      )
       .afterDismissed()
       .pipe(
         filter((item) => !!item),
         switchMap((request) =>
-          this.exportApiService
-            .exportPdf({
-              ...request,
-              clientId: this.clientId,
-              withSessions: request.withSessions as boolean,
-              withTreatments: request.withTreatments as boolean
-            })
-            .pipe(
-              map((file) => ({
-                file,
-                startDate: request.startDate,
-                endDate: request.endDate
-              }))
-            )
+          this.exportApiService.exportPdf({ ...request, clientId: this.clientId }).pipe(
+            map((file) => ({
+              file,
+              startDate: request.startDate,
+              endDate: request.endDate
+            }))
+          )
         )
       )
       .subscribe((response) => {
