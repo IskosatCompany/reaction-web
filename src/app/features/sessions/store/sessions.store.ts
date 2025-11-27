@@ -8,7 +8,6 @@ import {
   withState
 } from '@ngrx/signals';
 import { delay, finalize, map } from 'rxjs';
-import { UserRole } from '../../authentication/models/login.interface';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
 import { ClientsApiService } from '../../clients/api/clients-api.service';
 import { Client } from '../../clients/models/client.interface';
@@ -51,13 +50,11 @@ export const SessionsStore = signalStore(
           .subscribe((clients) => patchState(store, { clients }));
       },
       _loadCoaches(): void {
-        const coachesRequest$ =
-          authenticationService.userRole() === UserRole.admin ||
-          authenticationService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-            ? coachesApiService.getCoaches()
-            : coachesApiService
-                .getCoachDetails(authenticationService.userId())
-                .pipe(map((item) => [item]));
+        const coachesRequest$ = authenticationService.isAdmin()
+          ? coachesApiService.getCoaches()
+          : coachesApiService
+              .getCoachDetails(authenticationService.userId())
+              .pipe(map((item) => [item]));
 
         coachesRequest$
           .pipe(finalize(() => patchState(store, { _coachesStatus: 'LOADED' })))

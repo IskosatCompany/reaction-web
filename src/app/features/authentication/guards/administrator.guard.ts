@@ -1,17 +1,13 @@
-import { CanActivateFn, Router } from '@angular/router';
-import { AuthenticationService } from '../services/authentication.service';
 import { inject } from '@angular/core';
+import { CanActivateFn, Router } from '@angular/router';
 import { RoutesPaths } from '../../../core/models/routes-paths.enum';
-import { UserRole } from '../models/login.interface';
+import { AuthenticationService } from '../services/authentication.service';
 
 export const administratorGuard: CanActivateFn = () => {
   const authenticationService = inject(AuthenticationService);
   const router = inject(Router);
 
-  if (
-    authenticationService.userRole() === UserRole.admin ||
-    authenticationService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-  ) {
+  if (authenticationService.isAdmin()) {
     return true;
   }
 

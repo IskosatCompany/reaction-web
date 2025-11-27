@@ -1,4 +1,4 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { catchError, EMPTY, Observable, switchMap, tap, throwError } from 'rxjs';
 import { AuthenticationApiService } from '../api/authentication-api.service';
@@ -20,6 +20,12 @@ export class AuthenticationService {
   readonly isAuthenticated = signal(false);
   readonly userRole = signal<UserRole>(UserRole.admin);
   readonly userId = signal<string>('');
+
+  // TODO: remove this after implement permissions management
+  readonly isAdmin = computed(
+    () =>
+      this.userRole() === UserRole.admin || this.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
+  );
 
   initialize(): Observable<void> {
     const token = this.getAuthToken();

@@ -1,11 +1,10 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
-import { UserRole } from '../../../authentication/models/login.interface';
-import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { Subject } from 'rxjs';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { Session, SessionStatus } from '../../models/session.interface';
 
 @Component({
@@ -24,11 +23,7 @@ export class SessionsAccordion {
 
   sessionStatusEnum = SessionStatus;
   evaluationEditSubject$ = new Subject<void>();
-  canEdit = computed(
-    () =>
-      this.authService.userRole() === UserRole.admin ||
-      this.authService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-  );
+  canEdit = this.authService.isAdmin();
   statusLabels: Record<SessionStatus, string> = {
     [SessionStatus.Completed]: 'Finalizada',
     [SessionStatus.Pending]: 'Pendente'

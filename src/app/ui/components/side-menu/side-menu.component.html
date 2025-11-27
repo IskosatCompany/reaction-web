@@ -12,11 +12,7 @@
 
     <mat-nav-list>
       @for (item of menuItems(); track $index) {
-        @if (
-          !item.role ||
-          item.role === userRole() ||
-          userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-        ) {
+        @if (!item.role || item.role === userRole() || isAdmin()) {
           <a
             mat-list-item
             [routerLink]="item.route"
