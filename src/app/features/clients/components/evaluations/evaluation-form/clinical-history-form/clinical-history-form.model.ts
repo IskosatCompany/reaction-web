@@ -9,4 +9,5 @@ export interface ClinicalHistoryDataForm {
   similarInjuries: string | null;
   fractures: string | null;
   accidents: string | null;
+  previousProcess: string | null;
 }

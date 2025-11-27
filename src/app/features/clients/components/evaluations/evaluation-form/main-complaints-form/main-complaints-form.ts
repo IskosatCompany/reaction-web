@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { MainComplaints } from '../../../../models/evaluation/main-complaints.mo
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MainComplaintsFormComponent {
+  model = input<MainComplaints>();
   mainComplaintsForm = new FormGroup({
     mainComplaints: new FormControl<string | null>(null),
     painLevel: new FormControl<number | null>(null),
@@ -32,6 +33,24 @@ export class MainComplaintsFormComponent {
       map(() => this.handleFormData(this.mainComplaintsForm.getRawValue()))
     )
   );
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.mainComplaintsForm.setValue({
+          mainComplaints: model.mainComplaints ?? null,
+          painLevel: model.painLevel ?? null,
+          painType: model.painType ?? null,
+          painLocation: model.painLocation ?? null,
+          onsetProgression: model.onsetProgression ?? null,
+          reliefConditions: model.reliefConditions ?? null,
+          aggravation: model.aggravation ?? null,
+          associatedManifestations: model.associatedManifestations ?? null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: MainComplaintsForm): MainComplaints {
     return {

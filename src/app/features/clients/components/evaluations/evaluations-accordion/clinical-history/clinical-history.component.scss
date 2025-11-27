@@ -1,0 +1,38 @@
+:host {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: start;
+}
+
+.clinical-title {
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.clinical-label {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.7);
+
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.clinical-value {
+  color: rgba(0, 0, 0, 0.87);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 600px) {
+  .clinical-label {
+    text-align: left;
+    padding-right: 0;
+    margin-bottom: 4px;
+  }
+}

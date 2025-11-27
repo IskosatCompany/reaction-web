@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -27,6 +27,7 @@ import { ClinicalEvaluation } from '../../../../models/evaluation/clinical-evalu
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalEvaluationFormComponent {
+  model = input<ClinicalEvaluation>();
   clinicalEvaluationForm = new FormGroup({
     systems: new FormControl<string | null>(null),
     isometricStrengthTests: new FormArray([this.createIsometricStrengthTestGroup()])
@@ -42,6 +43,32 @@ export class ClinicalEvaluationFormComponent {
 
   get fieldsArray(): FormArray {
     return this.clinicalEvaluationForm.get('isometricStrengthTests') as FormArray;
+  }
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        const groups = model.isometricStrengthTests?.length
+          ? model.isometricStrengthTests.map((test) => {
+              const group = this.createIsometricStrengthTestGroup();
+              group.setValue({
+                muscleGroup: test.muscleGroup ?? null,
+                left: test.left ?? null,
+                right: test.right ?? null,
+                rsi: test.rsi ?? null
+              });
+              return group;
+            })
+          : [this.createIsometricStrengthTestGroup()];
+
+        this.clinicalEvaluationForm.setControl('isometricStrengthTests', new FormArray(groups));
+
+        this.clinicalEvaluationForm.patchValue({
+          systems: model.systems ?? null
+        });
+      }
+    });
   }
 
   addField(): void {

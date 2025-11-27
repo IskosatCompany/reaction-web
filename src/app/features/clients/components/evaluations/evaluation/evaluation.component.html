@@ -1,1 +1,5 @@
-<app-evaluation-form (evaluationCreate)="onEvaluationCreate($event)" />
+<app-evaluation-form
+  [model]="evaluation()"
+  (evaluationCreate)="onEvaluationCreate($event)"
+  (evaluationEdit)="onEvaluationEdit($event)"
+/>

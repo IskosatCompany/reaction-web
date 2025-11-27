@@ -22,6 +22,10 @@ export class EvaluationApiService {
     );
   }
 
+  getEvaluationById(evaluationId: string): Observable<Evaluation> {
+    return this.#http.get<Evaluation>(`${this.#apiUrl}/evaluation/${evaluationId}`);
+  }
+
   addEvaluation(payload: Partial<Evaluation>): Observable<Evaluation> {
     return this.#http.post<Evaluation>(`${this.#apiUrl}/evaluation`, payload);
   }

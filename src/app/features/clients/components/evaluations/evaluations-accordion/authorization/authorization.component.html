@@ -1,0 +1,9 @@
+<div class="label">Autorizado</div>
+<div class="value">
+  {{ authorization()?.authorizeEvaluation ? 'Sim' : 'Não' }}
+</div>
+
+<div class="label">Data</div>
+<div class="value">
+  {{ authorization()?.date | date: 'dd/MM/yyyy' }}
+</div>

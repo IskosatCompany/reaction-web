@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -25,6 +25,7 @@ import { Authorization } from '../../../../models/evaluation/authorization.model
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuthorizationFormComponent {
+  model = input<Authorization>();
   authorizationForm = new FormGroup({
     authorizeEvaluation: new FormControl<boolean | null>(null),
     authorizationDate: new FormControl<Date | null>(null)
@@ -36,6 +37,18 @@ export class AuthorizationFormComponent {
       map(() => this.handleFormData(this.authorizationForm.getRawValue()))
     )
   );
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.authorizationForm.setValue({
+          authorizeEvaluation: model.authorizeEvaluation ?? null,
+          authorizationDate: model.date ? new Date(model.date) : null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: AuthorizationForm): Authorization {
     return {

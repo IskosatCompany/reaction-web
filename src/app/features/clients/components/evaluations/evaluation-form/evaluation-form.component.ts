@@ -8,7 +8,7 @@ import {
   signal
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -69,10 +69,8 @@ export class EvaluationFormComponent {
   model = input<Evaluation>();
 
   evaluationCreate = output<Partial<Evaluation>>();
+  evaluationEdit = output<Partial<Evaluation>>();
 
-  clinicalEvaluationForm = new FormGroup({
-    systems: new FormControl<string | null>(null)
-  });
   coachFilterCtrl = new FormControl('');
   evaluation?: Partial<Evaluation>;
 
@@ -89,6 +87,18 @@ export class EvaluationFormComponent {
       (item) =>
         item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
     );
+  });
+  generalInfo = computed<EvaluationGeneralInfo | undefined>(() => {
+    const model = this.model();
+    if (!model) {
+      return;
+    }
+    return {
+      notes: model.notes,
+      date: model.date,
+      coachId: model.coachId ?? '',
+      clientId: model.clientId ?? ''
+    };
   });
 
   onStepOneChange(event: ProfessionalAndPhysicalData) {
@@ -130,6 +140,10 @@ export class EvaluationFormComponent {
   }
 
   onSubmit(): void {
+    if (this.model() && this.evaluation) {
+      this.evaluationEdit.emit(this.evaluation);
+      return;
+    }
     if (this.evaluation) {
       this.evaluationCreate.emit(this.evaluation);
     }

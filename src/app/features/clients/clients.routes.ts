@@ -14,6 +14,13 @@ export const routes: Route[] = [
       )
   },
   {
+    path: ':id/evaluation/:evaluationId',
+    loadComponent: () =>
+      import('./components/evaluations/evaluation/evaluation.component').then(
+        (m) => m.EvaluationComponent
+      )
+  },
+  {
     path: ':id',
     loadComponent: () =>
       import('./components/client-detail/client-detail.component').then(

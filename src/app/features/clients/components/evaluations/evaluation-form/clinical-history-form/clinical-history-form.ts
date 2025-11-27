@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,6 +14,7 @@ import { ClinicalHistory } from '../../../../models/evaluation/clinical-history.
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClinicalHistoryForm {
+  model = input<ClinicalHistory>();
   clinicalHistoryForm = new FormGroup({
     allergies: new FormControl<string | null>(null),
     contraindications: new FormControl<string | null>(null),
@@ -24,7 +25,8 @@ export class ClinicalHistoryForm {
     exams: new FormControl<string | null>(null),
     similarInjuries: new FormControl<string | null>(null),
     fractures: new FormControl<string | null>(null),
-    accidents: new FormControl<string | null>(null)
+    accidents: new FormControl<string | null>(null),
+    previousProcess: new FormControl<string | null>(null)
   });
 
   value = outputFromObservable(
@@ -33,6 +35,27 @@ export class ClinicalHistoryForm {
       map(() => this.handleFormData(this.clinicalHistoryForm.getRawValue()))
     )
   );
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.clinicalHistoryForm.setValue({
+          allergies: model.allergies ?? null,
+          contraindications: model.contraindications ?? null,
+          medication: model.medication ?? null,
+          personalHistory: model.personalHistory ?? null,
+          surgicalHistory: model.surgicalHistory ?? null,
+          hospitalizations: model.hospitalizations ?? null,
+          exams: model.exams ?? null,
+          similarInjuries: model.similarInjuries ?? null,
+          fractures: model.fractures ?? null,
+          accidents: model.accidents ?? null,
+          previousProcess: model.previousProcess ?? null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: ClinicalHistoryDataForm): ClinicalHistory {
     return {
@@ -45,7 +68,8 @@ export class ClinicalHistoryForm {
       hospitalizations: formData.hospitalizations ?? undefined,
       exams: formData.exams ?? undefined,
       similarInjuries: formData.similarInjuries ?? undefined,
-      fractures: formData.fractures ?? undefined
+      fractures: formData.fractures ?? undefined,
+      previousProcess: formData.previousProcess ?? undefined
     };
   }
 }

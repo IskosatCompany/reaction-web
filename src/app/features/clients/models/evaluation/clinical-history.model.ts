@@ -9,4 +9,5 @@ export interface ClinicalHistory {
   similarInjuries?: string;
   fractures?: string;
   accidents?: string;
+  previousProcess?: string;
 }

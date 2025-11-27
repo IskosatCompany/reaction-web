@@ -1,0 +1,14 @@
+<div class="label">Avaliado por</div>
+<div class="value">
+  {{ coachName() }}
+</div>
+
+<div class="label">Data</div>
+<div class="value">
+  {{ generalInfo()?.date | date: 'dd/MM/yyyy' }}
+</div>
+
+<div class="label">Notas</div>
+<div class="value">
+  {{ generalInfo()?.notes ?? '—' }}
+</div>

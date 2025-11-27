@@ -1,0 +1,38 @@
+:host {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: start;
+}
+
+.label {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.7);
+
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.value {
+  color: rgba(0, 0, 0, 0.87);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+@media (max-width: 520px) {
+  :host {
+    grid-template-columns: 1fr;
+  }
+  .label {
+    grid-column: 1;
+    margin-bottom: 4px;
+  }
+  .value {
+    grid-column: 1;
+    border-bottom: 1px solid #e6e9ee;
+    margin-bottom: 8px;
+  }
+}

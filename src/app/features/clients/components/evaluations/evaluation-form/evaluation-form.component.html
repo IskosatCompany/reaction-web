@@ -5,7 +5,10 @@
     @if (isMobile()) {
       <h2>Dados profissionais e físicos</h2>
     }
-    <app-professional-physical-form (value)="onStepOneChange($event)" />
+    <app-professional-physical-form
+      [model]="model()?.professionalAndPhysicalData"
+      (value)="onStepOneChange($event)"
+    />
     <button matButton="elevated" matStepperNext>Seguinte</button>
   </mat-step>
   <mat-step>
@@ -13,7 +16,10 @@
     @if (isMobile()) {
       <h2>Histórico Clínico</h2>
     }
-    <app-clinical-history-form (value)="onStepTwoChange($event)" />
+    <app-clinical-history-form
+      [model]="model()?.clinicalHistory"
+      (value)="onStepTwoChange($event)"
+    />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -24,7 +30,10 @@
     @if (isMobile()) {
       <h2>Queixas Principais</h2>
     }
-    <app-main-complaints-form (value)="onStepThreeChange($event)" />
+    <app-main-complaints-form
+      [model]="model()?.mainComplaints"
+      (value)="onStepThreeChange($event)"
+    />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -35,7 +44,10 @@
     @if (isMobile()) {
       <h2>Rotina e bem estar</h2>
     }
-    <app-well-being-form (value)="onStepFourChange($event)" />
+    <app-well-being-form
+      [model]="model()?.routineAndWellBeing"
+      (value)="onStepFourChange($event)"
+    />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -46,7 +58,10 @@
     @if (isMobile()) {
       <h2>Avaliação Clínica</h2>
     }
-    <app-clinical-evaluation-form (value)="onClinicalEvaluationChange($event)" />
+    <app-clinical-evaluation-form
+      [model]="model()?.clinicalEvaluation"
+      (value)="onClinicalEvaluationChange($event)"
+    />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -57,7 +72,10 @@
     @if (isMobile()) {
       <h2>Diagnóstico e tratamento</h2>
     }
-    <app-diagnosis-treatment-form (value)="onStepFiveChange($event)" />
+    <app-diagnosis-treatment-form
+      [model]="model()?.diagnosisAndTreatment"
+      (value)="onStepFiveChange($event)"
+    />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -68,7 +86,7 @@
     @if (isMobile()) {
       <h2>Autorização</h2>
     }
-    <app-authorization-form (value)="onStepSixChange($event)" />
+    <app-authorization-form [model]="model()?.authorization" (value)="onStepSixChange($event)" />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
       <button matButton="elevated" matStepperNext>Seguinte</button>
@@ -80,6 +98,7 @@
       <h2>Conclusão</h2>
     }
     <app-general-info-form
+      [model]="generalInfo()"
       [coaches]="coaches()"
       (value)="onStepSevenChange($event)"
       (isValid)="isValid.set($event)"

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
 import { outputFromObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, filter, map } from 'rxjs';
@@ -28,7 +28,9 @@ import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-inf
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GeneralInfoFormComponent {
+  model = input<EvaluationGeneralInfo>();
   coaches = input<Coach[]>();
+
   evaluationGeneralInfoForm = new FormGroup({
     coachId: new FormControl<string | null>(null, Validators.required),
     date: new FormControl<Date | null>(null, Validators.required),
@@ -63,6 +65,19 @@ export class GeneralInfoFormComponent {
         item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
     );
   });
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.evaluationGeneralInfoForm.setValue({
+          coachId: model.coachId ?? null,
+          date: model.date ? new Date(model.date) : null,
+          notes: model.notes ?? null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: EvaluationGeneralInfoForm): EvaluationGeneralInfo {
     if (!formData.coachId || !formData.date) {

@@ -1,0 +1,24 @@
+<div class="label">Cadeia lesional</div>
+<div class="value">
+  {{ diagnosisTreatment()?.lesionChain ?? '—' }}
+</div>
+
+<div class="label">Diagnóstico</div>
+<div class="value">
+  {{ diagnosisTreatment()?.diagnosis ?? '—' }}
+</div>
+
+<div class="label">Tratamento</div>
+<div class="value">
+  {{ diagnosisTreatment()?.treatment ?? '—' }}
+</div>
+
+<div class="label">Orientações</div>
+<div class="value">
+  {{ diagnosisTreatment()?.counseling ?? '—' }}
+</div>
+
+<div class="label">Próximo tratamento</div>
+<div class="value">
+  {{ diagnosisTreatment()?.nextTreatment ?? '—' }}
+</div>

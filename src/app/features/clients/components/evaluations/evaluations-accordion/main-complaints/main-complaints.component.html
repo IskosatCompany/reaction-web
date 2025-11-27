@@ -1,0 +1,39 @@
+<div class="main-label">Queixa principal</div>
+<div class="main-value">
+  {{ mainComplaints()?.mainComplaints ?? '—' }}
+</div>
+
+<div class="main-label">Nível da dor</div>
+<div class="main-value">
+  {{ mainComplaints()?.painLevel ?? '—' }}
+</div>
+
+<div class="main-label">Tipo de dor</div>
+<div class="main-value">
+  {{ mainComplaints()?.painType ?? '—' }}
+</div>
+
+<div class="main-label">Localização da dor</div>
+<div class="main-value">
+  {{ mainComplaints()?.painLocation ?? '—' }}
+</div>
+
+<div class="main-label">Início / Progressão</div>
+<div class="main-value">
+  {{ mainComplaints()?.onsetProgression ?? '—' }}
+</div>
+
+<div class="main-label">Condições de alívio</div>
+<div class="main-value">
+  {{ mainComplaints()?.reliefConditions ?? '—' }}
+</div>
+
+<div class="main-label">Agravantes</div>
+<div class="main-value">
+  {{ mainComplaints()?.aggravation ?? '—' }}
+</div>
+
+<div class="main-label">Manifestações associadas</div>
+<div class="main-value">
+  {{ mainComplaints()?.associatedManifestations ?? '—' }}
+</div>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { DiagnosisAndTreatment } from '../../../../models/evaluation/diagnosis-t
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DiagnosisTreatmentFormComponent {
+  model = input<DiagnosisAndTreatment>();
   diagnosisTreatmentForm = new FormGroup({
     lesionChain: new FormControl<string | null>(null),
     diagnosis: new FormControl<string | null>(null),
@@ -29,6 +30,21 @@ export class DiagnosisTreatmentFormComponent {
       map(() => this.handleFormData(this.diagnosisTreatmentForm.getRawValue()))
     )
   );
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.diagnosisTreatmentForm.setValue({
+          lesionChain: model.lesionChain ?? null,
+          diagnosis: model.diagnosis ?? null,
+          treatment: model.treatment ?? null,
+          counseling: model.counseling ?? null,
+          nextTreatment: model.nextTreatment ?? null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: DiagnosisAndTreatmentForm): DiagnosisAndTreatment {
     return {

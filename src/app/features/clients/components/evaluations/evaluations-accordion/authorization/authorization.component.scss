@@ -1,0 +1,23 @@
+:host {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 16px;
+  align-items: start;
+}
+
+.label {
+  font-weight: 700;
+  color: rgba(0, 0, 0, 0.7);
+
+  padding-right: 8px;
+  white-space: nowrap;
+}
+
+.value {
+  color: rgba(0, 0, 0, 0.87);
+  white-space: pre-wrap;
+  word-break: break-word;
+}

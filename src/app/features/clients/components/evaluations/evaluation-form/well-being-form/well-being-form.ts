@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,8 @@ import { WellBeing } from '../../../../models/evaluation/well-being.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WellBeingFormComponent {
+  model = input<WellBeing>();
+
   wellBeingForm = new FormGroup({
     generalState: new FormControl<string | null>(null),
     sleepPattern: new FormControl<string | null>(null),
@@ -28,6 +30,20 @@ export class WellBeingFormComponent {
       map(() => this.handleFormData(this.wellBeingForm.getRawValue()))
     )
   );
+
+  constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.wellBeingForm.setValue({
+          generalState: model.generalState ?? null,
+          sleepPattern: model.sleepPattern ?? null,
+          sleepHours: model.sleepHours ?? null,
+          dailyPainPattern: model.dailyPainPattern ?? null
+        });
+      }
+    });
+  }
 
   private handleFormData(formData: WellBeingForm): WellBeing {
     return {

@@ -1,3 +1,13 @@
 button {
   float: right;
 }
+
+.section-title {
+  font-weight: 700;
+  font-size: 20px;
+
+  &:not(:first-of-type) {
+    display: block;
+    padding-top: 16px;
+  }
+}

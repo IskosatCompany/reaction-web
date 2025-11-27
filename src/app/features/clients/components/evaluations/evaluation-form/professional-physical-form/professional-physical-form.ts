@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
 import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,8 @@ import { ProfessionalAndPhysicalData } from '../../../../models/evaluation/profe
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfessionalPhysicalForm {
+  model = input<ProfessionalAndPhysicalData>();
+
   professionalPhysicalForm = new FormGroup({
     profession: new FormControl<string | null>(null),
     physicalActivity: new FormControl<string | null>(null),
@@ -31,6 +33,20 @@ export class ProfessionalPhysicalForm {
   );
 
   constructor() {
+    effect(() => {
+      const model = this.model();
+      if (model) {
+        this.professionalPhysicalForm.setValue({
+          profession: model.profession ?? null,
+          physicalActivity: model.physicalActivity ?? null,
+          regularActivity: model.regularActivity ?? null,
+          height: model.height ?? null,
+          weight: model.weight ?? null,
+          bmi: model.bmi ?? null
+        });
+      }
+    });
+
     this.professionalPhysicalForm.valueChanges.pipe(debounceTime(300)).subscribe(() => {
       const values = this.professionalPhysicalForm.getRawValue();
       const height = values.height;
