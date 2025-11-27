@@ -7,7 +7,7 @@
 }
 
 <form [formGroup]="filtersForm" [class.inline]="!withinBottomSheet()">
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>Data</mat-label>
     <mat-date-range-input [rangePicker]="picker">
       <input matStartDate formControlName="startDate" />
@@ -17,7 +17,7 @@
     <mat-date-range-picker #picker></mat-date-range-picker>
   </mat-form-field>
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>Cliente</mat-label>
     <mat-select formControlName="clientId" panelClass="searchable-mat-select">
       <mat-option>
@@ -36,7 +36,7 @@
   </mat-form-field>
 
   @if (isAbleToFilterByCoach()) {
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="outline" subscriptSizing="dynamic">
       <mat-label>Treinador</mat-label>
       <mat-select formControlName="coachId" panelClass="searchable-mat-select">
         <mat-option>
@@ -53,7 +53,7 @@
     </mat-form-field>
   }
 
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
     <mat-label>Estado</mat-label>
     <mat-select formControlName="status">
       <mat-option [value]="null">-</mat-option>

@@ -161,8 +161,7 @@ export class SessionUpsertComponent {
       clientId: this.#session.client?.id ?? '',
       coachId: this.#session.coach?.id ?? '',
       duration: 60,
-      startTime: defaultStartDateTime,
-      report: ''
+      startTime: defaultStartDateTime
     });
     this.form.enable();
   }

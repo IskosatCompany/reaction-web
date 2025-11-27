@@ -1,16 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  output,
-  signal
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +10,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { SessionsRequest } from '../../models/http/sessions-request.interface';
 import { SessionStatus, SessionStatusLabel } from '../../models/session.interface';
+import { SessionsListFiltersService } from '../../services/sessions-list-filters.service';
 import { SessionsStore } from '../../store/sessions.store';
 
 interface SessionsListFiltersForm {
@@ -52,25 +44,14 @@ export interface SessionsListFiltersData {
 export class SessionsListFiltersComponent {
   readonly #formBuilder = inject(FormBuilder);
   readonly #sessionsStore = inject(SessionsStore);
+  readonly #sessionsFiltersService = inject(SessionsListFiltersService);
   readonly #bottomSheetRef = inject(MatBottomSheetRef, { optional: true });
-  readonly #bottomSheetData = inject<SessionsListFiltersData>(MAT_BOTTOM_SHEET_DATA, {
-    optional: true
-  });
 
-  readonly defaultRequest = input<SessionsRequest>(this.#bottomSheetData?.defaultRequest ?? {});
-  readonly isAbleToFilterByCoach = input(this.#bottomSheetData?.isAbleToFilterByCoach ?? true);
-  readonly filtersChanged = output<SessionsRequest>();
-
+  readonly isAbleToFilterByCoach = this.#sessionsFiltersService.isAdmin;
   readonly sessionStatus = SessionStatus;
   readonly sessionStatusLabel = SessionStatusLabel;
   readonly withinBottomSheet = signal(!!this.#bottomSheetRef);
-  readonly filtersForm = this.#formBuilder.group<SessionsListFiltersForm>({
-    startDate: this.#formBuilder.control<Date | null>(null),
-    endDate: this.#formBuilder.control<Date | null>(null),
-    clientId: this.#formBuilder.control<string | null>(null),
-    coachId: this.#formBuilder.control<string | null>(null),
-    status: this.#formBuilder.control<SessionStatus | null>(null)
-  });
+  readonly filtersForm: FormGroup<SessionsListFiltersForm>;
 
   // Clients
   readonly clients = this.#sessionsStore.clients;
@@ -105,30 +86,27 @@ export class SessionsListFiltersComponent {
   });
 
   constructor() {
-    effect(() => {
-      const { clientId, coachId, endDate, startDate, status } = this.defaultRequest();
-      this.filtersForm.setValue({
-        clientId: clientId ?? null,
-        coachId: coachId ?? null,
-        status: status ?? null,
-        startDate: startDate ? new Date(startDate) : null,
-        endDate: endDate ? new Date(endDate) : null
-      });
+    const { clientId, coachId, endDate, startDate, status } = this.#sessionsFiltersService.request;
+
+    this.filtersForm = this.#formBuilder.group<SessionsListFiltersForm>({
+      startDate: this.#formBuilder.control<Date | null>(startDate ? new Date(startDate) : null),
+      endDate: this.#formBuilder.control<Date | null>(endDate ? new Date(endDate) : null),
+      clientId: this.#formBuilder.control<string | null>(clientId ?? null),
+      coachId: this.#formBuilder.control<string | null>(coachId ?? null),
+      status: this.#formBuilder.control<SessionStatus | null>(status ?? null)
     });
   }
 
   apply(): void {
     const request = this.#mapFiltersToSessionsRequest();
-    if (this.#bottomSheetRef) {
-      this.#bottomSheetRef.dismiss(request);
-      return;
-    }
 
-    this.filtersChanged.emit(request);
+    this.#sessionsFiltersService.updateRequest(request);
+    this.#bottomSheetRef?.dismiss();
   }
 
   reset(): void {
-    const { clientId, coachId, endDate, startDate, status } = this.defaultRequest();
+    const { clientId, coachId, endDate, startDate, status } =
+      this.#sessionsFiltersService.defaultRequest;
 
     this.filtersForm.reset({
       startDate: startDate ? new Date(startDate) : null,
