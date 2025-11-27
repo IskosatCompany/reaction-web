@@ -69,25 +69,23 @@ export class SessionUpsertComponent {
 
   form: FormGroup<SessionUpsertForm>;
   action = signal<Action>(this.#session.id ? 'edit' : 'create');
-  title = computed(() => {
-    switch (this.action()) {
-      case 'create':
-        return 'Nova Sessão';
-      case 'edit':
-        return this.#session.client?.name;
-      case 'duplicate':
-        return 'Duplicar sessão';
-    }
+  title = computed<string>(() => {
+    const titleLabels: Record<Action, string> = {
+      create: 'Nova Sessão',
+      edit: this.#session.client?.name ?? 'Editar Sessão',
+      duplicate: 'Duplicar sessão'
+    };
+
+    return titleLabels[this.action()];
   });
   saveButton = computed(() => {
-    switch (this.action()) {
-      case 'create':
-        return 'Criar';
-      case 'edit':
-        return 'Guardar';
-      case 'duplicate':
-        return 'Duplicar';
-    }
+    const saveButtonLabels: Record<Action, string> = {
+      create: 'Criar',
+      edit: 'Guardar',
+      duplicate: 'Duplicar'
+    };
+
+    return saveButtonLabels[this.action()];
   });
 
   // Clients
@@ -194,8 +192,8 @@ export class SessionUpsertComponent {
       return;
     }
 
-    if (this.action() === 'edit') {
-      this.#upsertSessionService.editSession(this.#session.id as string, {
+    if (this.action() === 'edit' && this.#session.id) {
+      this.#upsertSessionService.editSession(this.#session.id, {
         clientId,
         coachId,
         startDate: sessionStartDateTime.getTime(),
