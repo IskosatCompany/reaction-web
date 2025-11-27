@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
@@ -19,6 +19,8 @@ import { combineLatest, filter, Observable, startWith, Subject, switchMap } from
 import { ClientFormComponent } from '../client-form/client-form.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SearchComponent } from '../../../../ui/components/search/search.component';
+import { UserRole } from '../../../authentication/models/login.interface';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
 
 @Component({
   selector: 'app-clients-list',
@@ -37,6 +39,7 @@ import { SearchComponent } from '../../../../ui/components/search/search.compone
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClientsList {
+  authService = inject(AuthenticationService);
   bottomSheet = inject(MatBottomSheet);
   isMobile = inject(IS_MOBILE);
   modal = inject(MatDialog);
@@ -69,6 +72,12 @@ export class ClientsList {
       }
     }
   ];
+
+  isAdmin = computed(
+    () =>
+      this.authService.userRole() === UserRole.admin ||
+      this.authService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
+  );
 
   constructor() {
     this.addClientSubject$

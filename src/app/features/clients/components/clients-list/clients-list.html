@@ -10,6 +10,9 @@
 } @else {
   <app-table [dataSource]="dataSource" [columns]="columns" [rowActions]="actions" />
 }
-<button matFab class="float-button" (click)="addClient()">
-  <mat-icon>add</mat-icon>
-</button>
+
+@if (isAdmin()) {
+  <button matFab class="float-button" (click)="addClient()">
+    <mat-icon>add</mat-icon>
+  </button>
+}

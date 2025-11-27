@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RoutesPaths } from './core/models/routes-paths.enum';
 import { authenticationGuard } from './features/authentication/guards/authentication.guard';
 import { loginGuard } from './features/authentication/guards/login.guard';
+import { administratorGuard } from './features/authentication/guards/administrator.guard';
 
 export const routes: Routes = [
   {
@@ -45,7 +46,7 @@ export const routes: Routes = [
   },
   {
     path: RoutesPaths.team,
-    canActivate: [authenticationGuard],
+    canActivate: [authenticationGuard, administratorGuard],
     loadChildren: () => import('./features/coaches/coaches.routes').then((m) => m.routes)
   },
   {
