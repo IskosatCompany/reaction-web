@@ -1,9 +1,19 @@
 <div class="header">
-  <h2>{{ title }}</h2>
+  <h2>{{ title() }}</h2>
   <div class="header__actions">
-    @if (isEditing) {
-      <button mat-icon-button matSuffix type="button" (click)="deleteSession()">
+    @if (action() === 'edit') {
+      <button mat-icon-button matSuffix type="button" matTooltip="Apagar" (click)="deleteSession()">
         <mat-icon>delete</mat-icon>
+      </button>
+
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        matTooltip="Duplicar"
+        (click)="duplicateSession()"
+      >
+        <mat-icon>file_copy</mat-icon>
       </button>
     }
 
@@ -77,6 +87,6 @@
 <div class="footer">
   <button matButton (click)="close()">Cancelar</button>
   <button matButton="filled" (click)="confirm()" [disabled]="form.invalid">
-    {{ isEditing ? 'Guardar' : 'Criar' }}
+    {{ saveButton() }}
   </button>
 </div>

@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTimepickerModule } from '@angular/material/timepicker';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import {
   addMinutes,
   differenceInMinutes,
@@ -38,6 +39,8 @@ interface SessionUpsertForm {
   report: FormControl<string>;
 }
 
+type Action = 'create' | 'edit' | 'duplicate';
+
 @Component({
   selector: 'app-session-upsert',
   imports: [
@@ -50,7 +53,8 @@ interface SessionUpsertForm {
     ReactiveFormsModule,
     MatButtonModule,
     MatIconModule,
-    NgxMatSelectSearchModule
+    NgxMatSelectSearchModule,
+    MatTooltipModule
   ],
   templateUrl: './session-upsert.component.html',
   styleUrl: './session-upsert.component.scss',
@@ -64,8 +68,25 @@ export class SessionUpsertComponent {
   readonly #authService = inject(AuthenticationService);
 
   form: FormGroup<SessionUpsertForm>;
+  action = signal<Action>(this.#session.id ? 'edit' : 'create');
+  title = computed<string>(() => {
+    const titleLabels: Record<Action, string> = {
+      create: 'Nova Sessão',
+      edit: this.#session.client?.name ?? 'Editar Sessão',
+      duplicate: 'Duplicar sessão'
+    };
 
-  readonly sessionDetailsExpanded = signal(false);
+    return titleLabels[this.action()];
+  });
+  saveButton = computed(() => {
+    const saveButtonLabels: Record<Action, string> = {
+      create: 'Criar',
+      edit: 'Guardar',
+      duplicate: 'Duplicar'
+    };
+
+    return saveButtonLabels[this.action()];
+  });
 
   // Clients
   readonly clients = this.#sessionsStore.clients;
@@ -99,17 +120,9 @@ export class SessionUpsertComponent {
     );
   });
 
-  get isEditing(): boolean {
-    return !!this.#session.id;
-  }
-
-  get title(): string {
-    return this.#session.client ? this.#session.client?.name : 'Nova sessão';
-  }
-
   get hasSessionStarted(): boolean {
     const { id, startDate } = this.#session;
-    return !!id && !!startDate && isBefore(startDate, new Date());
+    return this.action() === 'edit' && !!id && !!startDate && isBefore(startDate, new Date());
   }
 
   constructor() {
@@ -144,6 +157,21 @@ export class SessionUpsertComponent {
     });
   }
 
+  duplicateSession(): void {
+    this.action.set('duplicate');
+
+    const defaultStartDateTime = this.#getDefaultStartDateTime();
+    this.form.setValue({
+      startDate: defaultStartDateTime,
+      clientId: this.#session.client?.id ?? '',
+      coachId: this.#session.coach?.id ?? '',
+      duration: 60,
+      startTime: defaultStartDateTime,
+      report: ''
+    });
+    this.form.enable();
+  }
+
   close(): void {
     this.#upsertSessionService.closeBottomSheet();
   }
@@ -164,7 +192,7 @@ export class SessionUpsertComponent {
       return;
     }
 
-    if (this.#session.id) {
+    if (this.action() === 'edit' && this.#session.id) {
       this.#upsertSessionService.editSession(this.#session.id, {
         clientId,
         coachId,
