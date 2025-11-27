@@ -32,12 +32,15 @@ export interface SideMenuItem {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideMenuComponent {
+  readonly #authService = inject(AuthenticationService);
+
   menuItems = input.required<SideMenuItem[]>();
 
   isMobile = inject(IS_MOBILE);
-  userRole = inject(AuthenticationService).userRole;
-  userId = inject(AuthenticationService).userId;
   isMenuOpen = signal(false);
+  isAdmin = this.#authService.isAdmin;
+  userRole = this.#authService.userRole;
+  userId = this.#authService.userId;
 
   constructor() {
     effect(() => {

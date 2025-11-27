@@ -1,11 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -24,7 +25,6 @@ import {
 } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
-import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
@@ -40,7 +40,6 @@ import { ClientFormComponent } from '../client-form/client-form.component';
 import { EvaluationFormComponent } from '../evaluations/evaluation-form/evaluation-form.component';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { ExportReportComponent } from '../export-report/export-report.component';
-import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
 
 enum SessionFilter {
   Last30Days = 'Últimos 30 dias',
@@ -149,11 +148,7 @@ export class ClientDetailComponent {
     )
   );
 
-  canEdit = computed(
-    () =>
-      this.authService.userRole() === UserRole.admin ||
-      this.authService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-  );
+  canEdit = this.authService.isAdmin;
 
   constructor() {
     this.addEvaluationSubject$

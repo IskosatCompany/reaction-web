@@ -1,26 +1,25 @@
 import { AsyncPipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
+import { SearchComponent } from '../../../../ui/components/search/search.component';
 import { TableComponent } from '../../../../ui/components/table/table.component';
 import {
   PaginatedTableDataSource,
   TableColumn,
   TableRowAction
 } from '../../../../ui/components/table/table.model';
-import { ClientsApiService } from '../../api/clients-api.service';
-import { MatDialog } from '@angular/material/dialog';
-import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-sheet';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { Client, ClientForm } from '../../models/client.interface';
-import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
-import { ClientFormComponent } from '../client-form/client-form.component';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SearchComponent } from '../../../../ui/components/search/search.component';
-import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
+import { ClientsApiService } from '../../api/clients-api.service';
+import { Client, ClientForm } from '../../models/client.interface';
+import { ClientFormComponent } from '../client-form/client-form.component';
 
 @Component({
   selector: 'app-clients-list',
@@ -73,11 +72,7 @@ export class ClientsList {
     }
   ];
 
-  isAdmin = computed(
-    () =>
-      this.authService.userRole() === UserRole.admin ||
-      this.authService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-  );
+  isAdmin = this.authService.isAdmin;
 
   constructor() {
     this.addClientSubject$

@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
 import { DatePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { ChangeDetectionStrategy, Component, inject, input, output } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { EvaluationFormComponent } from '../evaluation-form/evaluation-form.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
 import { filter, Observable, Subject, switchMap } from 'rxjs';
-import { EvaluationApiService } from '../../../api/evaluation-api.service';
 import { AuthenticationService } from '../../../../authentication/services/authentication.service';
-import { UserRole } from '../../../../authentication/models/login.interface';
+import { EvaluationApiService } from '../../../api/evaluation-api.service';
+import { Evaluation, EvaluationForm } from '../../../models/evaluation.interface';
+import { EvaluationFormComponent } from '../evaluation-form/evaluation-form.component';
 
 @Component({
   selector: 'app-evaluations-accordion',
@@ -27,11 +26,7 @@ export class EvaluationsAccordionComponent {
   evaluationEditSubject$ = new Subject<void>();
   refreshEvaluations = output<void>();
 
-  canEdit = computed(
-    () =>
-      this.authService.userRole() === UserRole.admin ||
-      this.authService.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
-  );
+  canEdit = this.authService.isAdmin;
 
   constructor() {
     this.evaluationEditSubject$
