@@ -13,10 +13,11 @@ import { SideMenuComponent, SideMenuItem } from './ui/components/side-menu/side-
 })
 export class App {
   menuItems: SideMenuItem[] = [
-    { label: 'Agenda', route: `/${RoutesPaths.sessions}`, icon: 'calendar_today' },
-    { label: 'Clientes', route: `/${RoutesPaths.clients}`, icon: 'fitness_center' },
-    { label: 'Equipa', route: `/${RoutesPaths.team}`, icon: 'groups', role: UserRole.admin },
-    { label: 'Perfil', route: `/${RoutesPaths.profile}`, icon: 'person' },
+    { label: 'Agenda', route: `/${RoutesPaths.calendar}`, icon: 'calendar_month' },
+    { label: 'Clientes', route: `/${RoutesPaths.clients}`, icon: 'group' },
+    { label: 'Equipa', route: `/${RoutesPaths.team}`, icon: 'badge', role: UserRole.admin },
+    { label: 'Sessões', route: `/${RoutesPaths.sessions}`, icon: 'fitness_center' },
+    { label: 'Perfil', route: `/${RoutesPaths.profile}`, icon: 'account_circle' },
     { label: 'Sair', route: `/${RoutesPaths.logout}`, icon: 'logout' }
   ];
 

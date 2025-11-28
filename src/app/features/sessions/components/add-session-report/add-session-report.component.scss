@@ -1,0 +1,23 @@
+.header {
+  display: flex;
+  align-items: center;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  button {
+    margin-left: auto;
+  }
+}
+
+mat-form-field {
+  width: 100%;
+  padding-top: 8px;
+}
+
+.footer {
+  display: flex;
+  gap: 4px;
+  justify-content: flex-end;
+}

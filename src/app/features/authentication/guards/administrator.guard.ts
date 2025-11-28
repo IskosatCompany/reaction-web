@@ -11,5 +11,5 @@ export const administratorGuard: CanActivateFn = () => {
     return true;
   }
 
-  return router.navigateByUrl(`/${RoutesPaths.sessions}`);
+  return router.navigateByUrl(`/${RoutesPaths.calendar}`);
 };

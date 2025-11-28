@@ -70,12 +70,11 @@ export const SessionsStore = signalStore(
       },
       getCoachById(coachId: string): Coach {
         const coach = store.coaches().find((item) => item.id === coachId);
-        // if (!coach) {
-        //   throw new Error('Coach not found');
-        // }
-        //TODO: problem with normal coach user not seeing his sessions
+        if (!coach) {
+          throw new Error('Coach not found');
+        }
 
-        return coach ?? store.coaches()[0];
+        return coach;
       }
     })
   ),

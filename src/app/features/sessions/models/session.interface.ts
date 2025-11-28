@@ -6,6 +6,11 @@ export enum SessionStatus {
   Completed = 'COMPLETED'
 }
 
+export const SessionStatusLabel: Record<SessionStatus, string> = {
+  [SessionStatus.Completed]: 'Finalizada',
+  [SessionStatus.Pending]: 'Pendente'
+};
+
 export interface Session {
   id: string;
   client: Client;

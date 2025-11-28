@@ -10,12 +10,10 @@ import { combineLatest, filter, Observable, startWith, Subject, switchMap } from
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { SearchComponent } from '../../../../ui/components/search/search.component';
+import { ColumnBuilder } from '../../../../ui/components/table/models/table-column.builder';
+import { TableBuilder } from '../../../../ui/components/table/models/table.builder';
 import { TableComponent } from '../../../../ui/components/table/table.component';
-import {
-  PaginatedTableDataSource,
-  TableColumn,
-  TableRowAction
-} from '../../../../ui/components/table/table.model';
+import { formatClient } from '../../../../ui/helpers/client.helper';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { ClientsApiService } from '../../api/clients-api.service';
 import { Client, ClientForm } from '../../models/client.interface';
@@ -23,8 +21,8 @@ import { ClientFormComponent } from '../client-form/client-form.component';
 
 @Component({
   selector: 'app-clients-list',
-  templateUrl: './clients-list.html',
-  styleUrl: './clients-list.scss',
+  templateUrl: './clients-list.component.html',
+  styleUrl: './clients-list.component.scss',
   imports: [
     TableComponent,
     CardComponent,
@@ -37,7 +35,7 @@ import { ClientFormComponent } from '../client-form/client-form.component';
   providers: [ClientsApiService],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ClientsList {
+export class ClientsListComponent {
   authService = inject(AuthenticationService);
   bottomSheet = inject(MatBottomSheet);
   isMobile = inject(IS_MOBILE);
@@ -47,30 +45,35 @@ export class ClientsList {
   addClientSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   searchSubject$ = new Subject<string>();
-  columns: TableColumn<Client>[] = [
-    { id: 'clientNumber', label: 'Número de Cliente', width: 200 },
-    { id: 'name', label: 'Nome' },
-    { id: 'email', label: 'Email' },
-    { id: 'phoneNumber', label: 'Telefone' }
-  ];
 
-  dataSource: PaginatedTableDataSource<Client> = {
-    data$: combineLatest([
-      this.searchSubject$.pipe(startWith('')),
-      this.refreshSubject$.pipe(startWith(null))
-    ]).pipe(switchMap(([searchTerm, _]) => this.clientsApiService.getClients(searchTerm)))
-  };
-
-  actions: TableRowAction<Client>[] = [
-    {
-      id: 'action',
-      icon: 'open_in_new',
-      tooltip: () => 'Ver detalhes',
-      callback: (row) => {
-        this.router.navigate(['clients', row.id]);
-      }
-    }
-  ];
+  tableConfig = new TableBuilder<Client>()
+    .column(
+      new ColumnBuilder<Client>('client', 'Cliente')
+        .cellFn((row) => formatClient(row.name, row.clientNumber))
+        .build()
+    )
+    .column(new ColumnBuilder<Client>('email', 'Email').cellFn((row) => row.email).build())
+    .column(
+      new ColumnBuilder<Client>('phoneNumber', 'Telefone').cellFn((row) => row.phoneNumber).build()
+    )
+    .column(
+      new ColumnBuilder<Client>('actions')
+        .actions([
+          {
+            icon: 'open_in_new',
+            tooltip: 'Ver detalhes',
+            callback: (row) => this.router.navigate(['clients', row.id])
+          }
+        ])
+        .build()
+    )
+    .fromObservable(
+      combineLatest([
+        this.searchSubject$.pipe(startWith('')),
+        this.refreshSubject$.pipe(startWith(null))
+      ]).pipe(switchMap(([searchTerm, _]) => this.clientsApiService.getClients(searchTerm)))
+    )
+    .build();
 
   isAdmin = this.authService.isAdmin;
 

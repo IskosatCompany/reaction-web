@@ -1,0 +1,22 @@
+mat-spinner {
+  margin: auto;
+  height: 100% !important;
+}
+
+button {
+  margin-bottom: 20px;
+}
+
+app-card {
+  &:not(:last-of-type) {
+    margin-bottom: 8px;
+  }
+
+  span {
+    font-size: 16px;
+
+    span {
+      font-weight: 700;
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { Subject } from 'rxjs';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
-import { Session, SessionStatus } from '../../models/session.interface';
+import { Session, SessionStatus, SessionStatusLabel } from '../../models/session.interface';
 
 @Component({
   selector: 'app-sessions-accordion',
@@ -24,8 +24,5 @@ export class SessionsAccordion {
   sessionStatusEnum = SessionStatus;
   evaluationEditSubject$ = new Subject<void>();
   canEdit = this.authService.isAdmin();
-  statusLabels: Record<SessionStatus, string> = {
-    [SessionStatus.Completed]: 'Finalizada',
-    [SessionStatus.Pending]: 'Pendente'
-  };
+  statusLabels = SessionStatusLabel;
 }

@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { catchError, EMPTY, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, finalize, Observable, switchMap, tap, throwError } from 'rxjs';
 import { AuthenticationApiService } from '../api/authentication-api.service';
 import { UserRole } from '../models/login.interface';
 
@@ -49,10 +49,10 @@ export class AuthenticationService {
   login(email: string, password: string): Observable<unknown> {
     return this.#apiService.login({ email, password }).pipe(
       catchError((error) => throwError(() => error)),
+      finalize(() => this.#setUserData()),
       tap(({ authToken, refreshToken }) => {
         localStorage.setItem(TOKEN_KEY, authToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-        this.#setUserData();
       })
     );
   }
@@ -60,10 +60,10 @@ export class AuthenticationService {
   refresh(): Observable<unknown> {
     return this.#apiService.refresh().pipe(
       catchError((error) => throwError(() => error)),
+      finalize(() => this.#setUserData()),
       tap(({ authToken, refreshToken }) => {
         localStorage.setItem(TOKEN_KEY, authToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-        this.#setUserData();
       })
     );
   }

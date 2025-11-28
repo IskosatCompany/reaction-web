@@ -36,7 +36,7 @@
       </mat-toolbar>
     }
 
-    <div class="content">
+    <div class="content" [class.content--mobile]="isMobile()">
       <ng-content />
     </div>
   </mat-sidenav-content>

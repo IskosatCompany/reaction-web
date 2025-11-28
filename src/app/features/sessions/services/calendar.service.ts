@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 import { SessionsApiService } from '../api/sessions-api.service';
 import { SessionDto } from '../models/http/session-dto.interface';
 import { SessionsRequest } from '../models/http/sessions-request.interface';
-import { SessionsFilters } from '../models/sessions-filters.interface';
+import { CalendarFilters } from '../models/calendar-filters.interface';
 import { SessionsStore } from '../store/sessions.store';
 
 @Injectable()
@@ -22,7 +22,7 @@ export class CalendarService {
   readonly #store = inject(SessionsStore);
 
   #calendarApi?: Calendar;
-  #filters: SessionsFilters = {};
+  #filters: CalendarFilters = {};
 
   readonly openFilters$ = this.#openFilters.asObservable();
   readonly viewChanged$ = this.#viewChanged.asObservable();
@@ -133,7 +133,7 @@ export class CalendarService {
     event?.remove();
   }
 
-  applyFilters(filters: SessionsFilters): void {
+  applyFilters(filters: CalendarFilters): void {
     this.#filters = { ...filters };
     if (this.#filters.date) {
       this.#calendarApi?.gotoDate(this.#filters.date);

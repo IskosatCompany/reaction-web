@@ -8,7 +8,7 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: RoutesPaths.sessions
+    redirectTo: `${RoutesPaths.calendar}`
   },
   {
     path: RoutesPaths.login,
@@ -35,9 +35,14 @@ export const routes: Routes = [
       import('./features/authentication/authentication.routes').then((m) => m.logoutRoutes)
   },
   {
+    path: RoutesPaths.calendar,
+    canActivate: [authenticationGuard],
+    loadChildren: () => import('./features/sessions/sessions.routes').then((m) => m.calendarRoutes)
+  },
+  {
     path: RoutesPaths.sessions,
     canActivate: [authenticationGuard],
-    loadChildren: () => import('./features/sessions/sessions.routes').then((m) => m.routes)
+    loadChildren: () => import('./features/sessions/sessions.routes').then((m) => m.sessionsRoutes)
   },
   {
     path: RoutesPaths.clients,

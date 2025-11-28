@@ -7,17 +7,15 @@ import { Router } from '@angular/router';
 import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
+import { SearchComponent } from '../../../../ui/components/search/search.component';
+import { ColumnBuilder } from '../../../../ui/components/table/models/table-column.builder';
+import { TableBuilder } from '../../../../ui/components/table/models/table.builder';
 import { TableComponent } from '../../../../ui/components/table/table.component';
-import {
-  PaginatedTableDataSource,
-  TableColumn,
-  TableRowAction
-} from '../../../../ui/components/table/table.model';
+import { formatCoach } from '../../../../ui/helpers/coach.helper';
 import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
-import { SearchComponent } from '../../../../ui/components/search/search.component';
 
 @Component({
   selector: 'app-coach-list',
@@ -41,29 +39,35 @@ export class CoachListComponent {
   createCoachSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   searchSubject$ = new Subject<string>();
-  columns: TableColumn<Coach>[] = [
-    { id: 'employeeNumber', label: 'Número de Treinador', width: 200 },
-    { id: 'name', label: 'Nome' },
-    { id: 'email', label: 'Email' },
-    { id: 'phoneNumber', label: 'Telefone' }
-  ];
 
-  dataSource: PaginatedTableDataSource<Coach> = {
-    data$: combineLatest([
-      this.searchSubject$.pipe(startWith('')),
-      this.refreshSubject$.pipe(startWith(null))
-    ]).pipe(switchMap(([searchTerm, _]) => this.coachApiService.getCoaches(searchTerm)))
-  };
-  actions: TableRowAction<Coach>[] = [
-    {
-      id: 'action',
-      icon: 'open_in_new',
-      tooltip: () => 'Ver detalhes',
-      callback: (row) => {
-        this.router.navigate(['team', row.id]);
-      }
-    }
-  ];
+  tableConfig = new TableBuilder<Coach>()
+    .column(
+      new ColumnBuilder<Coach>('coach', 'Treinador')
+        .cellFn((row) => formatCoach(row.name, row.employeeNumber))
+        .build()
+    )
+    .column(new ColumnBuilder<Coach>('email', 'Email').cellFn((row) => row.email).build())
+    .column(
+      new ColumnBuilder<Coach>('phoneNumber', 'Telefone').cellFn((row) => row.phoneNumber).build()
+    )
+    .column(
+      new ColumnBuilder<Coach>('actions')
+        .actions([
+          {
+            icon: 'open_in_new',
+            tooltip: 'Ver detalhes',
+            callback: (row) => this.router.navigate(['team', row.id])
+          }
+        ])
+        .build()
+    )
+    .fromObservable(
+      combineLatest([
+        this.searchSubject$.pipe(startWith('')),
+        this.refreshSubject$.pipe(startWith(null))
+      ]).pipe(switchMap(([searchTerm, _]) => this.coachApiService.getCoaches(searchTerm)))
+    )
+    .build();
 
   constructor() {
     this.createCoachSubject$

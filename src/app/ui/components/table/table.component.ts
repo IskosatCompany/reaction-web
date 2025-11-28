@@ -1,54 +1,49 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  ElementRef,
-  input,
-  signal,
-  viewChild
-} from '@angular/core';
+import { CdkTableModule } from '@angular/cdk/table';
+import { NgTemplateOutlet } from '@angular/common';
+import { ChangeDetectionStrategy, Component, computed, effect, input, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { PaginatedTableDataSource, TableColumn, TableRowAction } from './table.model';
-import { MatPaginator } from '@angular/material/paginator';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { switchMap } from 'rxjs';
-import { TableCellComponent } from '../table-cell/table-cell.component';
-import { TableActionsCellComponent } from '../table-actions-cell/table-actions-cell.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { tap } from 'rxjs';
+import { TableConfig } from './models/table-config.interface';
 
 @Component({
   selector: 'app-table',
-  imports: [MatTableModule, TableCellComponent, TableActionsCellComponent],
+  imports: [
+    NgTemplateOutlet,
+    MatTableModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    CdkTableModule
+  ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent<T> {
-  columns = input.required<TableColumn<T>[]>();
-  dataSource = input.required<PaginatedTableDataSource<T>>();
-  rowHeight = input<number>();
-  rowActions = input<TableRowAction<T>[]>();
-  headerElement = viewChild<ElementRef>('header');
-  paginator = viewChild<MatPaginator>(MatPaginator);
+  config = input.required<TableConfig<T>>();
 
-  tableData = toSignal(
-    toObservable(this.dataSource).pipe(switchMap((dataSource) => dataSource.data$)),
-    { initialValue: [] }
-  );
-  headerHeight = signal(0);
-
-  displayedColumns = computed<string[]>(() => {
-    let columns = this.columns().map((col) => col.id);
-    if (this.rowActions()) {
-      columns = [...columns, 'table-actions'];
-    }
-    return columns;
+  columns = computed(() => {
+    const cols = this.config().columns;
+    return cols.map((item) => item.key as string);
   });
+  isLoading = signal(true);
+  data = signal<T[]>([]);
 
-  rowActionsCellWidth = computed<number>(() => {
-    const rowActions = this.rowActions();
-    if (rowActions) {
-      return 40 + rowActions.length * 24 + (rowActions.length - 1) * 16;
-    }
-    return 0;
-  });
+  constructor() {
+    effect(() => {
+      this.config()
+        .data$.pipe(tap(() => this.isLoading.set(true)))
+        .subscribe({
+          next: (data) => {
+            this.data.set([...data]);
+            this.isLoading.set(false);
+          }
+        });
+    });
+  }
 }

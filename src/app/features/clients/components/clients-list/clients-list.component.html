@@ -1,6 +1,6 @@
 <app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
 @if (isMobile()) {
-  @for (client of dataSource.data$ | async; track client) {
+  @for (client of tableConfig.data$ | async; track client.id) {
     <app-card (click)="onClientClick(client.id)">
       <h1>{{ client.name }}</h1>
       <span><span>Email:</span> {{ client.email }}</span>
@@ -8,7 +8,7 @@
     </app-card>
   }
 } @else {
-  <app-table [dataSource]="dataSource" [columns]="columns" [rowActions]="actions" />
+  <app-table [config]="tableConfig" />
 }
 
 @if (isAdmin()) {
