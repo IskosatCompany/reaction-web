@@ -28,10 +28,12 @@
     <mat-label>Morada</mat-label>
     <input matInput formControlName="address" />
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>NIF</mat-label>
     <input matInput formControlName="nif" />
   </mat-form-field>
+
   <mat-form-field appearance="outline">
     <mat-label>Data de nascimento</mat-label>
     <input matInput formControlName="birthDate" [matDatepicker]="datepicker" />
@@ -42,6 +44,11 @@
         <button matButton="elevated" matDatepickerApply>Selecionar</button>
       </mat-datepicker-actions>
     </mat-datepicker>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Planeamento</mat-label>
+    <textarea matInput formControlName="planning" rows="5"></textarea>
   </mat-form-field>
   <div class="actions">
     <button matButton="tonal" (click)="onCancel()">Cancelar</button>

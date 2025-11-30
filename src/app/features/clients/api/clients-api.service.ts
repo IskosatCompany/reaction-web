@@ -24,7 +24,8 @@ export class ClientsApiService {
       name: client.name,
       phoneNumber: client.phoneNumber,
       nif: client.nif,
-      birthDate: client.birthDate?.getTime() ?? undefined
+      birthDate: client.birthDate?.getTime() ?? undefined,
+      planning: client.planning ?? undefined
     };
     return this.#http.post<Client>(`${this.#apiUrl}/client`, clientCreateRequest);
   }

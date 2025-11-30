@@ -21,6 +21,10 @@
   <span><span>NIF:</span> {{ client()?.nif }}</span>
   <span><span>Morada:</span> {{ client()?.address }}</span>
 </app-card>
+<app-card>
+  <h2>Planeamento</h2>
+  <p class="planning">{{ client()?.planning ?? 'Sem planeamento' }}</p>
+</app-card>
 <mat-tab-group>
   <mat-tab label="Avaliações">
     <ng-template matTabContent>

@@ -177,18 +177,6 @@ export class ClientDetailComponent {
       .afterDismissed();
   }
 
-  // openEvaluationBottomSheet(): Observable<Partial<EvaluationForm> | undefined> {
-  //   return this.bottomSheet
-  //     .open<
-  //       EvaluationFormComponent,
-  //       { clientId: string; evaluation?: Evaluation },
-  //       Partial<EvaluationForm>
-  //     >(EvaluationFormComponent, {
-  //       data: { clientId: this.clientId }
-  //     })
-  //     .afterDismissed();
-  // }
-
   onSessionFilterChanged(event: MatRadioChange<SessionFilterDate>): void {
     this.selectedSessionFilterSubject$.next(event.value);
   }
