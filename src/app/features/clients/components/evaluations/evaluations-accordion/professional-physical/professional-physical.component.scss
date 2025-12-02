@@ -10,15 +10,18 @@
 
 .label {
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.7);
-
   padding-right: 8px;
   white-space: nowrap;
 }
 
-title {
-  font-weight: 700;
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
+@media (max-width: 600px) {
+  :host {
+    grid-template-columns: 1fr;
+  }
+
+  .label {
+    text-align: left;
+    padding-right: 0;
+    margin-bottom: 4px;
+  }
 }

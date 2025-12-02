@@ -8,28 +8,22 @@
   align-items: start;
 }
 
-.clinical-title {
-  font-weight: 700;
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
 .clinical-label {
   font-weight: 700;
-  color: rgba(0, 0, 0, 0.7);
-
   padding-right: 8px;
   white-space: nowrap;
 }
 
 .clinical-value {
-  color: rgba(0, 0, 0, 0.87);
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 @media (max-width: 600px) {
+  :host {
+    grid-template-columns: 1fr;
+  }
+
   .clinical-label {
     text-align: left;
     padding-right: 0;
