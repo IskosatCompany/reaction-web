@@ -3,5 +3,4 @@ export interface DiagnosisAndTreatmentForm {
   diagnosis: string | null;
   treatment: string | null;
   counseling: string | null;
-  nextTreatment: string | null;
 }

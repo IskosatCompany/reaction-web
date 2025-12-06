@@ -1,21 +1,21 @@
 <form [formGroup]="diagnosisTreatmentForm">
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Cadeia de lesão</mat-label>
+    <mat-label>Cadeia lesional</mat-label>
     <textarea
       matInput
       formControlName="lesionChain"
       rows="3"
-      placeholder="Descreva a cadeia de lesão"
+      placeholder="Descreva a cadeia lesional"
     ></textarea>
   </mat-form-field>
 
   <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Diagnóstico</mat-label>
+    <mat-label>Diagnóstico osteopático</mat-label>
     <textarea
       matInput
       formControlName="diagnosis"
       rows="3"
-      placeholder="Diagnóstico clínico"
+      placeholder="Diagnóstico osteopático"
     ></textarea>
   </mat-form-field>
 
@@ -36,16 +36,6 @@
       formControlName="counseling"
       rows="3"
       placeholder="Recomendações ao paciente"
-    ></textarea>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill" class="full-width">
-    <mat-label>Próximo atendimento</mat-label>
-    <textarea
-      matInput
-      formControlName="nextTreatment"
-      rows="2"
-      placeholder="Notas para próximo atendimento"
     ></textarea>
   </mat-form-field>
 </form>

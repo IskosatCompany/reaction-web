@@ -21,12 +21,10 @@ export class ClinicalHistoryForm {
     medication: new FormControl<string | null>(null),
     personalHistory: new FormControl<string | null>(null),
     surgicalHistory: new FormControl<string | null>(null),
-    hospitalizations: new FormControl<string | null>(null),
     exams: new FormControl<string | null>(null),
     similarInjuries: new FormControl<string | null>(null),
     fractures: new FormControl<string | null>(null),
-    accidents: new FormControl<string | null>(null),
-    previousProcess: new FormControl<string | null>(null)
+    accidents: new FormControl<string | null>(null)
   });
 
   value = outputFromObservable(
@@ -46,12 +44,10 @@ export class ClinicalHistoryForm {
           medication: model.medication ?? null,
           personalHistory: model.personalHistory ?? null,
           surgicalHistory: model.surgicalHistory ?? null,
-          hospitalizations: model.hospitalizations ?? null,
           exams: model.exams ?? null,
           similarInjuries: model.similarInjuries ?? null,
           fractures: model.fractures ?? null,
-          accidents: model.accidents ?? null,
-          previousProcess: model.previousProcess ?? null
+          accidents: model.accidents ?? null
         });
       }
     });
@@ -65,11 +61,9 @@ export class ClinicalHistoryForm {
       medication: formData.medication ?? undefined,
       personalHistory: formData.personalHistory ?? undefined,
       surgicalHistory: formData.surgicalHistory ?? undefined,
-      hospitalizations: formData.hospitalizations ?? undefined,
       exams: formData.exams ?? undefined,
       similarInjuries: formData.similarInjuries ?? undefined,
-      fractures: formData.fractures ?? undefined,
-      previousProcess: formData.previousProcess ?? undefined
+      fractures: formData.fractures ?? undefined
     };
   }
 }

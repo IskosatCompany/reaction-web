@@ -82,17 +82,6 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Autorização</ng-template>
-    @if (isMobile()) {
-      <h2>Autorização</h2>
-    }
-    <app-authorization-form [model]="model()?.authorization" (value)="onStepSixChange($event)" />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
-  </mat-step>
-  <mat-step>
     <ng-template matStepLabel>Conclusão</ng-template>
     @if (isMobile()) {
       <h2>Conclusão</h2>

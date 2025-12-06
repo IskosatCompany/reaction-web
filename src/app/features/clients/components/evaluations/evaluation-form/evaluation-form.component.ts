@@ -22,7 +22,6 @@ import { ClinicalHistoryForm } from './clinical-history-form/clinical-history-fo
 import { MainComplaintsFormComponent } from './main-complaints-form/main-complaints-form';
 import { WellBeingFormComponent } from './well-being-form/well-being-form';
 import { DiagnosisTreatmentFormComponent } from './diagnosis-treatment-form/diagnosis-treatment-form';
-import { AuthorizationFormComponent } from './authorization-form/authorization-form';
 import { ActivatedRoute } from '@angular/router';
 import { GeneralInfoFormComponent } from './general-info-form/general-info-form';
 import { ClinicalEvaluationFormComponent } from './clinical-evaluation-form/clinical-evaluation-form';
@@ -54,7 +53,6 @@ import { IS_MOBILE } from '../../../../../core/tokens/mobile.token';
     MainComplaintsFormComponent,
     WellBeingFormComponent,
     DiagnosisTreatmentFormComponent,
-    AuthorizationFormComponent,
     GeneralInfoFormComponent,
     ClinicalEvaluationFormComponent
   ],

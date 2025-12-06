@@ -3,5 +3,4 @@ export interface DiagnosisAndTreatment {
   diagnosis?: string;
   treatment?: string;
   counseling?: string;
-  nextTreatment?: string;
 }

@@ -36,11 +36,6 @@
       <app-diagnosis-treatment [diagnosisTreatment]="evaluation().diagnosisAndTreatment" />
     }
 
-    @if (evaluation().authorization) {
-      <span class="section-title">Autorização</span>
-      <app-authorization [authorization]="evaluation().authorization" />
-    }
-
     <app-general-info [generalInfo]="generalInfo()" [coaches]="coaches()"></app-general-info>
     @if (canEdit()) {
       <button matMiniFab (click)="onEvaluationEdit()">

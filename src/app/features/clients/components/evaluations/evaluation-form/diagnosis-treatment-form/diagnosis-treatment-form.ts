@@ -20,8 +20,7 @@ export class DiagnosisTreatmentFormComponent {
     lesionChain: new FormControl<string | null>(null),
     diagnosis: new FormControl<string | null>(null),
     treatment: new FormControl<string | null>(null),
-    counseling: new FormControl<string | null>(null),
-    nextTreatment: new FormControl<string | null>(null)
+    counseling: new FormControl<string | null>(null)
   });
 
   value = outputFromObservable(
@@ -39,8 +38,7 @@ export class DiagnosisTreatmentFormComponent {
           lesionChain: model.lesionChain ?? null,
           diagnosis: model.diagnosis ?? null,
           treatment: model.treatment ?? null,
-          counseling: model.counseling ?? null,
-          nextTreatment: model.nextTreatment ?? null
+          counseling: model.counseling ?? null
         });
       }
     });
@@ -51,8 +49,7 @@ export class DiagnosisTreatmentFormComponent {
       lesionChain: formData.lesionChain ?? undefined,
       diagnosis: formData.diagnosis ?? undefined,
       treatment: formData.treatment ?? undefined,
-      counseling: formData.counseling ?? undefined,
-      nextTreatment: formData.nextTreatment ?? undefined
+      counseling: formData.counseling ?? undefined
     };
   }
 }

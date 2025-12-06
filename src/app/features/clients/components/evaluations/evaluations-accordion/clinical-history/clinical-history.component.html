@@ -23,11 +23,6 @@
   {{ clinicalHistory()?.surgicalHistory ?? '—' }}
 </div>
 
-<div class="clinical-label">Internações</div>
-<div class="clinical-value">
-  {{ clinicalHistory()?.hospitalizations ?? '—' }}
-</div>
-
 <div class="clinical-label">Exames</div>
 <div class="clinical-value">
   {{ clinicalHistory()?.exams ?? '—' }}
@@ -46,9 +41,4 @@
 <div class="clinical-label">Acidentes</div>
 <div class="clinical-value">
   {{ clinicalHistory()?.accidents ?? '—' }}
-</div>
-
-<div class="clinical-label">Processos anteriores</div>
-<div class="clinical-value">
-  {{ clinicalHistory()?.previousProcess ?? '—' }}
 </div>

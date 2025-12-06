@@ -14,7 +14,6 @@ import { MainComplaintsComponent } from './main-complaints/main-complaints.compo
 import { WellBeingComponent } from './well-being/well-being.component';
 import { ClinicalEvaluationComponent } from './clinical-evaluation/clinical-evaluation.component';
 import { DiagnosisTreatmentComponent } from './diagnosis-treatment/diagnosis-treatment.component';
-import { AuthorizationComponent } from './authorization/authorization.component';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GeneralInfoComponent } from './general-info/general-info.component';
@@ -33,7 +32,6 @@ import { Router } from '@angular/router';
     WellBeingComponent,
     ClinicalEvaluationComponent,
     DiagnosisTreatmentComponent,
-    AuthorizationComponent,
     GeneralInfoComponent
   ],
   templateUrl: './evaluations-accordion.component.html',
