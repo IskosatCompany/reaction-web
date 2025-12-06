@@ -156,12 +156,16 @@ export class SessionUpsertComponent {
     this.action.set('duplicate');
 
     const defaultStartDateTime = this.#getDefaultStartDateTime();
+    const sessionDate = new Date(this.#session.startDate as number);
+
     this.form.setValue({
       startDate: defaultStartDateTime,
       clientId: this.#session.client?.id ?? '',
       coachId: this.#session.coach?.id ?? '',
-      duration: 60,
-      startTime: defaultStartDateTime
+      duration: differenceInMinutes(this.#session.endDate as number, sessionDate),
+      startTime: new Date(
+        defaultStartDateTime.setHours(sessionDate.getHours(), sessionDate.getMinutes())
+      )
     });
     this.form.enable();
   }
