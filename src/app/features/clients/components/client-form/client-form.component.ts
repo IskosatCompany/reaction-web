@@ -28,12 +28,11 @@ export class ClientFormComponent {
   confirmBtnText = this.data ? 'Atualizar' : 'Criar';
   form = new FormGroup({
     name: new FormControl<string | null>(null, [Validators.required]),
-    email: new FormControl<string | null>(null, [Validators.email]),
+    email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl<string | null>(null),
     address: new FormControl<string | null>(null),
     birthDate: new FormControl<Date | null>(null),
-    nif: new FormControl<string | null>(null),
-    planning: new FormControl<string | null>(null)
+    nif: new FormControl<string | null>(null)
   });
 
   constructor() {
@@ -52,8 +51,7 @@ export class ClientFormComponent {
       phoneNumber: model.phoneNumber,
       address: model.address,
       birthDate: model.birthDate ? new Date(model.birthDate) : undefined,
-      nif: model.nif,
-      planning: model.planning ?? null
+      nif: model.nif
     });
   }
 

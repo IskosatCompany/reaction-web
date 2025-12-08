@@ -24,8 +24,7 @@ export class ClientsApiService {
       name: client.name,
       phoneNumber: client.phoneNumber,
       nif: client.nif,
-      birthDate: client.birthDate?.getTime() ?? undefined,
-      planning: client.planning ?? undefined
+      birthDate: client.birthDate?.getTime() ?? undefined
     };
     return this.#http.post<Client>(`${this.#apiUrl}/client`, clientCreateRequest);
   }
@@ -44,6 +43,10 @@ export class ClientsApiService {
       birthDate: payload.birthDate?.getTime() ?? undefined
     };
     return this.#http.put<Client>(`${this.#apiUrl}/client/${clientId}`, clientCreateRequest);
+  }
+
+  editPlanning(clientId: string, planning: string): Observable<Client> {
+    return this.#http.post<Client>(`${this.#apiUrl}/client/${clientId}/planning`, { planning });
   }
 
   getClientDetails(clientId: string): Observable<Client> {

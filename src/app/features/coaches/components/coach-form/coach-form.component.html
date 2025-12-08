@@ -14,6 +14,9 @@
     @if (form.get('email')?.errors?.['email'] && form.get('email')?.touched) {
       <mat-error>Introduza um email válido.</mat-error>
     }
+    @if (form.get('email')?.hasError('required')) {
+      <mat-error> Campo obrigatório! </mat-error>
+    }
   </mat-form-field>
 
   <mat-form-field appearance="outline" class="form-field">

@@ -17,7 +17,6 @@ export interface ClientForm {
   address: string | null;
   birthDate: Date | null;
   nif: string | null;
-  planning: string | null;
 }
 
 export type ClientCreate = Omit<ClientForm, 'birthDate'> & { birthDate?: number };

@@ -1,8 +1,16 @@
+@use '@angular/material' as mat;
+
 :host {
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 12px;
+
+  @include mat.card-overrides(
+    (
+      elevated-container-color: #f7f9fd
+    )
+  );
 }
 
 :host(.mobile) {
@@ -12,6 +20,45 @@
     width: 50%;
     align-self: center;
   }
+}
+
+.client-detail-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .client {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 16px;
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      @media (max-width: 600px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  }
+
+  mat-accordion {
+    width: 100%;
+    padding: 0;
+  }
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+  }
+}
+
+.client-detail-tabs {
+  padding: 16px;
 }
 
 .planning {
@@ -24,6 +71,45 @@
   align-items: center;
   gap: 8px;
   margin: 12px 0;
+}
+
+.personal-info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+
+    .label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      @include mat.icon-overrides(
+        (
+          color: var(--dark-blue)
+        )
+      );
+    }
+
+    .value {
+      font-weight: 700;
+    }
+  }
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    > div {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+  }
 }
 
 mat-accordion {
@@ -42,17 +128,9 @@ app-card {
   }
 
   header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-
     h1 {
       line-height: 32px;
       margin: 0;
-    }
-    .actions {
-      display: flex;
-      gap: 8px;
     }
   }
 }

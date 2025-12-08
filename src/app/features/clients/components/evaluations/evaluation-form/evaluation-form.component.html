@@ -7,7 +7,9 @@
 </header>
 <mat-stepper [linear]="false" #stepper>
   <mat-step>
-    <ng-template matStepLabel>Dados profissionais e físicos</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Dados profissionais e físicos </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Dados profissionais e físicos</h2>
     }
@@ -18,7 +20,9 @@
     <button matButton="elevated" matStepperNext>Seguinte</button>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Histórico Clínico</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Histórico Clínico </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Histórico Clínico</h2>
     }
@@ -32,7 +36,9 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Queixas Principais</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Queixas Principais </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Queixas Principais</h2>
     }
@@ -46,7 +52,9 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Rotina e bem estar</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Rotina e bem estar </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Rotina e bem estar</h2>
     }
@@ -60,7 +68,9 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Avaliação Clínica</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Avaliação Clínica </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Avaliação Clínica</h2>
     }
@@ -74,7 +84,9 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Diagnóstico e tratamento</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Diagnóstico e tratamento </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Diagnóstico e tratamento</h2>
     }
@@ -88,7 +100,9 @@
     </div>
   </mat-step>
   <mat-step>
-    <ng-template matStepLabel>Conclusão</ng-template>
+    <ng-template matStepLabel>
+      <span class="step-label"> Conclusão </span>
+    </ng-template>
     @if (isMobile()) {
       <h2>Conclusão</h2>
     }

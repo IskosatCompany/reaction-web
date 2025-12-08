@@ -1,25 +1,60 @@
+@use '@angular/material' as mat;
+
 :host {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   padding: 12px;
+
+  @include mat.card-overrides(
+    (
+      elevated-container-color: #f7f9fd
+    )
+  );
 }
 
-app-card {
-  span {
-    font-size: 16px;
-    span {
-      font-weight: 700;
-    }
-  }
+:host(.mobile) {
+  flex-direction: column;
+}
 
-  .coach,
-  div {
+mat-card {
+  padding: 16px;
+
+  .coach {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+  }
+}
+
+mat-accordion {
+  width: 100%;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+
+    .label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      @include mat.icon-overrides(
+        (
+          color: var(--dark-blue)
+        )
+      );
+    }
+
+    .value {
+      font-weight: 700;
+    }
 
     .coach__color {
       border-radius: 50%;
@@ -37,17 +72,21 @@ app-card {
 
     @media (max-width: 600px) {
       .coach__color {
-        width: 12vw;
+        width: 6vw;
         height: 6vw;
       }
     }
+  }
 
-    h1 {
-      line-height: 32px;
-      margin: 0;
-    }
-    .actions {
-      display: flex;
+  // Mobile breakpoint
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    > div {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
       gap: 8px;
     }
   }

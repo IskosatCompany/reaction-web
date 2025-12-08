@@ -1,0 +1,15 @@
+@if (isSaveBtnEnabled()) {
+  <button matButton="filled" (click)="onSave()">Guardar</button>
+}
+<form [formGroup]="planningForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Planeamento</mat-label>
+    <textarea
+      matInput
+      cdkTextareaAutosize
+      cdkAutosizeMinRows="10"
+      formControlName="planning"
+      placeholder="Planeamento"
+    ></textarea>
+  </mat-form-field>
+</form>

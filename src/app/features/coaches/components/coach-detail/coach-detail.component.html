@@ -1,19 +1,81 @@
-<app-card>
+<mat-card>
   <header class="coach">
-    <div>
-      <div class="coach__color" [style.background-color]="coach()?.color"></div>
-      <h1>{{ coach()?.name }} - #{{ coach()?.employeeNumber }}</h1>
-    </div>
+    <h1>{{ coach()?.name }} - #{{ coach()?.employeeNumber }}</h1>
     <button matMiniFab matTooltip="Editar Treinador" (click)="onCoachEdit()">
       <mat-icon>edit</mat-icon>
     </button>
   </header>
-  <span><span>Email:</span> {{ coach()?.email }}</span>
-  <span><span>Nº de telemóvel:</span> {{ coach()?.phoneNumber }}</span>
-  <span><span>Especialidade:</span> {{ coach()?.expertise }}</span>
-  <span><span>NIF:</span> {{ coach()?.nif }}</span>
-  <span><span>Nº cartão profissional:</span> {{ coach()?.professionalCardNumber }}</span>
-  <span><span>Seguro pessoal:</span> {{ coach()?.civilInsurance }}</span>
-  <span><span>Seguro de trabalho:</span> {{ coach()?.workInsurance }}</span>
-  <span><span>Morada:</span> {{ coach()?.address }}</span>
-</app-card>
+</mat-card>
+
+<mat-accordion>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>Informações</mat-panel-title>
+    </mat-expansion-panel-header>
+    <section class="info">
+      <div>
+        <div class="label">
+          <mat-icon>mail</mat-icon>
+          <span>Email</span>
+        </div>
+        <span class="value">{{ coach()?.email }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>phone</mat-icon>
+          <span>Nº de telemóvel</span>
+        </div>
+        <span class="value">{{ coach()?.phoneNumber ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>work</mat-icon>
+          <span>Especialidade</span>
+        </div>
+        <span class="value">{{ coach()?.expertise ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>badge</mat-icon>
+          <span>NIF</span>
+        </div>
+        <span class="value">{{ coach()?.nif ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>credit_card</mat-icon>
+          <span>Nº da cédula profissional</span>
+        </div>
+        <span class="value">{{ coach()?.professionalCardNumber ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>security</mat-icon>
+          <span>Seguro pessoal</span>
+        </div>
+        <span class="value">{{ coach()?.civilInsurance ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>security</mat-icon>
+          <span>Seguro de trabalho</span>
+        </div>
+        <span class="value">{{ coach()?.workInsurance ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>home</mat-icon>
+          <span>Morada</span>
+        </div>
+        <span class="value">{{ coach()?.address ?? '-' }}</span>
+      </div>
+      <div>
+        <div class="label">
+          <mat-icon>palette</mat-icon>
+          <span>Cor</span>
+        </div>
+        <div class="coach__color" [style.background-color]="coach()?.color ?? 'currentColor'"></div>
+      </div>
+    </section>
+  </mat-expansion-panel>
+</mat-accordion>

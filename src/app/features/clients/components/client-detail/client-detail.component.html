@@ -1,68 +1,120 @@
-<app-card>
-  <header>
-    <h1>{{ client()?.name }} - #{{ client()?.clientNumber }}</h1>
-    @if (canEdit()) {
-      <div class="actions">
-        <button matMiniFab matTooltip="Editar Cliente" (click)="onClientEdit()">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button matMiniFab matTooltip="Adicionar Avaliação" (click)="onEvaluationAdd()">
-          <mat-icon>summarize</mat-icon>
-        </button>
-        <button matMiniFab matTooltip="Exportar PDF" (click)="exportReport()">
-          <mat-icon>download</mat-icon>
-        </button>
-      </div>
-    }
-  </header>
-  <span><span>Email:</span> {{ client()?.email }}</span>
-  <span><span>Nº de telemóvel:</span> {{ client()?.phoneNumber }}</span>
-  <span><span>Data de nascimento:</span> {{ client()?.birthDate | date: 'dd/MM/yyyy' }}</span>
-  <span><span>NIF:</span> {{ client()?.nif }}</span>
-  <span><span>Morada:</span> {{ client()?.address }}</span>
-</app-card>
-<app-card>
-  <h2>Planeamento</h2>
-  <p class="planning">{{ client()?.planning ?? 'Sem planeamento' }}</p>
-</app-card>
-<mat-tab-group>
-  <mat-tab label="Avaliações">
-    <ng-template matTabContent>
-      <mat-accordion>
-        @for (evaluation of evaluations(); track evaluation) {
-          <app-evaluations-accordion
-            [evaluation]="evaluation"
-            (refreshEvaluations)="refreshEvaluationsSubject$.next()"
-          />
-        }
-      </mat-accordion>
-    </ng-template>
-  </mat-tab>
-  <mat-tab label="Sessões">
-    <ng-template matTabContent>
-      <mat-radio-group class="session-filters">
-        <mat-radio-button
-          [checked]="true"
-          [value]="sessionFilters[sessionFilterEnum.Last30Days]"
-          (change)="onSessionFilterChanged($event)"
-          >{{ sessionFilterEnum.Last30Days }}</mat-radio-button
-        >
-        <mat-radio-button
-          [value]="sessionFilters[sessionFilterEnum.Last60Days]"
-          (change)="onSessionFilterChanged($event)"
-          >{{ sessionFilterEnum.Last60Days }}</mat-radio-button
-        >
-        <mat-radio-button
-          [value]="sessionFilters[sessionFilterEnum.AllSessions]"
-          (change)="onSessionFilterChanged($event)"
-          >{{ sessionFilterEnum.AllSessions }}</mat-radio-button
-        >
-      </mat-radio-group>
-      <mat-accordion>
-        @for (session of sessions(); track session.id) {
-          <app-sessions-accordion [session]="session" />
-        }
-      </mat-accordion>
-    </ng-template>
-  </mat-tab>
-</mat-tab-group>
+<section class="client-detail-header">
+  <mat-card>
+    <header class="client">
+      <h1>{{ clientName() }}</h1>
+      @if (canEdit()) {
+        <div class="actions">
+          <button matMiniFab matTooltip="Editar Cliente" (click)="onClientEdit()">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button matMiniFab matTooltip="Adicionar Avaliação" (click)="onEvaluationAdd()">
+            <mat-icon>summarize</mat-icon>
+          </button>
+          <button matMiniFab matTooltip="Exportar PDF" (click)="exportReport()">
+            <mat-icon>download</mat-icon>
+          </button>
+        </div>
+      }
+    </header>
+  </mat-card>
+
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Informações Pessoais</mat-panel-title>
+      </mat-expansion-panel-header>
+      <section class="personal-info">
+        <div>
+          <div class="label">
+            <mat-icon>mail</mat-icon>
+            <span>Email</span>
+          </div>
+          <span class="value">{{ client()?.email }}</span>
+        </div>
+        <div>
+          <div class="label">
+            <mat-icon>phone</mat-icon>
+            <span>Nº de telemóvel</span>
+          </div>
+          <span class="value">{{ client()?.phoneNumber }}</span>
+        </div>
+        <div>
+          <div class="label">
+            <mat-icon>calendar_today</mat-icon>
+            <span>Data de nascimento</span>
+          </div>
+          <span class="value">{{ client()?.birthDate | date: 'dd/MM/yyyy' }}</span>
+        </div>
+        <div>
+          <div class="label">
+            <mat-icon>badge</mat-icon>
+            <span>NIF</span>
+          </div>
+          <span class="value">{{ client()?.nif }}</span>
+        </div>
+        <div>
+          <div class="label">
+            <mat-icon>home</mat-icon>
+            <span>Morada</span>
+          </div>
+          <span class="value">{{ client()?.address }}</span>
+        </div>
+      </section>
+    </mat-expansion-panel>
+  </mat-accordion>
+</section>
+
+<mat-card class="client-detail-tabs">
+  <mat-tab-group>
+    <mat-tab label="Avaliações">
+      <ng-template matTabContent>
+        <mat-accordion>
+          @for (evaluation of evaluations(); track evaluation) {
+            <app-evaluations-accordion
+              [evaluation]="evaluation"
+              (refreshEvaluations)="refreshEvaluationsSubject$.next()"
+            />
+          }
+        </mat-accordion>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Sessões">
+      <ng-template matTabContent>
+        <mat-radio-group class="session-filters">
+          <mat-radio-button
+            [checked]="true"
+            [value]="sessionFilters[sessionFilterEnum.Last30Days]"
+            (change)="onSessionFilterChanged($event)"
+          >
+            {{ sessionFilterEnum.Last30Days }}
+          </mat-radio-button>
+          <mat-radio-button
+            [value]="sessionFilters[sessionFilterEnum.Last60Days]"
+            (change)="onSessionFilterChanged($event)"
+          >
+            {{ sessionFilterEnum.Last60Days }}
+          </mat-radio-button>
+          <mat-radio-button
+            [value]="sessionFilters[sessionFilterEnum.AllSessions]"
+            (change)="onSessionFilterChanged($event)"
+          >
+            {{ sessionFilterEnum.AllSessions }}
+          </mat-radio-button>
+        </mat-radio-group>
+        <mat-accordion>
+          @for (session of sessions(); track session.id) {
+            <app-sessions-accordion [session]="session" />
+          }
+        </mat-accordion>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Planeamento">
+      <ng-template matTabContent>
+        <app-client-planning
+          [planning]="client()?.planning"
+          (planningChanged)="onPlanningChange($event)"
+        />
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</mat-card>

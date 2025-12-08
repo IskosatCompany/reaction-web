@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,7 +24,6 @@ import {
   switchMap
 } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { CardComponent } from '../../../../ui/components/card/card.component';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
@@ -39,6 +38,9 @@ import { ClientFormComponent } from '../client-form/client-form.component';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { ExportReportComponent } from '../export-report/export-report.component';
 import { Evaluation } from '../../models/evaluation/evaluation.model';
+import { ClientPlanningComponent } from './client-planning/client-planning.component';
+import { MatCard } from '@angular/material/card';
+import { formatClient } from '../../../../ui/helpers/client.helper';
 
 enum SessionFilter {
   Last30Days = 'Últimos 30 dias',
@@ -55,7 +57,7 @@ interface SessionFilterDate {
   selector: 'app-client-detail',
   imports: [
     MatTooltipModule,
-    CardComponent,
+    MatCard,
     MatButtonModule,
     MatExpansionModule,
     MatIconModule,
@@ -64,6 +66,7 @@ interface SessionFilterDate {
     MatRadioModule,
     EvaluationsAccordionComponent,
     SessionsAccordion,
+    ClientPlanningComponent,
     DatePipe
   ],
   templateUrl: './client-detail.component.html',
@@ -97,6 +100,7 @@ export class ClientDetailComponent {
     this.sessionFilters[SessionFilter.Last30Days]
   );
   editClientSubject$ = new Subject<void>();
+  editPlanningSubject$ = new Subject<string>();
   refreshClientSubject$ = new Subject<void>();
   refreshEvaluationsSubject$ = new Subject<void>();
 
@@ -146,6 +150,10 @@ export class ClientDetailComponent {
     )
   );
 
+  clientName = computed(() =>
+    formatClient(this.client()?.name ?? '', this.client()?.clientNumber ?? 0)
+  );
+
   canEdit = this.authService.isAdmin;
 
   constructor() {
@@ -155,6 +163,15 @@ export class ClientDetailComponent {
         filter((client?: Partial<ClientForm>) => client !== undefined),
         switchMap((client: Partial<ClientForm>) =>
           this.clientApiService.editClient(this.clientId, client)
+        ),
+        takeUntilDestroyed()
+      )
+      .subscribe(() => this.refreshClientSubject$.next());
+
+    this.editPlanningSubject$
+      .pipe(
+        switchMap((planning: string) =>
+          this.clientApiService.editPlanning(this.clientId, planning)
         ),
         takeUntilDestroyed()
       )
@@ -179,6 +196,10 @@ export class ClientDetailComponent {
 
   onSessionFilterChanged(event: MatRadioChange<SessionFilterDate>): void {
     this.selectedSessionFilterSubject$.next(event.value);
+  }
+
+  onPlanningChange(planning: string): void {
+    this.editPlanningSubject$.next(planning);
   }
 
   exportReport(): void {

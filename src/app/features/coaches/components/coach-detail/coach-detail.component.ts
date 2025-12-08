@@ -7,16 +7,17 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { CardComponent } from '../../../../ui/components/card/card.component';
 import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCard } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-coach-detail',
-  imports: [MatButtonModule, CardComponent, MatIconModule, MatTooltipModule],
+  imports: [MatButtonModule, MatCard, MatIconModule, MatTooltipModule, MatExpansionModule],
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -31,7 +31,7 @@ export class CoachFormComponent {
   confirmBtnText = this.data.coach ? 'Atualizar' : 'Criar';
   form = new FormGroup({
     name: new FormControl<string | null>(null, [Validators.required]),
-    email: new FormControl<string | null>(null, [Validators.email]),
+    email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
     phoneNumber: new FormControl<string | null>(null),
     expertise: new FormControl<string | null>(null, [Validators.required]),
     nif: new FormControl<string | null>(null),
