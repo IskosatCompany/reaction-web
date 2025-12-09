@@ -12,17 +12,25 @@ import { MatFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
-import { switchMap } from 'rxjs';
+import { Calendar, CalendarOptions, EventInput, EventMountArg } from '@fullcalendar/core';
+import { EMPTY, switchMap, tap } from 'rxjs';
+import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { formatClient } from '../../../../ui/helpers/client.helper';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
-import { CalendarFilters } from '../../models/calendar-filters.interface';
-import { CalendarService } from '../../services/calendar.service';
-import { UpsertSessionService } from '../../services/upsert-session.service';
+import { CALENDAR_DEFAULT_OPTIONS } from '../../constants/calendar-options.constant';
+import { SessionDto } from '../../models/http/session-dto.interface';
+import { SessionOverlayService } from '../../services/session-overlay.service';
+import { AddSessionService } from '../../services/sessions-actions/add-session.service';
+import { CloseSessionService } from '../../services/sessions-actions/close-session.service';
+import { DeleteSessionService } from '../../services/sessions-actions/delete-session.service';
+import { DuplicateSessionService } from '../../services/sessions-actions/duplicate-session.service';
+import { EditSessionService } from '../../services/sessions-actions/edit-session.service';
 import { SessionsStore } from '../../store/sessions.store';
-import { SessionsFiltersComponent } from '../sessions-filters/sessions-filters.component';
 
 @Component({
   selector: 'app-sessions-calendar',
@@ -32,10 +40,17 @@ import { SessionsFiltersComponent } from '../sessions-filters/sessions-filters.c
     MatBottomSheetModule,
     MatFabButton,
     MatIconModule,
-    MatProgressSpinnerModule,
-    SessionsFiltersComponent
+    MatProgressSpinnerModule
   ],
-  providers: [CalendarService, SessionsStore, UpsertSessionService],
+  providers: [
+    SessionsStore,
+    SessionOverlayService,
+    AddSessionService,
+    EditSessionService,
+    DuplicateSessionService,
+    DeleteSessionService,
+    CloseSessionService
+  ],
   templateUrl: './sessions-calendar.component.html',
   styleUrl: './sessions-calendar.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -43,15 +58,21 @@ import { SessionsFiltersComponent } from '../sessions-filters/sessions-filters.c
 export class SessionsCalendarComponent {
   readonly #sessionsStore = inject(SessionsStore);
   readonly #sessionsApi = inject(SessionsApiService);
-  readonly #calendarService = inject(CalendarService);
-  readonly #upsertSessionService = inject(UpsertSessionService);
   readonly #authService = inject(AuthenticationService);
+  readonly #overlayService = inject(SessionOverlayService);
+  readonly #addSessionService = inject(AddSessionService);
+  readonly #editSessionService = inject(EditSessionService);
+  readonly #duplicateSessionService = inject(DuplicateSessionService);
+  readonly #deleteSessionService = inject(DeleteSessionService);
+  readonly #closeSessionService = inject(CloseSessionService);
+  readonly #router = inject(Router);
+
+  #calendarApi?: Calendar;
 
   readonly calendarComponent = viewChild<FullCalendarComponent>('calendar');
   readonly isMobile = inject(IS_MOBILE);
-  readonly filtersOpen = signal(false);
   readonly calendarTitle = signal('');
-  readonly calendarOptions = this.#calendarService.options;
+  readonly calendarOptions = this.#getCalendarOptions();
   readonly clients = this.#sessionsStore.clients;
   readonly coaches = this.#sessionsStore.coaches;
   readonly isLoadingCalendarData = this.#sessionsStore.isLoadingData;
@@ -64,47 +85,147 @@ export class SessionsCalendarComponent {
       }
 
       const calendarApi = calendarComponent.getApi();
-      this.#calendarService.setCalendarApi(calendarApi);
+      this.#calendarApi = calendarApi;
     });
 
-    this.#calendarService.dateClicked$
-      .pipe(takeUntilDestroyed())
-      .subscribe((date) => this.createNewSession(date));
-
-    this.#calendarService.sessionClicked$
+    this.#overlayService.performAction$
       .pipe(
         takeUntilDestroyed(),
-        switchMap((sessionId) => this.#sessionsApi.getSessionDetails(sessionId))
-      )
-      .subscribe((sessionDto) =>
-        this.#upsertSessionService.openBottomSheet({
-          id: sessionDto.id,
-          startDate: sessionDto.startDate,
-          endDate: sessionDto.endDate,
-          client: this.#sessionsStore.getClientById(sessionDto.clientId),
-          coach: this.#sessionsStore.getCoachById(sessionDto.coachId)
+        switchMap(({ sessionDto, action }) => {
+          switch (action) {
+            case 'goToClient':
+              this.#router.navigate([RoutesPaths.clients, sessionDto.clientId]);
+              return EMPTY;
+
+            case 'duplicate':
+              return this.#duplicateSessionService
+                .duplicate(sessionDto.id)
+                .pipe(tap((result) => this.#addSessionToCalendar(result)));
+
+            case 'delete':
+              return this.#deleteSessionService
+                .delete(sessionDto.id)
+                .pipe(tap(() => this.#removeSessionFromCalendar(sessionDto.id)));
+
+            case 'close':
+              return this.#closeSessionService
+                .close(sessionDto.id)
+                .pipe(tap((result) => this.#completeSessionOnCalendar(result)));
+          }
         })
-      );
-
-    this.#calendarService.openFilters$
-      .pipe(takeUntilDestroyed())
-      .subscribe(() => this.filtersOpen.set(true));
-
-    this.#calendarService.viewChanged$
-      .pipe(takeUntilDestroyed())
-      .subscribe(({ title }) => this.calendarTitle.set(title));
+      )
+      .subscribe();
   }
 
-  applyFilters(filters: CalendarFilters): void {
-    this.#calendarService.applyFilters(filters);
-  }
-
-  createNewSession(date?: Date): void {
+  createSession(date?: Date): void {
     const coach =
       this.#authService.userRole() === UserRole.coach
         ? this.#sessionsStore.getCoachById(this.#authService.userId())
         : undefined;
 
-    this.#upsertSessionService.openBottomSheet({ startDate: date?.getTime(), coach });
+    this.#addSessionService
+      .add({ startDate: date?.getTime(), coach })
+      .subscribe((sessionDto) => this.#addSessionToCalendar(sessionDto));
+  }
+
+  editSession(sessionId: string): void {
+    this.#editSessionService.edit(sessionId).subscribe((sessionDto) => {
+      this.#removeSessionFromCalendar(sessionDto.id);
+      this.#addSessionToCalendar(sessionDto);
+    });
+  }
+
+  #getCalendarOptions(): CalendarOptions {
+    return {
+      ...CALENDAR_DEFAULT_OPTIONS,
+      dateClick: (arg) => this.createSession(arg.date),
+      datesSet: (arg) => this.calendarTitle.set(arg.view.title),
+      eventClick: (arg) => this.editSession(arg.event.id),
+      eventDidMount: (mountArg) => {
+        this.#addRightClickListener(mountArg);
+        this.#addLongPressListener(mountArg);
+      },
+      events: (fetchInfo, successCallback, failureCallback) => {
+        this.#calendarApi?.removeAllEvents();
+
+        this.#sessionsApi
+          .getSessions({
+            startDate: fetchInfo.start.getTime(),
+            endDate: fetchInfo.end.getTime()
+          })
+          .subscribe({
+            next: (sessions) => {
+              const events = sessions.map((item): EventInput => {
+                const client = this.#sessionsStore.getClientById(item.clientId);
+                const coach = this.#sessionsStore.getCoachById(item.coachId);
+
+                return {
+                  id: item.id,
+                  title: formatClient(client.name, client.clientNumber),
+                  start: item.startDate,
+                  end: item.endDate,
+                  editable: false,
+                  backgroundColor: coach.color,
+                  borderColor: coach.color,
+                  extendedProps: { sessionDto: item }
+                };
+              });
+
+              successCallback(events);
+            },
+            error: (err) => failureCallback(err)
+          });
+      }
+    };
+  }
+
+  #addRightClickListener(mountArg: EventMountArg): void {
+    mountArg.el.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+
+      const session = this.#calendarApi?.getEventById(mountArg.event.id);
+      this.#overlayService.open(mountArg.el, session?.extendedProps['sessionDto']);
+    });
+  }
+
+  #addLongPressListener(mountArg: EventMountArg): void {
+    let pressTimer: number;
+
+    mountArg.el.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => {
+        const session = this.#calendarApi?.getEventById(mountArg.event.id);
+        this.#overlayService.open(mountArg.el, session?.extendedProps['sessionDto']);
+      }, 600);
+    });
+
+    ['touchend', 'touchcancel', 'touchmove'].forEach((evt) =>
+      mountArg.el.addEventListener(evt, () => clearTimeout(pressTimer))
+    );
+  }
+
+  #addSessionToCalendar(sessionDto: SessionDto): void {
+    const client = this.#sessionsStore.getClientById(sessionDto.clientId);
+    const coach = this.#sessionsStore.getCoachById(sessionDto.coachId);
+
+    this.#calendarApi?.addEvent({
+      id: sessionDto.id,
+      title: client.name,
+      start: sessionDto.startDate,
+      end: sessionDto.endDate,
+      editable: false,
+      backgroundColor: coach.color,
+      borderColor: coach.color,
+      extendedProps: { sessionDto }
+    });
+  }
+
+  #removeSessionFromCalendar(sessionId: string): void {
+    const event = this.#calendarApi?.getEventById(sessionId);
+    event?.remove();
+  }
+
+  #completeSessionOnCalendar(sessionDto: SessionDto): void {
+    const event = this.#calendarApi?.getEventById(sessionDto.id);
+    event?.setExtendedProp('sessionDto', sessionDto);
   }
 }

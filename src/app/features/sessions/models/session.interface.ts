@@ -1,6 +1,8 @@
 import { Client } from '../../clients/models/client.interface';
 import { Coach } from '../../coaches/models/coach.model';
 
+export type SessionAction = 'duplicate' | 'delete' | 'close' | 'goToClient';
+
 export enum SessionStatus {
   Pending = 'PENDING',
   Completed = 'COMPLETED'

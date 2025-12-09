@@ -10,11 +10,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { differenceInMinutes, format } from 'date-fns';
+import { differenceInMinutes, format, isSameDay } from 'date-fns';
 import { EMPTY, map, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
+import { TableActionsColumn } from '../../../../ui/components/table/models/table-action.interface';
 import { ColumnBuilder } from '../../../../ui/components/table/models/table-column.builder';
+import { TableColumn } from '../../../../ui/components/table/models/table-column.interface';
 import { TableConfig } from '../../../../ui/components/table/models/table-config.interface';
 import { TableBuilder } from '../../../../ui/components/table/models/table.builder';
 import { TableComponent } from '../../../../ui/components/table/table.component';
@@ -79,8 +81,11 @@ export class SessionsListComponent {
     );
   }
 
-  completeSession(session: Session): void {
-    if (session.status === SessionStatus.Completed) {
+  closeSession(session: Session): void {
+    if (
+      session.status === SessionStatus.Completed ||
+      (!isSameDay(session.startDate, new Date()) && !this.#authService.isAdmin())
+    ) {
       return;
     }
 
@@ -126,18 +131,7 @@ export class SessionsListComponent {
           .cellFn((row) => SessionStatusLabel[row.status])
           .build()
       )
-      .column(
-        new ColumnBuilder<Session>('actions')
-          .actions([
-            {
-              icon: 'assignment_turned_in',
-              callback: (row) => this.completeSession(row),
-              isDisabled: (row) => row.status === SessionStatus.Completed,
-              tooltip: 'Completar sessão'
-            }
-          ])
-          .build()
-      )
+      .column(this.#getActionsColumn())
       .fromObservable(
         this.#filtersService.loadSessionsSubject.pipe(
           switchMap((filters) => this.#sessionsApiService.getSessions(filters)),
@@ -152,6 +146,36 @@ export class SessionsListComponent {
           )
         )
       )
+      .build();
+  }
+
+  #getActionsColumn(): TableColumn<Session> {
+    const isAbleToCloseSession = (row: Session) =>
+      row.status !== SessionStatus.Completed &&
+      (isSameDay(row.startDate, new Date()) || this.#authService.isAdmin());
+
+    const closeSessionAction: TableActionsColumn<Session> = {
+      icon: 'assignment_turned_in',
+      callback: (row) => this.closeSession(row),
+      isDisabled: (row) => !isAbleToCloseSession(row),
+      tooltip: () => 'Concluir sessão'
+    };
+
+    const warningAction: TableActionsColumn<Session> = {
+      icon: 'warning',
+      color: '#EBBE4D',
+      isHidden: (row) => row.status === SessionStatus.Completed || isAbleToCloseSession(row),
+      tooltip: (row) => {
+        if (!isSameDay(row.startDate, new Date()) && !this.#authService.isAdmin()) {
+          return 'Sem permissões para concluir a sessão';
+        }
+
+        return '';
+      }
+    };
+
+    return new ColumnBuilder<Session>('actions')
+      .actions([warningAction, closeSessionAction])
       .build();
   }
 }

@@ -1,22 +1,6 @@
 <div class="header">
-  <h2>{{ title() }}</h2>
+  <h2>{{ title }}</h2>
   <div class="header__actions">
-    @if (action() === 'edit') {
-      <button mat-icon-button matSuffix type="button" matTooltip="Apagar" (click)="deleteSession()">
-        <mat-icon>delete</mat-icon>
-      </button>
-
-      <button
-        mat-icon-button
-        matSuffix
-        type="button"
-        matTooltip="Duplicar"
-        (click)="duplicateSession()"
-      >
-        <mat-icon>file_copy</mat-icon>
-      </button>
-    }
-
     <button mat-icon-button matSuffix type="button" (click)="close()">
       <mat-icon>close</mat-icon>
     </button>
@@ -56,7 +40,7 @@
         />
       </mat-option>
       @for (client of filteredClients(); track client.id) {
-        <mat-option [value]="client.id">{{ client.name }} - #{{ client.clientNumber }}</mat-option>
+        <mat-option [value]="client.id">{{ client | formatClient }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -71,7 +55,7 @@
         />
       </mat-option>
       @for (coach of filteredCoaches(); track coach.id) {
-        <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
+        <mat-option [value]="coach.id">{{ coach | formatCoach }}</mat-option>
       }
     </mat-select>
   </mat-form-field>
@@ -80,6 +64,6 @@
 <div class="footer">
   <button matButton (click)="close()">Cancelar</button>
   <button matButton="filled" (click)="confirm()" [disabled]="form.invalid">
-    {{ saveButton() }}
+    {{ saveButton }}
   </button>
 </div>

@@ -61,7 +61,7 @@ export class ClientsListComponent {
         .actions([
           {
             icon: 'open_in_new',
-            tooltip: 'Ver detalhes',
+            tooltip: () => 'Ver detalhes',
             callback: (row) => this.router.navigate(['clients', row.id])
           }
         ])
