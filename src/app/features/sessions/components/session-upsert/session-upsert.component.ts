@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
@@ -6,7 +6,7 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule
 } from '@angular/forms';
-import { MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -24,11 +24,25 @@ import {
   roundToNearestMinutes
 } from 'date-fns';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
+import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { Session } from '../../models/session.interface';
-import { UpsertSessionService } from '../../services/upsert-session.service';
 import { SessionsStore } from '../../store/sessions.store';
+
+export interface SessionUpsertData {
+  action: Action;
+  session: Partial<Session>;
+}
+
+export interface SessionUpsertFormResult {
+  startDate: Date;
+  startTime: Date;
+  duration: number;
+  clientId: string;
+  coachId: string;
+}
 
 interface SessionUpsertForm {
   startDate: FormControl<Date>;
@@ -53,39 +67,42 @@ type Action = 'create' | 'edit' | 'duplicate';
     MatButtonModule,
     MatIconModule,
     NgxMatSelectSearchModule,
-    MatTooltipModule
+    MatTooltipModule,
+    FormatClientPipe,
+    FormatCoachPipe
   ],
   templateUrl: './session-upsert.component.html',
   styleUrl: './session-upsert.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionUpsertComponent {
-  readonly #session = inject<Partial<Session>>(MAT_BOTTOM_SHEET_DATA);
+  readonly #data = inject<SessionUpsertData>(MAT_BOTTOM_SHEET_DATA);
   readonly #formBuilder = inject(NonNullableFormBuilder);
   readonly #sessionsStore = inject(SessionsStore);
-  readonly #upsertSessionService = inject(UpsertSessionService);
   readonly #authService = inject(AuthenticationService);
+  readonly #bottomSheetRef = inject(MatBottomSheetRef);
 
   form: FormGroup<SessionUpsertForm>;
-  action = signal<Action>(this.#session.id ? 'edit' : 'create');
-  title = computed<string>(() => {
+
+  get title(): string {
     const titleLabels: Record<Action, string> = {
       create: 'Nova Sessão',
-      edit: this.#session.client?.name ?? 'Editar Sessão',
+      edit: this.#data.session.client?.name ?? 'Editar Sessão',
       duplicate: 'Duplicar sessão'
     };
 
-    return titleLabels[this.action()];
-  });
-  saveButton = computed(() => {
+    return titleLabels[this.#data.action];
+  }
+
+  get saveButton(): string {
     const saveButtonLabels: Record<Action, string> = {
       create: 'Criar',
       edit: 'Guardar',
       duplicate: 'Duplicar'
     };
 
-    return saveButtonLabels[this.action()];
-  });
+    return saveButtonLabels[this.#data.action];
+  }
 
   // Clients
   readonly clients = this.#sessionsStore.clients;
@@ -119,96 +136,48 @@ export class SessionUpsertComponent {
     );
   });
 
-  get hasSessionStarted(): boolean {
-    const { id, startDate } = this.#session;
-    return this.action() === 'edit' && !!id && !!startDate && isBefore(startDate, new Date());
-  }
-
   constructor() {
     const defaultStartDateTime = this.#getDefaultStartDateTime();
-    const { client, coach, startDate, endDate } = this.#session;
+    const { id, client, coach, startDate, endDate } = this.#data.session;
 
     this.form = this.#formBuilder.group<SessionUpsertForm>({
-      startDate: this.#formBuilder.control<Date>({
-        value: startDate ? new Date(startDate) : defaultStartDateTime,
-        disabled: this.hasSessionStarted
-      }),
-      startTime: this.#formBuilder.control<Date>({
-        value: startDate ? new Date(startDate) : defaultStartDateTime,
-        disabled: this.hasSessionStarted
-      }),
-      duration: this.#formBuilder.control<number>({
-        value: startDate && endDate ? differenceInMinutes(endDate, startDate) : 60,
-        disabled: this.hasSessionStarted
-      }),
-      clientId: this.#formBuilder.control<string>({
-        value: client?.id ?? '',
-        disabled: this.hasSessionStarted
-      }),
-      coachId: this.#formBuilder.control<string>({
-        value: coach?.id ?? '',
-        disabled: this.hasSessionStarted || this.#authService.userRole() === UserRole.coach
-      })
+      startDate: this.#formBuilder.control<Date>(
+        startDate ? new Date(startDate) : defaultStartDateTime
+      ),
+      startTime: this.#formBuilder.control<Date>(
+        startDate ? new Date(startDate) : defaultStartDateTime
+      ),
+      duration: this.#formBuilder.control<number>(
+        startDate && endDate ? differenceInMinutes(endDate, startDate) : 60
+      ),
+      clientId: this.#formBuilder.control<string>(client?.id ?? ''),
+      coachId: this.#formBuilder.control<string>(coach?.id ?? '')
     });
-  }
 
-  duplicateSession(): void {
-    this.action.set('duplicate');
-
-    const defaultStartDateTime = this.#getDefaultStartDateTime();
-    const sessionDate = new Date(this.#session.startDate as number);
-
-    this.form.setValue({
-      startDate: defaultStartDateTime,
-      clientId: this.#session.client?.id ?? '',
-      coachId: this.#session.coach?.id ?? '',
-      duration: differenceInMinutes(this.#session.endDate as number, sessionDate),
-      startTime: new Date(
-        defaultStartDateTime.setHours(sessionDate.getHours(), sessionDate.getMinutes())
-      )
-    });
-    this.form.enable();
+    const hasSessionStarted =
+      this.#data.action === 'edit' && !!id && !!startDate && isBefore(startDate, new Date());
+    if (hasSessionStarted) {
+      this.form.disable();
+    } else if (this.#authService.userRole() === UserRole.coach) {
+      this.form.controls.coachId.disable();
+    }
   }
 
   close(): void {
-    this.#upsertSessionService.closeBottomSheet();
+    this.#bottomSheetRef.dismiss();
   }
 
   confirm(): void {
     const { clientId, coachId, duration, startDate, startTime } = this.form.getRawValue();
+    const result: SessionUpsertFormResult = {
+      clientId,
+      coachId,
+      duration,
+      startDate,
+      startTime
+    };
 
-    const sessionStartDateTime = this.#getSessionStartDateTime(startDate, startTime);
-
-    if (this.action() === 'edit' && this.#session.id) {
-      this.#upsertSessionService.editSession(this.#session.id, {
-        clientId,
-        coachId,
-        startDate: sessionStartDateTime.getTime(),
-        endDate: addMinutes(sessionStartDateTime, duration).getTime()
-      });
-    } else {
-      this.#upsertSessionService.createSession({
-        clientId,
-        coachId,
-        startDate: sessionStartDateTime.getTime(),
-        endDate: addMinutes(sessionStartDateTime, duration).getTime()
-      });
-    }
-  }
-
-  deleteSession(): void {
-    if (!this.#session.id) {
-      return;
-    }
-
-    this.#upsertSessionService.deleteSession(this.#session.id);
-  }
-
-  #getSessionStartDateTime(startDate: Date, startTime: Date): Date {
-    const hours = startTime.getHours();
-    const minutes = startTime.getMinutes();
-
-    return new Date(startDate.setHours(hours, minutes, 0, 0));
+    this.#bottomSheetRef.dismiss(result);
   }
 
   #getDefaultStartDateTime(): Date {

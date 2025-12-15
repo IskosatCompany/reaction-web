@@ -51,3 +51,11 @@ body {
 .searchable-mat-select {
   max-height: 200px !important;
 }
+
+.transparent-backdrop {
+  background: transparent;
+}
+
+:host ::ng-deep .session-bottom-sheet-container > mat-bottom-sheet-container {
+  padding: 16px;
+}

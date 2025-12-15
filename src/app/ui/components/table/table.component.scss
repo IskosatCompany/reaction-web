@@ -9,3 +9,10 @@ mat-spinner {
   top: 100px;
   right: 50%;
 }
+
+.actions-column {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -19,16 +19,29 @@
         } @else {
           <!-- actions column -->
           @if (col.actions?.length) {
-            @for (action of col.actions; track $index) {
-              <button
-                mat-icon-button
-                (click)="action.callback(row)"
-                [disabled]="action.isDisabled ? action.isDisabled(row) : false"
-                [matTooltip]="action.tooltip"
-              >
-                <mat-icon>{{ action.icon }}</mat-icon>
-              </button>
-            }
+            <div class="actions-column">
+              @for (action of col.actions; track $index) {
+                @if (!action.isHidden || !action.isHidden(row)) {
+                  @if (action.callback) {
+                    <button
+                      mat-icon-button
+                      (click)="action.callback(row)"
+                      [disabled]="action.isDisabled ? action.isDisabled(row) : false"
+                      [matTooltip]="action.tooltip ? action.tooltip(row) : null"
+                    >
+                      <mat-icon>{{ action.icon }}</mat-icon>
+                    </button>
+                  } @else {
+                    <mat-icon
+                      [style.color]="action.color"
+                      [matTooltip]="action.tooltip ? action.tooltip(row) : null"
+                    >
+                      {{ action.icon }}
+                    </mat-icon>
+                  }
+                }
+              }
+            </div>
           } @else {
             <!-- normal text cell -->
             {{ col.cellFn ? col.cellFn(row) : row[col.key] }}
