@@ -17,40 +17,10 @@
     <mat-date-range-picker #picker></mat-date-range-picker>
   </mat-form-field>
 
-  <mat-form-field appearance="outline" subscriptSizing="dynamic">
-    <mat-label>Cliente</mat-label>
-    <mat-select formControlName="clientId" panelClass="searchable-mat-select">
-      <mat-option>
-        <ngx-mat-select-search
-          placeholderLabel="Pesquisar cliente"
-          [formControl]="clientFilterCtrl"
-        />
-      </mat-option>
-      <mat-option [value]="null">-</mat-option>
-      @for (client of filteredClients(); track client.id) {
-        <mat-option [value]="client.id">
-          {{ client.name }} - #{{ client.clientNumber }}
-        </mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
+  <app-searchable-select [appClientSelect]="clients()" formControlName="clientId" />
 
   @if (isAbleToFilterByCoach()) {
-    <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>Treinador</mat-label>
-      <mat-select formControlName="coachId" panelClass="searchable-mat-select">
-        <mat-option>
-          <ngx-mat-select-search
-            placeholderLabel="Pesquisar treinador"
-            [formControl]="coachFilterCtrl"
-          />
-        </mat-option>
-        <mat-option [value]="null">-</mat-option>
-        @for (coach of filteredCoaches(); track coach.id) {
-          <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
+    <app-searchable-select [appCoachSelect]="coaches()" formControlName="coachId" />
   }
 
   <mat-form-field appearance="outline" subscriptSizing="dynamic">

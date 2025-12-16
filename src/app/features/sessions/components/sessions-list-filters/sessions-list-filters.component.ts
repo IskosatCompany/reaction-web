@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,7 +6,9 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { SearchableSelectComponent } from '../../../../ui/components/searchable-select/searchable-select.component';
+import { ClientSelectDirective } from '../../../../ui/directives/client-select.directive';
+import { CoachSelectDirective } from '../../../../ui/directives/coach-select.directive';
 import { SessionsRequest } from '../../models/http/sessions-request.interface';
 import { SessionStatus, SessionStatusLabel } from '../../models/session.interface';
 import { SessionsListFiltersService } from '../../services/sessions-list-filters.service';
@@ -33,9 +34,11 @@ export interface SessionsListFiltersData {
     MatFormFieldModule,
     MatDatepickerModule,
     MatSelectModule,
-    NgxMatSelectSearchModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    SearchableSelectComponent,
+    ClientSelectDirective,
+    CoachSelectDirective
   ],
   templateUrl: './sessions-list-filters.component.html',
   styleUrl: './sessions-list-filters.component.scss',
@@ -48,42 +51,12 @@ export class SessionsListFiltersComponent {
   readonly #bottomSheetRef = inject(MatBottomSheetRef, { optional: true });
 
   readonly isAbleToFilterByCoach = this.#sessionsFiltersService.isAdmin;
+  readonly clients = this.#sessionsStore.clients;
+  readonly coaches = this.#sessionsStore.coaches;
   readonly sessionStatus = SessionStatus;
   readonly sessionStatusLabel = SessionStatusLabel;
   readonly withinBottomSheet = signal(!!this.#bottomSheetRef);
   readonly filtersForm: FormGroup<SessionsListFiltersForm>;
-
-  // Clients
-  readonly clients = this.#sessionsStore.clients;
-  readonly clientFilterCtrl = new FormControl('');
-  readonly clientFilter = toSignal(this.clientFilterCtrl.valueChanges, { initialValue: '' });
-  readonly filteredClients = computed(() => {
-    const search = this.clientFilter()?.toLowerCase();
-    if (!search?.trim()) {
-      return this.clients();
-    }
-
-    return this.clients().filter(
-      (item) =>
-        item.name.toLowerCase().includes(search) || item.clientNumber.toString().includes(search)
-    );
-  });
-
-  // Coaches
-  readonly coaches = this.#sessionsStore.coaches;
-  readonly coachFilterCtrl = new FormControl('');
-  readonly coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
-  readonly filteredCoaches = computed(() => {
-    const search = this.coachFilter()?.toLowerCase();
-    if (!search?.trim()) {
-      return this.coaches();
-    }
-
-    return this.coaches().filter(
-      (item) =>
-        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
-    );
-  });
 
   constructor() {
     const { clientId, coachId, endDate, startDate, status } = this.#sessionsFiltersService.request;

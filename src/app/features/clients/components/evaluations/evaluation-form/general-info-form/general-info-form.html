@@ -1,23 +1,15 @@
 <form [formGroup]="evaluationGeneralInfoForm" class="general-info-form">
   <div class="info">
-    <mat-form-field appearance="fill">
-      <mat-label>Treinador</mat-label>
-      <mat-select formControlName="coachId" panelClass="searchable-mat-select">
-        <mat-option>
-          <ngx-mat-select-search
-            [formControl]="coachFilterCtrl"
-            placeholderLabel="Pesquisar treinador"
-            noEntriesFoundLabel="Nenhum treinador encontrado"
-          />
-        </mat-option>
-        @for (coach of filteredCoaches(); track coach.id) {
-          <mat-option [value]="coach.id">{{ coach.name }} - #{{ coach.employeeNumber }}</mat-option>
-        }
-      </mat-select>
+    <app-searchable-select
+      [appCoachSelect]="coaches()"
+      [allowNull]="false"
+      appearance="fill"
+      formControlName="coachId"
+    >
       @if (evaluationGeneralInfoForm.get('coachId')?.hasError('required')) {
-        <mat-error>Coach é obrigatório</mat-error>
+        <mat-error>Campo obrigatório</mat-error>
       }
-    </mat-form-field>
+    </app-searchable-select>
 
     <mat-form-field appearance="fill">
       <mat-label>Data da Avaliação</mat-label>

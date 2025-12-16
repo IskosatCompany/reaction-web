@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
-import { outputFromObservable, toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, effect, input } from '@angular/core';
+import { outputFromObservable } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { debounceTime, filter, map } from 'rxjs';
-import { Coach } from '../../../../../coaches/models/coach.model';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { EvaluationGeneralInfoForm } from './general-info-form.model';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { debounceTime, filter, map } from 'rxjs';
+import { SearchableSelectComponent } from '../../../../../../ui/components/searchable-select/searchable-select.component';
+import { CoachSelectDirective } from '../../../../../../ui/directives/coach-select.directive';
+import { Coach } from '../../../../../coaches/models/coach.model';
 import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-info.model';
+import { EvaluationGeneralInfoForm } from './general-info-form.model';
 
 @Component({
   selector: 'app-general-info-form',
@@ -18,10 +18,10 @@ import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-inf
     ReactiveFormsModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatSelectModule,
     MatInputModule,
     MatButtonModule,
-    NgxMatSelectSearchModule
+    SearchableSelectComponent,
+    CoachSelectDirective
   ],
   templateUrl: './general-info-form.html',
   styleUrl: './general-info-form.scss',
@@ -29,7 +29,7 @@ import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-inf
 })
 export class GeneralInfoFormComponent {
   model = input<EvaluationGeneralInfo>();
-  coaches = input<Coach[]>();
+  coaches = input<Coach[]>([]);
 
   evaluationGeneralInfoForm = new FormGroup({
     coachId: new FormControl<string | null>(null, Validators.required),
@@ -50,21 +50,6 @@ export class GeneralInfoFormComponent {
       map(() => this.evaluationGeneralInfoForm.valid)
     )
   );
-
-  // Coaches
-  readonly coachFilterCtrl = new FormControl('');
-  readonly coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
-  readonly filteredCoaches = computed(() => {
-    const search = this.coachFilter()?.toLowerCase();
-    if (!search?.trim()) {
-      return this.coaches();
-    }
-
-    return this.coaches()?.filter(
-      (item) =>
-        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
-    );
-  });
 
   constructor() {
     effect(() => {

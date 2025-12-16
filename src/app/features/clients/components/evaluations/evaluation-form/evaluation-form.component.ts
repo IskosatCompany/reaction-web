@@ -8,7 +8,7 @@ import {
   signal
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,7 +17,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IS_MOBILE } from '../../../../../core/tokens/mobile.token';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
 import { Authorization } from '../../../models/evaluation/authorization.model';
@@ -48,7 +47,6 @@ import { WellBeingFormComponent } from './well-being-form/well-being-form';
     MatDatepickerModule,
     MatSelectModule,
     MatButtonModule,
-    NgxMatSelectSearchModule,
     ProfessionalPhysicalForm,
     ClinicalHistoryForm,
     MainComplaintsFormComponent,
@@ -67,38 +65,27 @@ export class EvaluationFormComponent {
   isMobile = inject(IS_MOBILE);
   coachApiService = inject(CoachApiService);
   route = inject(ActivatedRoute);
+
   model = input<Evaluation>();
 
   evaluationCreate = output<Partial<Evaluation>>();
   evaluationEdit = output<Partial<Evaluation>>();
 
-  coachFilterCtrl = new FormControl('');
   evaluation?: Partial<Evaluation>;
 
   isValid = signal(false);
   coaches = toSignal(this.coachApiService.getCoaches(), { initialValue: [] });
-  coachFilter = toSignal(this.coachFilterCtrl.valueChanges, { initialValue: '' });
-  filteredCoaches = computed(() => {
-    const search = this.coachFilter()?.toLowerCase();
-    if (!search?.trim()) {
-      return this.coaches();
-    }
-
-    return this.coaches().filter(
-      (item) =>
-        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
-    );
-  });
   generalInfo = computed<EvaluationGeneralInfo | undefined>(() => {
     const model = this.model();
     if (!model) {
       return;
     }
+
     return {
       notes: model.notes,
       date: model.date,
-      coachId: model.coachId ?? '',
-      clientId: model.clientId ?? ''
+      coachId: model.coachId,
+      clientId: model.clientId
     };
   });
 

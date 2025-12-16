@@ -1,3 +1,33 @@
-<p>
-  searchable-select works!
-</p>
+<mat-form-field [appearance]="appearance" subscriptSizing="dynamic">
+  @if (label) {
+    <mat-label>{{ label }}</mat-label>
+  }
+
+  <mat-select
+    [value]="value()"
+    [disabled]="disabled()"
+    (selectionChange)="select($event.value)"
+    panelClass="searchable-mat-select"
+  >
+    <!-- Search -->
+    <mat-option>
+      <ngx-mat-select-search
+        [placeholderLabel]="placeholder"
+        [formControl]="searchCtrl"
+        noEntriesFoundLabel="Sem resultados"
+      />
+    </mat-option>
+
+    <!-- Optional null -->
+    @if (allowNull && !search()) {
+      <mat-option [value]="null">-</mat-option>
+    }
+
+    <!-- Options -->
+    @for (item of filteredItems(); track $index) {
+      <mat-option [value]="item[valueKey]">{{ displayFn(item) }}</mat-option>
+    }
+  </mat-select>
+
+  <ng-content select="mat-error"></ng-content>
+</mat-form-field>
