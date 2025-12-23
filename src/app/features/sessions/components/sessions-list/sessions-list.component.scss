@@ -20,3 +20,17 @@ app-card {
     }
   }
 }
+
+mat-card {
+  padding: 10px;
+  background: white;
+  margin-bottom: 20px;
+}
+
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
