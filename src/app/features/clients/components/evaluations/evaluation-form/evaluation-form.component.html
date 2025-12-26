@@ -37,22 +37,6 @@
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
-      <span class="step-label"> Queixas Principais </span>
-    </ng-template>
-    @if (isMobile()) {
-      <h2>Queixas Principais</h2>
-    }
-    <app-main-complaints-form
-      [model]="model()?.mainComplaints"
-      (value)="onStepThreeChange($event)"
-    />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>
       <span class="step-label"> Rotina e bem estar </span>
     </ng-template>
     @if (isMobile()) {
@@ -61,6 +45,22 @@
     <app-well-being-form
       [model]="model()?.routineAndWellBeing"
       (value)="onStepFourChange($event)"
+    />
+    <div class="stepper-nav">
+      <button matButton="elevated" matStepperPrevious>Voltar</button>
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>
+      <span class="step-label"> Queixas Principais </span>
+    </ng-template>
+    @if (isMobile()) {
+      <h2>Queixas Principais</h2>
+    }
+    <app-main-complaints-form
+      [model]="model()?.mainComplaints"
+      (value)="onStepThreeChange($event)"
     />
     <div class="stepper-nav">
       <button matButton="elevated" matStepperPrevious>Voltar</button>
