@@ -7,4 +7,5 @@ export interface MainComplaintsForm {
   reliefConditions: string | null;
   aggravation: string | null;
   associatedManifestations: string | null;
+  similarInjuries: string | null;
 }
