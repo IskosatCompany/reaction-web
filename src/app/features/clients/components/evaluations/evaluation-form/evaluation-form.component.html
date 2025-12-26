@@ -5,111 +5,131 @@
   </button>
   <h1>Nova avaliação</h1>
 </header>
-<mat-stepper [linear]="false" #stepper>
+<mat-stepper [orientation]="isMobile() ? 'vertical' : 'horizontal'" [linear]="false" #stepper>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Dados profissionais e físicos </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Dados profissionais e físicos</h2>
-    }
+
     <app-professional-physical-form
       [model]="model()?.professionalAndPhysicalData"
-      (value)="onStepOneChange($event)"
+      (value)="onProfessionalPhysicalFormChange($event)"
     />
-    <button matButton="elevated" matStepperNext>Seguinte</button>
+
+    @if (!isMobile()) {
+      <button matButton="elevated" matStepperNext>Seguinte</button>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Histórico Clínico </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Histórico Clínico</h2>
-    }
+
     <app-clinical-history-form
       [model]="model()?.clinicalHistory"
-      (value)="onStepTwoChange($event)"
+      (value)="onClinicalHistoryFormChange($event)"
     />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Rotina e bem estar </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Rotina e bem estar</h2>
-    }
+
     <app-well-being-form
       [model]="model()?.routineAndWellBeing"
-      (value)="onStepFourChange($event)"
+      (value)="onWellBeingFormChange($event)"
     />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Queixas Principais </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Queixas Principais</h2>
-    }
+
     <app-main-complaints-form
       [model]="model()?.mainComplaints"
-      (value)="onStepThreeChange($event)"
+      (value)="onMainComplaintsFormChange($event)"
     />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
-      <span class="step-label"> Avaliação Clínica </span>
+      <span class="step-label"> Avaliação Física </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Avaliação Clínica</h2>
-    }
+
     <app-clinical-evaluation-form
       [model]="model()?.clinicalEvaluation"
-      (value)="onClinicalEvaluationChange($event)"
+      (value)="onClinicalEvaluationFormChange($event)"
     />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>
+      <span class="step-label"> Testes Físicos </span>
+    </ng-template>
+
+    <app-physical-tests-form
+      [model]="model()?.physicalTests"
+      (value)="onPhysicalTestsFormChange($event)"
+    />
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Diagnóstico e tratamento </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Diagnóstico e tratamento</h2>
-    }
+
     <app-diagnosis-treatment-form
       [model]="model()?.diagnosisAndTreatment"
-      (value)="onStepFiveChange($event)"
+      (value)="onDiagnosisTreatmentFormChange($event)"
     />
-    <div class="stepper-nav">
-      <button matButton="elevated" matStepperPrevious>Voltar</button>
-      <button matButton="elevated" matStepperNext>Seguinte</button>
-    </div>
+
+    @if (!isMobile()) {
+      <div class="stepper-nav">
+        <button matButton="elevated" matStepperPrevious>Voltar</button>
+        <button matButton="elevated" matStepperNext>Seguinte</button>
+      </div>
+    }
   </mat-step>
   <mat-step>
     <ng-template matStepLabel>
       <span class="step-label"> Conclusão </span>
     </ng-template>
-    @if (isMobile()) {
-      <h2>Conclusão</h2>
-    }
     <app-general-info-form
       [model]="generalInfo()"
       [coaches]="coaches()"
-      (value)="onStepSevenChange($event)"
+      (value)="onGeneralInfoFormChange($event)"
       (isValid)="isValid.set($event)"
     />
     <div class="stepper-nav">

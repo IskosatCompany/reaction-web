@@ -18,6 +18,7 @@ import { CoachApiService } from '../../../../coaches/api/coach-api.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { GeneralInfoComponent } from './general-info/general-info.component';
 import { Router } from '@angular/router';
+import { PhysicalTestsComponent } from './physical-tests.component/physical-tests.component';
 
 @Component({
   selector: 'app-evaluations-accordion',
@@ -32,7 +33,8 @@ import { Router } from '@angular/router';
     WellBeingComponent,
     ClinicalEvaluationComponent,
     DiagnosisTreatmentComponent,
-    GeneralInfoComponent
+    GeneralInfoComponent,
+    PhysicalTestsComponent
   ],
   templateUrl: './evaluations-accordion.component.html',
   styleUrl: './evaluations-accordion.component.scss',

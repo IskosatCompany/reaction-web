@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject, input } from '@angular/core';
 import { outputFromObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { debounceTime, filter, map } from 'rxjs';
@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { EvaluationGeneralInfoForm } from './general-info-form.model';
 import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-info.model';
+import { IS_MOBILE } from '../../../../../../core/tokens/mobile.token';
 
 @Component({
   selector: 'app-general-info-form',
@@ -28,6 +29,7 @@ import { EvaluationGeneralInfo } from '../../../../models/evaluation/general-inf
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GeneralInfoFormComponent {
+  protected readonly isMobile = inject(IS_MOBILE);
   model = input<EvaluationGeneralInfo>();
   coaches = input<Coach[]>();
 

@@ -1,5 +1,4 @@
 <form [formGroup]="clinicalEvaluationForm">
-  <!-- Systems Control -->
   <mat-form-field appearance="outline">
     <mat-label>Avaliação Postural</mat-label>
     <textarea
@@ -10,50 +9,17 @@
     ></textarea>
   </mat-form-field>
 
-  <h2>Testes Isométricos</h2>
-  <!-- Isometrics Strength Tests Array -->
-  <div class="strengths" formArrayName="isometricStrengthTests">
-    @for (group of fieldsArray.controls; track $index; let i = $index) {
-      <mat-card class="strength-test-group">
-        <mat-card-content [formGroupName]="i">
-          <div class="form-row">
-            <mat-form-field appearance="outline">
-              <mat-label>Grupo Muscular</mat-label>
-              <input matInput formControlName="muscleGroup" placeholder="Inserir músculo" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Esquerda</mat-label>
-              <input matInput type="number" formControlName="left" placeholder="Lado Esquerdo" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>Direita</mat-label>
-              <input matInput type="number" formControlName="right" placeholder="Lado Direito" />
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-              <mat-label>RSI</mat-label>
-              <input matInput type="number" formControlName="rsi" placeholder="RSI" />
-            </mat-form-field>
-
-            <button
-              matMiniFab
-              (click)="removeField(i)"
-              [disabled]="fieldsArray.length === 1"
-              [matTooltip]="'Remover teste'"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    }
-  </div>
-
-  <!-- Add Field Button -->
-  <button matButton="filled" (click)="addField()">
-    <mat-icon>add</mat-icon>
-    Adicionar Teste
-  </button>
+  <mat-card>
+    <mat-card-header><h2>Perímetros</h2></mat-card-header>
+    <mat-card-content>
+      <app-form-array-field
+        [formArray]="fieldsArray"
+        [fields]="isometricStrengthTestsFields"
+        addButtonLabel="Adicionar Teste"
+        removeTooltip="Remover teste"
+        (addField)="addField()"
+        (removeField)="removeField($event)"
+      />
+    </mat-card-content>
+  </mat-card>
 </form>

@@ -1,0 +1,65 @@
+<form [formGroup]="physicalTestsForm">
+  <mat-card>
+    <mat-card-header>
+      <h2>Força Isométrica</h2>
+    </mat-card-header>
+    <mat-card-content>
+      <app-form-array-field
+        [formArray]="isometricStrengthTests"
+        [fields]="isometricStrengthTestsFields"
+        addButtonLabel="Adicionar Teste"
+        removeTooltip="Remover teste"
+        (addField)="addField('isometricStrengthTests')"
+        (removeField)="removeField('isometricStrengthTests', $event)"
+      />
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <h2>Mobilidade</h2>
+    </mat-card-header>
+    <mat-card-content>
+      <app-form-array-field
+        [formArray]="mobilityTests"
+        [fields]="isometricStrengthTestsFields"
+        addButtonLabel="Adicionar Teste"
+        removeTooltip="Remover teste"
+        (addField)="addField('mobilityTests')"
+        (removeField)="removeField('mobilityTests', $event)"
+      />
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <h2>Salto</h2>
+    </mat-card-header>
+    <mat-card-content>
+      <app-form-array-field
+        [formArray]="jumpTests"
+        [fields]="isometricStrengthTestsFields"
+        addButtonLabel="Adicionar Teste"
+        removeTooltip="Remover teste"
+        (addField)="addField('jumpTests')"
+        (removeField)="removeField('jumpTests', $event)"
+      />
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <h2>Força Isoinercial</h2>
+    </mat-card-header>
+    <mat-card-content>
+      <app-form-array-field
+        [formArray]="isoinertialTests"
+        [fields]="isometricStrengthTestsFields"
+        addButtonLabel="Adicionar Teste"
+        removeTooltip="Remover teste"
+        (addField)="addField('isoinertialTests')"
+        (removeField)="removeField('isoinertialTests', $event)"
+      />
+    </mat-card-content>
+  </mat-card>
+</form>

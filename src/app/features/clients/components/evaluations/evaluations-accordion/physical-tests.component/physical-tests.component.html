@@ -1,0 +1,43 @@
+@if (physicalTests().isometricStrengthTests?.length) {
+  <section class="test-grid">
+    <span>Testes de Força Isométrica</span>
+    <div>
+      @for (test of physicalTests().isometricStrengthTests; track test) {
+        <app-physical-test [physicalTest]="test" />
+      }
+    </div>
+  </section>
+}
+
+@if (physicalTests().mobilityTests?.length) {
+  <section class="test-grid">
+    <span>Testes de Mobilidade</span>
+    <div>
+      @for (test of physicalTests().mobilityTests; track test) {
+        <app-physical-test [physicalTest]="test" />
+      }
+    </div>
+  </section>
+}
+
+@if (physicalTests().jumpTests?.length) {
+  <section class="test-grid">
+    <span>Testes de Salto</span>
+    <div>
+      @for (test of physicalTests().jumpTests; track test) {
+        <app-physical-test [physicalTest]="test" />
+      }
+    </div>
+  </section>
+}
+
+@if (physicalTests().isoinertialTests?.length) {
+  <section class="test-grid">
+    <span>Testes de Força Isoinercial</span>
+    <div>
+      @for (test of physicalTests().isoinertialTests; track test) {
+        <app-physical-test [physicalTest]="test" />
+      }
+    </div>
+  </section>
+}

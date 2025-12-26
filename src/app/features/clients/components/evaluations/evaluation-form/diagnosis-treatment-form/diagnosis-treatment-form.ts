@@ -19,7 +19,6 @@ export class DiagnosisTreatmentFormComponent {
   diagnosisTreatmentForm = new FormGroup({
     lesionChain: new FormControl<string | null>(null),
     diagnosis: new FormControl<string | null>(null),
-    treatment: new FormControl<string | null>(null),
     counseling: new FormControl<string | null>(null)
   });
 
@@ -37,7 +36,6 @@ export class DiagnosisTreatmentFormComponent {
         this.diagnosisTreatmentForm.setValue({
           lesionChain: model.lesionChain ?? null,
           diagnosis: model.diagnosis ?? null,
-          treatment: model.treatment ?? null,
           counseling: model.counseling ?? null
         });
       }
@@ -48,7 +46,6 @@ export class DiagnosisTreatmentFormComponent {
     return {
       lesionChain: formData.lesionChain ?? undefined,
       diagnosis: formData.diagnosis ?? undefined,
-      treatment: formData.treatment ?? undefined,
       counseling: formData.counseling ?? undefined
     };
   }

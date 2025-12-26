@@ -3,17 +3,11 @@
   {{ clinicalEvaluation()?.systems ?? '—' }}
 </div>
 
-<div class="clinical-label">Testes de força isométrica</div>
+<div class="clinical-label">Perímetros</div>
 <div class="clinical-value">
-  @if (clinicalEvaluation()?.isometricStrengthTests?.length) {
-    @for (test of clinicalEvaluation()?.isometricStrengthTests; track test) {
-      <strong>{{ test.muscleGroup ?? '—' }}</strong>
-      <div>
-        Esquerda: {{ test.left ?? '—' }} &nbsp;•&nbsp; Direita:
-        {{ test.right ?? '—' }} &nbsp;•&nbsp; RSI: {{ test.rsi ?? '—' }}
-      </div>
-      <!-- small spacer between entries -->
-      <div style="height: 8px"></div>
+  @if (clinicalEvaluation()?.perimeters?.length) {
+    @for (test of clinicalEvaluation()?.perimeters; track test) {
+      <app-physical-test [physicalTest]="test" />
     }
   }
 </div>

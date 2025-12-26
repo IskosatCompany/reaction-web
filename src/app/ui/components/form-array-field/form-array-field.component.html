@@ -1,0 +1,46 @@
+@for (group of formArray().controls; track $index; let i = $index) {
+  <section [formGroup]="$any(group)" class="form-row">
+    @for (field of fields(); let last = $last; track field) {
+      @if (field.type === 'select') {
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>{{ field.label }}</mat-label>
+          <mat-select [formControlName]="field.name">
+            @for (option of field.options; track option.value) {
+              <mat-option [value]="option.value">
+                {{ option.label }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      } @else {
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>{{ field.label }}</mat-label>
+          <input
+            matInput
+            [type]="field.type"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || field.label"
+            [required]="field.required || false"
+          />
+        </mat-form-field>
+      }
+    }
+
+    <button
+      matMiniFab
+      (click)="onRemoveField(i)"
+      [disabled]="formArray().length === 1"
+      [matTooltip]="removeTooltip()"
+      class="delete-button"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </section>
+}
+
+<div class="add-button" [class.center]="isMobile()">
+  <button matButton="filled" (click)="onAddField()">
+    <mat-icon>add</mat-icon>
+    {{ addButtonLabel() }}
+  </button>
+</div>

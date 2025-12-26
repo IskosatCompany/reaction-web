@@ -1,6 +1,6 @@
 <form [formGroup]="evaluationGeneralInfoForm" class="general-info-form">
-  <div class="info">
-    <mat-form-field appearance="fill">
+  <div class="info" [class.info-mobile]="isMobile()">
+    <mat-form-field>
       <mat-label>Treinador</mat-label>
       <mat-select formControlName="coachId" panelClass="searchable-mat-select">
         <mat-option>
@@ -15,11 +15,11 @@
         }
       </mat-select>
       @if (evaluationGeneralInfoForm.get('coachId')?.hasError('required')) {
-        <mat-error>Coach é obrigatório</mat-error>
+        <mat-error>Treinador é obrigatório</mat-error>
       }
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field>
       <mat-label>Data da Avaliação</mat-label>
       <input
         matInput
@@ -36,7 +36,7 @@
       </mat-datepicker>
     </mat-form-field>
   </div>
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Notas</mat-label>
     <textarea
       matInput

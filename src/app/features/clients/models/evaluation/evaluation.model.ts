@@ -1,3 +1,4 @@
+import { PhysicalTests } from '../../components/evaluations/evaluation-form/physical-tests-form/physical-tests-form.model';
 import { Authorization } from './authorization.model';
 import { ClinicalEvaluation } from './clinical-evaluation.model';
 import { ClinicalHistory } from './clinical-history.model';
@@ -17,6 +18,7 @@ export interface Evaluation {
   mainComplaints?: MainComplaints;
   routineAndWellBeing?: WellBeing;
   diagnosisAndTreatment?: DiagnosisAndTreatment;
+  physicalTests?: PhysicalTests;
   clinicalEvaluation?: ClinicalEvaluation;
   authorization?: Authorization;
 }

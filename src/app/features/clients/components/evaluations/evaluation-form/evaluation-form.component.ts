@@ -36,6 +36,8 @@ import { GeneralInfoFormComponent } from './general-info-form/general-info-form'
 import { MainComplaintsFormComponent } from './main-complaints-form/main-complaints-form';
 import { ProfessionalPhysicalForm } from './professional-physical-form/professional-physical-form';
 import { WellBeingFormComponent } from './well-being-form/well-being-form';
+import { PhysicalTestsFormComponent } from './physical-tests-form/physical-tests-form.component';
+import { PhysicalTests } from './physical-tests-form/physical-tests-form.model';
 
 @Component({
   selector: 'app-evaluation-form',
@@ -56,6 +58,7 @@ import { WellBeingFormComponent } from './well-being-form/well-being-form';
     DiagnosisTreatmentFormComponent,
     GeneralInfoFormComponent,
     ClinicalEvaluationFormComponent,
+    PhysicalTestsFormComponent,
     RouterLink,
     MatIconModule
   ],
@@ -102,31 +105,27 @@ export class EvaluationFormComponent {
     };
   });
 
-  onStepOneChange(event: ProfessionalAndPhysicalData) {
+  onProfessionalPhysicalFormChange(event: ProfessionalAndPhysicalData) {
     this.evaluation = { ...this.evaluation, professionalAndPhysicalData: event };
   }
 
-  onStepTwoChange(data: ClinicalHistory) {
+  onClinicalHistoryFormChange(data: ClinicalHistory) {
     this.evaluation = { ...this.evaluation, clinicalHistory: data };
   }
 
-  onStepThreeChange(data: MainComplaints) {
+  onMainComplaintsFormChange(data: MainComplaints) {
     this.evaluation = { ...this.evaluation, mainComplaints: data };
   }
 
-  onStepFourChange(data: WellBeing) {
+  onWellBeingFormChange(data: WellBeing) {
     this.evaluation = { ...this.evaluation, routineAndWellBeing: data };
   }
 
-  onStepFiveChange(data: DiagnosisAndTreatment) {
+  onDiagnosisTreatmentFormChange(data: DiagnosisAndTreatment) {
     this.evaluation = { ...this.evaluation, diagnosisAndTreatment: data };
   }
 
-  onStepSixChange(data: Authorization) {
-    this.evaluation = { ...this.evaluation, authorization: data };
-  }
-
-  onStepSevenChange(data: EvaluationGeneralInfo) {
+  onGeneralInfoFormChange(data: EvaluationGeneralInfo) {
     this.evaluation = {
       ...this.evaluation,
       notes: data.notes,
@@ -136,8 +135,12 @@ export class EvaluationFormComponent {
     };
   }
 
-  onClinicalEvaluationChange(data: ClinicalEvaluation) {
+  onClinicalEvaluationFormChange(data: ClinicalEvaluation) {
     this.evaluation = { ...this.evaluation, clinicalEvaluation: data };
+  }
+
+  onPhysicalTestsFormChange(data: PhysicalTests) {
+    this.evaluation = { ...this.evaluation, physicalTests: data };
   }
 
   onSubmit(): void {
