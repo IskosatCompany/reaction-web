@@ -5,7 +5,6 @@ export interface ClinicalHistory {
   personalHistory?: string;
   surgicalHistory?: string;
   exams?: string;
-  similarInjuries?: string;
   fractures?: string;
   accidents?: string;
 }

@@ -24,7 +24,8 @@ export class MainComplaintsFormComponent {
     onsetProgression: new FormControl<string | null>(null),
     reliefConditions: new FormControl<string | null>(null),
     aggravation: new FormControl<string | null>(null),
-    associatedManifestations: new FormControl<string | null>(null)
+    associatedManifestations: new FormControl<string | null>(null),
+    similarInjuries: new FormControl<string | null>(null)
   });
 
   value = outputFromObservable(
@@ -46,7 +47,8 @@ export class MainComplaintsFormComponent {
           onsetProgression: model.onsetProgression ?? null,
           reliefConditions: model.reliefConditions ?? null,
           aggravation: model.aggravation ?? null,
-          associatedManifestations: model.associatedManifestations ?? null
+          associatedManifestations: model.associatedManifestations ?? null,
+          similarInjuries: model.similarInjuries ?? null
         });
       }
     });
@@ -61,7 +63,8 @@ export class MainComplaintsFormComponent {
       onsetProgression: formData.onsetProgression ?? undefined,
       reliefConditions: formData.reliefConditions ?? undefined,
       aggravation: formData.aggravation ?? undefined,
-      associatedManifestations: formData.associatedManifestations ?? undefined
+      associatedManifestations: formData.associatedManifestations ?? undefined,
+      similarInjuries: formData.similarInjuries ?? undefined
     };
   }
 }

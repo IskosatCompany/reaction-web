@@ -5,7 +5,6 @@ export interface ClinicalHistoryDataForm {
   personalHistory: string | null;
   surgicalHistory: string | null;
   exams: string | null;
-  similarInjuries: string | null;
   fractures: string | null;
   accidents: string | null;
 }
