@@ -20,7 +20,6 @@ export class ProfessionalPhysicalForm {
   professionalPhysicalForm = new FormGroup({
     profession: new FormControl<string | null>(null),
     physicalActivity: new FormControl<string | null>(null),
-    regularActivity: new FormControl<string | null>(null),
     height: new FormControl<number | null>(null),
     weight: new FormControl<number | null>(null),
     bmi: new FormControl<number | null>({ value: null, disabled: true })
@@ -39,7 +38,6 @@ export class ProfessionalPhysicalForm {
         this.professionalPhysicalForm.setValue({
           profession: model.profession ?? null,
           physicalActivity: model.physicalActivity ?? null,
-          regularActivity: model.regularActivity ?? null,
           height: model.height ?? null,
           weight: model.weight ?? null,
           bmi: model.bmi ?? null
@@ -62,7 +60,6 @@ export class ProfessionalPhysicalForm {
     return {
       profession: formData.profession ?? undefined,
       physicalActivity: formData.physicalActivity ?? undefined,
-      regularActivity: formData.regularActivity ?? undefined,
       height: formData.height ?? undefined,
       weight: formData.weight ?? undefined,
       bmi: formData.bmi ?? undefined
