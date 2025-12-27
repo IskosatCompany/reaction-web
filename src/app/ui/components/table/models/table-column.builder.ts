@@ -9,27 +9,27 @@ export class ColumnBuilder<T> {
     this.#col = { key, header };
   }
 
-  width(width: string) {
+  width(width: string): ColumnBuilder<T> {
     this.#col.width = width;
     return this;
   }
 
-  template(tpl: TemplateRef<{ $implicit: T }>) {
+  template(tpl: TemplateRef<{ $implicit: T }>): ColumnBuilder<T> {
     this.#col.template = tpl;
     return this;
   }
 
-  cellFn(fn: (row: T) => string) {
+  cellFn(fn: (row: T) => string): ColumnBuilder<T> {
     this.#col.cellFn = fn;
     return this;
   }
 
-  actions(actions: TableActionsColumn<T>[]) {
+  actions(actions: TableActionsColumn<T>[]): ColumnBuilder<T> {
     this.#col.actions = [...actions];
     return this;
   }
 
-  build() {
+  build(): TableColumn<T> {
     return this.#col;
   }
 }
