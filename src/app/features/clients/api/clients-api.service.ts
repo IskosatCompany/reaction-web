@@ -1,8 +1,8 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Client, ClientCreate, ClientForm } from '../models/client.interface';
 import { API_URL } from '../../../core/tokens/api-url.token';
+import { Client, ClientCreate, ClientForm } from '../models/client.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ClientsApiService {
@@ -14,6 +14,7 @@ export class ClientsApiService {
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
+
     return this.#http.get<Client[]>(`${this.#apiUrl}/client`, { params });
   }
 

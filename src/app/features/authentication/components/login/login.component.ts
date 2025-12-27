@@ -65,11 +65,7 @@ export class LoginComponent {
         catchError((error: HttpErrorResponse) => {
           // API sends an Unauthorized HTTP error when credentials are invalid
           if (error.status === HttpStatusCode.Unauthorized) {
-            this.#snackBar.open('Credenciais de acesso inválidas', undefined, {
-              horizontalPosition: 'center',
-              verticalPosition: 'bottom',
-              duration: 1500
-            });
+            this.#snackBar.open('Credenciais de acesso inválidas', undefined);
           }
 
           return EMPTY;
