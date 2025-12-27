@@ -8,6 +8,7 @@ import {
   provideZonelessChangeDetection
 } from '@angular/core';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -32,6 +33,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAppInitializer(() => inject(AuthenticationService).initialize()),
     provideNativeDateAdapter(),
+    {
+      provide: MAT_SNACK_BAR_DEFAULT_OPTIONS,
+      useValue: { horizontalPosition: 'center', verticalPosition: 'bottom', duration: 3000 }
+    },
     { provide: IS_MOBILE, useFactory: () => inject(LayoutService).isMobile },
     { provide: API_URL, useValue: environment.apiUrl },
     { provide: LOCALE_ID, useValue: 'pt-PT' },

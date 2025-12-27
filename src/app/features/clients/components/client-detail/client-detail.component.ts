@@ -3,11 +3,11 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRadioChange, MatRadioModule } from '@angular/material/radio';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -24,6 +24,7 @@ import {
   switchMap
 } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { formatClient } from '../../../../ui/helpers/client.helper';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
@@ -33,14 +34,12 @@ import { ClientsApiService } from '../../api/clients-api.service';
 import { EvaluationApiService } from '../../api/evaluation-api.service';
 import { ExportApiService } from '../../api/export-api.service';
 import { Client, ClientForm } from '../../models/client.interface';
+import { Evaluation } from '../../models/evaluation/evaluation.model';
 import { ExportPdfRequest } from '../../models/export-pdf-request.interface';
 import { ClientFormComponent } from '../client-form/client-form.component';
 import { EvaluationsAccordionComponent } from '../evaluations/evaluations-accordion/evaluations-accordion.component';
 import { ExportReportComponent } from '../export-report/export-report.component';
-import { Evaluation } from '../../models/evaluation/evaluation.model';
 import { ClientPlanningComponent } from './client-planning/client-planning.component';
-import { MatCard } from '@angular/material/card';
-import { formatClient } from '../../../../ui/helpers/client.helper';
 
 enum SessionFilter {
   Last30Days = 'Últimos 30 dias',
@@ -76,7 +75,6 @@ interface SessionFilterDate {
 export class ClientDetailComponent {
   isMobile = inject(IS_MOBILE);
   bottomSheet = inject(MatBottomSheet);
-  snackBarService = inject(MatSnackBar);
   clientApiService = inject(ClientsApiService);
   evaluationApiService = inject(EvaluationApiService);
   sessionsApiService = inject(SessionsApiService);
