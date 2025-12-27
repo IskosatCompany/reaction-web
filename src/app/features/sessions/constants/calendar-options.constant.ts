@@ -12,7 +12,7 @@ export const CALENDAR_DEFAULT_OPTIONS: CalendarOptions = {
   allDaySlot: false,
   nowIndicator: true,
   slotEventOverlap: false,
-  eventMaxStack: 3,
+  eventMaxStack: 5,
   height: '100%',
   windowResizeDelay: 0,
   headerToolbar: {
