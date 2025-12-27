@@ -12,6 +12,7 @@ import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
+import { genericErrorHandlingInterceptor } from './core/interceptors/generic-error-handling.interceptor';
 import { LayoutService } from './core/services/layout.service';
 import { API_URL } from './core/tokens/api-url.token';
 import { IS_MOBILE } from './core/tokens/mobile.token';
@@ -20,7 +21,9 @@ import { AuthenticationService } from './features/authentication/services/authen
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideHttpClient(withInterceptors([authenticationInterceptor])),
+    provideHttpClient(
+      withInterceptors([authenticationInterceptor, genericErrorHandlingInterceptor])
+    ),
     provideZonelessChangeDetection(),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
