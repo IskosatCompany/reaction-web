@@ -13,6 +13,16 @@ export const SessionStatusLabel: Record<SessionStatus, string> = {
   [SessionStatus.Pending]: 'Pendente'
 };
 
+export enum SessionType {
+  Training = 'TRAINING',
+  Treatment = 'TREATMENT'
+}
+
+export const SessionTypeLabel: Record<SessionType, string> = {
+  [SessionType.Training]: 'Treino',
+  [SessionType.Treatment]: 'Tratamento'
+};
+
 export interface Session {
   id: string;
   client: Client;
@@ -21,4 +31,5 @@ export interface Session {
   endDate: number;
   report?: string;
   status: SessionStatus;
+  type: SessionType;
 }
