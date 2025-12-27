@@ -13,7 +13,24 @@
       }
     </mat-form-field>
 
-    <app-password-input appearance="fill" formControlName="password" />
+    <mat-form-field appearance="fill">
+      <mat-label>Senha</mat-label>
+
+      <input matInput formControlName="password" [type]="passwordConfig.inputType()" />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        tabIndex="-1"
+        (click)="passwordConfig.toggleVisibility()"
+      >
+        <mat-icon>{{ passwordConfig.inputIcon() }}</mat-icon>
+      </button>
+
+      @if (form.controls.password.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
+    </mat-form-field>
 
     <button matButton="filled" type="submit">Entrar</button>
   </form>

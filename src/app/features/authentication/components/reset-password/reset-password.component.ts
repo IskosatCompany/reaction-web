@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   AbstractControl,
   FormControl,
@@ -17,7 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
-import { PasswordInputComponent } from '../../../../ui/components/password-input/password-input.component';
+import { PasswordInput } from '../../../../ui/models/password-input.class';
 import { PasswordApiService } from '../../api/password-api.service';
 import { AuthenticationContainerComponent } from '../container/container.component';
 
@@ -34,8 +35,7 @@ interface ResetPasswordForm {
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    AuthenticationContainerComponent,
-    PasswordInputComponent
+    AuthenticationContainerComponent
   ],
   templateUrl: './reset-password.component.html',
   styleUrl: './reset-password.component.scss',
@@ -46,6 +46,9 @@ export class ResetPasswordComponent {
   readonly #router = inject(Router);
   readonly #passwordApiService = inject(PasswordApiService);
   readonly #snackBar = inject(MatSnackBar);
+
+  readonly passwordConfig = new PasswordInput();
+  readonly confirmPasswordConfig = new PasswordInput();
 
   token!: string;
   form!: FormGroup<ResetPasswordForm>;
@@ -60,32 +63,35 @@ export class ResetPasswordComponent {
     }
 
     this.token = routeToken;
-    this.form = this.#formBuilder.group<ResetPasswordForm>(
-      {
-        password: this.#formBuilder.control<string>('', [Validators.required]),
-        confirmPassword: this.#formBuilder.control<string>('', [Validators.required])
-      },
-      { validators: this.passwordsValidator }
-    );
+    this.form = this.#formBuilder.group<ResetPasswordForm>({
+      password: this.#formBuilder.control<string>('', [
+        Validators.required,
+        Validators.minLength(6)
+      ]),
+      confirmPassword: this.#formBuilder.control<string>({ value: '', disabled: true }, [
+        this.passwordsValidator
+      ])
+    });
 
-    this.form.valueChanges.subscribe(() => {
-      if (this.form.hasError('passwordsMismatch')) {
-        this.form.controls.password.setErrors({ passwordsMismatch: true });
-        this.form.controls.confirmPassword.setErrors({ passwordsMismatch: true });
+    this.form.controls.password.valueChanges.pipe(takeUntilDestroyed()).subscribe((item) => {
+      if (!item.trim()) {
+        this.form.controls.confirmPassword.disable();
       } else {
-        this.form.controls.password.setErrors(null);
-        this.form.controls.confirmPassword.setErrors(null);
+        this.form.controls.confirmPassword.enable();
       }
     });
   }
 
   passwordsValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-    const formGroup = control as FormGroup<ResetPasswordForm>;
-    if (!formGroup.controls.password.value || !formGroup.controls.confirmPassword.value) {
+    if (!this.form) {
       return null;
     }
 
-    if (formGroup.controls.password.value === formGroup.controls.confirmPassword.value) {
+    if (!this.form.controls.password.value || !control.value) {
+      return null;
+    }
+
+    if (this.form.controls.password.value === control.value) {
       return null;
     }
 
@@ -93,7 +99,7 @@ export class ResetPasswordComponent {
   };
 
   submit() {
-    if (!this.form.valid) {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }

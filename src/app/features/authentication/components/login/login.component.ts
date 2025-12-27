@@ -14,7 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, RouterLink } from '@angular/router';
 import { catchError, EMPTY } from 'rxjs';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
-import { PasswordInputComponent } from '../../../../ui/components/password-input/password-input.component';
+import { PasswordInput } from '../../../../ui/models/password-input.class';
 import { AuthenticationService } from '../../services/authentication.service';
 import { AuthenticationContainerComponent } from '../container/container.component';
 
@@ -32,8 +32,7 @@ interface LoginForm {
     MatButtonModule,
     MatIconModule,
     AuthenticationContainerComponent,
-    RouterLink,
-    PasswordInputComponent
+    RouterLink
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
@@ -45,6 +44,7 @@ export class LoginComponent {
   readonly #authenticationService = inject(AuthenticationService);
   readonly #router = inject(Router);
 
+  readonly passwordConfig = new PasswordInput();
   readonly routesPaths = RoutesPaths;
 
   form = this.#formBuilder.group<LoginForm>({
