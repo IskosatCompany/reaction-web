@@ -2,8 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCard } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
@@ -11,9 +14,6 @@ import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatCard } from '@angular/material/card';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-coach-detail',
@@ -55,10 +55,10 @@ export class CoachDetailComponent {
       )
       .subscribe((coach: Coach) => {
         if (coach) {
-          this.snackBarService.open('Treinador editado com sucesso', 'Fechar', { duration: 3000 });
+          this.snackBarService.open('Treinador editado com sucesso', 'Fechar');
           this.refreshCoachSubject$.next();
         } else {
-          this.snackBarService.open('Error ao editar treinador', 'Fechar', { duration: 3000 });
+          this.snackBarService.open('Error ao editar treinador', 'Fechar');
         }
       });
   }
