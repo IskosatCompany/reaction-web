@@ -1,3 +1,5 @@
+@use '@angular/material' as mat;
+
 mat-spinner {
   margin: auto;
   height: 100% !important;
@@ -19,4 +21,23 @@ app-card {
       font-weight: 700;
     }
   }
+}
+
+mat-card {
+  @include mat.card-overrides(
+    (
+      elevated-container-color: #f7f9fd
+    )
+  );
+
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.mobile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-left: 16px;
+  padding-right: 16px;
 }

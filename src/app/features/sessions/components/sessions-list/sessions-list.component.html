@@ -2,7 +2,17 @@
   <mat-spinner />
 } @else {
   @if (isMobile()) {
-    <button matButton="filled" (click)="openFilters()">Filtros</button>
+    <div class="mobile-header">
+      <button matFab (click)="openFilters()">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+      <mat-card>
+        <div>
+          Foram encontradas <strong>{{ sessionsSize$ | async }}</strong> sessões para as datas
+          selecionadas
+        </div>
+      </mat-card>
+    </div>
 
     @for (session of tableConfig.data$ | async; track session.id) {
       <app-card (click)="closeSession(session)">
@@ -15,6 +25,12 @@
   } @else {
     <app-sessions-list-filters />
 
+    <mat-card>
+      <div>
+        Foram encontradas <strong>{{ sessionsSize$ | async }}</strong> sessões para as datas
+        selecionadas
+      </div>
+    </mat-card>
     <app-table [config]="tableConfig" />
   }
 }

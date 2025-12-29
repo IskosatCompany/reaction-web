@@ -41,6 +41,8 @@ import {
   SessionsListFiltersComponent,
   SessionsListFiltersData
 } from '../sessions-list-filters/sessions-list-filters.component';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sessions-list',
@@ -54,7 +56,9 @@ import {
     SessionsListFiltersComponent,
     CardComponent,
     MatProgressSpinnerModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule
   ],
   templateUrl: './sessions-list.component.html',
   styleUrl: './sessions-list.component.scss',
@@ -74,6 +78,7 @@ export class SessionsListComponent {
   readonly isLoadingClientsAndCoaches = this.#sessionsStore.isLoadingData;
   readonly isAbleToFilterByCoach = computed(() => this.#authService.userRole() === UserRole.admin);
   readonly tableConfig = this.#getTableConfig();
+  readonly sessionsSize$ = this.tableConfig.data$.pipe(map((item) => item.length));
 
   openFilters(): void {
     this.#bottomSheet.open<SessionsListFiltersComponent, SessionsListFiltersData, SessionsRequest>(
