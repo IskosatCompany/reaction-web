@@ -1,16 +1,18 @@
-<mat-expansion-panel [disabled]="isSessionPending()">
+<mat-expansion-panel (click)="handlePendingSession()" [disabled]="isSessionPending()">
   <mat-expansion-panel-header [class.pending-session]="isSessionPending()">
     <mat-panel-title>
       <div class="section-title">
-        <span>
-          {{ session().coach.name }}
+        <span [class.compact-name]="isMobile()">
+          {{ session().coach | formatCoach }}
         </span>
         <span>
           {{ session().startDate | date: 'dd/MM/yyyy' }}
         </span>
       </div>
     </mat-panel-title>
-    <mat-panel-description> {{ statusLabels[session().status] }} </mat-panel-description>
+    @if (!isMobile()) {
+      <mat-panel-description> {{ statusLabels[session().status] }} </mat-panel-description>
+    }
   </mat-expansion-panel-header>
 
   <ng-template matExpansionPanelContent>

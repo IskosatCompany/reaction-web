@@ -1,6 +1,14 @@
 .section-title {
   display: flex;
   gap: 24px;
+  width: 100%;
+
+  .compact-name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 40%;
+  }
 }
 
 .pending-session {
