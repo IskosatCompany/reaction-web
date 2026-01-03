@@ -1,5 +1,6 @@
 export interface MainComplaints {
   mainComplaints?: string;
+  similarInjuries?: string;
   painLevel?: number;
   painType?: string;
   painLocation?: string;

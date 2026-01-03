@@ -22,7 +22,6 @@ export class ClinicalHistoryForm {
     personalHistory: new FormControl<string | null>(null),
     surgicalHistory: new FormControl<string | null>(null),
     exams: new FormControl<string | null>(null),
-    similarInjuries: new FormControl<string | null>(null),
     fractures: new FormControl<string | null>(null),
     accidents: new FormControl<string | null>(null)
   });
@@ -45,7 +44,6 @@ export class ClinicalHistoryForm {
           personalHistory: model.personalHistory ?? null,
           surgicalHistory: model.surgicalHistory ?? null,
           exams: model.exams ?? null,
-          similarInjuries: model.similarInjuries ?? null,
           fractures: model.fractures ?? null,
           accidents: model.accidents ?? null
         });
@@ -62,7 +60,6 @@ export class ClinicalHistoryForm {
       personalHistory: formData.personalHistory ?? undefined,
       surgicalHistory: formData.surgicalHistory ?? undefined,
       exams: formData.exams ?? undefined,
-      similarInjuries: formData.similarInjuries ?? undefined,
       fractures: formData.fractures ?? undefined
     };
   }

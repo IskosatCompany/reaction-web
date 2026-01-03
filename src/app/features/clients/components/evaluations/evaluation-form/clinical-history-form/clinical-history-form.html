@@ -1,5 +1,5 @@
 <form [formGroup]="clinicalHistoryForm">
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Alergias</mat-label>
     <textarea
       matInput
@@ -9,17 +9,7 @@
     ></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Contra indicações</mat-label>
-    <textarea
-      matInput
-      formControlName="contraindications"
-      rows="3"
-      placeholder="Contra indicações"
-    ></textarea>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Medicação</mat-label>
     <textarea
       matInput
@@ -29,7 +19,7 @@
     ></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Antecedentes pessoais</mat-label>
     <textarea
       matInput
@@ -39,7 +29,7 @@
     ></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Antecedentes cirúgicos</mat-label>
     <textarea
       matInput
@@ -49,27 +39,27 @@
     ></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field>
+    <mat-label>Contra indicações</mat-label>
+    <textarea
+      matInput
+      formControlName="contraindications"
+      rows="3"
+      placeholder="Contra indicações"
+    ></textarea>
+  </mat-form-field>
+
+  <mat-form-field>
     <mat-label>Exames</mat-label>
     <textarea matInput formControlName="exams" rows="3" placeholder="Exames relevantes"></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Lesões similares</mat-label>
-    <textarea
-      matInput
-      formControlName="similarInjuries"
-      rows="3"
-      placeholder="Histórico de lesões"
-    ></textarea>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Fraturas</mat-label>
     <textarea matInput formControlName="fractures" rows="3" placeholder="Fraturas"></textarea>
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field>
     <mat-label>Acidentes</mat-label>
     <textarea
       matInput
