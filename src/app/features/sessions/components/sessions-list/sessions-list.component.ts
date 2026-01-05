@@ -9,6 +9,8 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { differenceInMinutes, format, isSameDay } from 'date-fns';
 import { EMPTY, map, switchMap } from 'rxjs';
@@ -41,8 +43,6 @@ import {
   SessionsListFiltersComponent,
   SessionsListFiltersData
 } from '../sessions-list-filters/sessions-list-filters.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-sessions-list',
@@ -178,7 +178,7 @@ export class SessionsListComponent {
 
     const warningAction: TableActionsColumn<Session> = {
       icon: 'warning',
-      color: '#EBBE4D',
+      color: '#ebbe4d',
       isHidden: (row) => row.status === SessionStatus.Completed || isAbleToCloseSession(row),
       tooltip: (row) => {
         if (!isSameDay(row.startDate, new Date()) && !this.#authService.isAdmin()) {

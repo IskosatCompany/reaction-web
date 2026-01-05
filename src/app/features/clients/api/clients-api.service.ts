@@ -9,8 +9,9 @@ export class ClientsApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getClients(searchTerm?: string): Observable<Client[]> {
-    let params = new HttpParams();
+  getClients(searchTerm?: string, showArchivedClients = false): Observable<Client[]> {
+    // TODO: set to properly query param
+    let params = new HttpParams().set('archived', showArchivedClients);
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
@@ -52,5 +53,13 @@ export class ClientsApiService {
 
   getClientDetails(clientId: string): Observable<Client> {
     return this.#http.get<Client>(`${this.#apiUrl}/client/${clientId}`);
+  }
+
+  archiveClient(clientId: string): Observable<Client> {
+    return this.#http.put<Client>(`${this.#apiUrl}/client/${clientId}/archive`, { archive: true });
+  }
+
+  unarchiveClient(clientId: string): Observable<Client> {
+    return this.#http.put<Client>(`${this.#apiUrl}/client/${clientId}/archive`, { archive: false });
   }
 }

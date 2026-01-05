@@ -5,6 +5,7 @@ import { MatBottomSheet, MatBottomSheetModule } from '@angular/material/bottom-s
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
 import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
@@ -30,7 +31,8 @@ import { ClientFormComponent } from '../client-form/client-form.component';
     MatBottomSheetModule,
     MatIconModule,
     MatButtonModule,
-    SearchComponent
+    SearchComponent,
+    MatSlideToggleModule
   ],
   providers: [ClientsApiService],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -45,6 +47,7 @@ export class ClientsListComponent {
   addClientSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   searchSubject$ = new Subject<string>();
+  showArchivedSubject$ = new Subject<boolean>();
 
   tableConfig = new TableBuilder<Client>()
     .column(
@@ -70,8 +73,13 @@ export class ClientsListComponent {
     .fromObservable(
       combineLatest([
         this.searchSubject$.pipe(startWith('')),
-        this.refreshSubject$.pipe(startWith(null))
-      ]).pipe(switchMap(([searchTerm, _]) => this.clientsApiService.getClients(searchTerm)))
+        this.refreshSubject$.pipe(startWith(null)),
+        this.showArchivedSubject$.pipe(startWith(false))
+      ]).pipe(
+        switchMap(([searchTerm, _, showArchivedClients]) =>
+          this.clientsApiService.getClients(searchTerm, showArchivedClients)
+        )
+      )
     )
     .build();
 

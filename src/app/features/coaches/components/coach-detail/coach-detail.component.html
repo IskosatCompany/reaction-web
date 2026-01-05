@@ -1,9 +1,26 @@
 <mat-card>
   <header class="coach">
-    <h1>{{ coach()?.name }} - #{{ coach()?.employeeNumber }}</h1>
-    <button matMiniFab matTooltip="Editar Treinador" (click)="onCoachEdit()">
-      <mat-icon>edit</mat-icon>
-    </button>
+    <div class="title">
+      <h1>{{ coachName() }}</h1>
+
+      <mat-icon matTooltip="Treinador arquivado">warning</mat-icon>
+      @if (coach()?.archived) {}
+    </div>
+    <div class="actions">
+      <button matMiniFab matTooltip="Editar Treinador" (click)="onCoachEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+
+      @if (coach()?.archived) {
+        <button matMiniFab matTooltip="Desarquivar" (click)="unarchiveCoach()">
+          <mat-icon>visibility</mat-icon>
+        </button>
+      } @else {
+        <button matMiniFab matTooltip="Arquivar" class="archive" (click)="archiveCoach()">
+          <mat-icon>visibility_off</mat-icon>
+        </button>
+      }
+    </div>
   </header>
 </mat-card>
 

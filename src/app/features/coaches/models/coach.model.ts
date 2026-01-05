@@ -12,6 +12,7 @@ export interface Coach {
   workInsurance: string;
   address: string;
   employeeNumber: number;
+  archived: boolean;
 }
 
 export interface CoachForm {

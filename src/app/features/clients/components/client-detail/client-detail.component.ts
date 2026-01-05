@@ -24,6 +24,8 @@ import {
   switchMap
 } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { ConfirmActionComponent } from '../../../../ui/components/confirm-action/confirm-action.component';
+import { ConfirmAction } from '../../../../ui/components/confirm-action/confirm-action.model';
 import { formatClient } from '../../../../ui/helpers/client.helper';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
@@ -105,7 +107,11 @@ export class ClientDetailComponent {
   client = toSignal<Client>(
     this.refreshClientSubject$.pipe(
       startWith(undefined),
-      switchMap(() => this.clientApiService.getClientDetails(this.clientId))
+      switchMap(() =>
+        this.clientApiService
+          .getClientDetails(this.clientId)
+          .pipe(map((item) => ({ ...item, archived: true })))
+      )
     )
   );
   evaluations = toSignal<Evaluation[]>(
@@ -230,5 +236,31 @@ export class ClientDetailComponent {
 
         saveAs(response.file, fileName);
       });
+  }
+
+  archiveClient(): void {
+    this.bottomSheet
+      .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
+        data: { message: 'Arquivar cliente?', buttonLabel: 'Arquivar' }
+      })
+      .afterDismissed()
+      .pipe(
+        filter((result) => result === true),
+        switchMap(() => this.clientApiService.archiveClient(this.clientId))
+      )
+      .subscribe(() => this.refreshClientSubject$.next());
+  }
+
+  unarchiveClient(): void {
+    this.bottomSheet
+      .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
+        data: { message: 'Desarquivar cliente?', buttonLabel: 'Desarquivar' }
+      })
+      .afterDismissed()
+      .pipe(
+        filter((result) => result === true),
+        switchMap(() => this.clientApiService.unarchiveClient(this.clientId))
+      )
+      .subscribe(() => this.refreshClientSubject$.next());
   }
 }

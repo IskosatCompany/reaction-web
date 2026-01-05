@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
-import { DeleteSessionConfirmationComponent } from '../../components/delete-session-confirmation/delete-session-confirmation.component';
+import { ConfirmActionComponent } from '../../../../ui/components/confirm-action/confirm-action.component';
+import { ConfirmAction } from '../../../../ui/components/confirm-action/confirm-action.model';
 import { SessionsActions } from '../../models/sessions-actions.class';
 
 @Injectable()
 export class DeleteSessionService extends SessionsActions<unknown, boolean, unknown> {
   delete(sessionId: string): Observable<unknown> {
     return super
-      .openBottomSheet(DeleteSessionConfirmationComponent)
+      .openBottomSheet<ConfirmAction>(ConfirmActionComponent, {
+        message: 'Apagar sessão?',
+        buttonLabel: 'Apagar'
+      })
       .pipe(switchMap(() => this.save(sessionId)));
   }
 

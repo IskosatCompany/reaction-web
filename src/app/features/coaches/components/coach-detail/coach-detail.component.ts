@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,6 +10,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
+import { ConfirmActionComponent } from '../../../../ui/components/confirm-action/confirm-action.component';
+import { ConfirmAction } from '../../../../ui/components/confirm-action/confirm-action.model';
+import { formatCoach } from '../../../../ui/helpers/coach.helper';
 import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
@@ -29,9 +32,7 @@ import { CoachInfoComponent } from '../coach-info/coach-info.component';
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[class.mobile]': 'isMobile()'
-  }
+  host: { '[class.mobile]': 'isMobile()' }
 })
 export class CoachDetailComponent {
   isMobile = inject(IS_MOBILE);
@@ -53,6 +54,11 @@ export class CoachDetailComponent {
       switchMap(() => this.coachApiService.getCoachDetails(this.coachId))
     )
   );
+
+  coachName = computed(() =>
+    formatCoach(this.coach()?.name ?? '', this.coach()?.employeeNumber ?? 0)
+  );
+
   constructor() {
     this.editCoachSubject$
       .pipe(
@@ -84,5 +90,31 @@ export class CoachDetailComponent {
         }
       })
       .afterDismissed();
+  }
+
+  archiveCoach(): void {
+    this.bottomSheet
+      .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
+        data: { message: 'Arquivar treinador?', buttonLabel: 'Arquivar' }
+      })
+      .afterDismissed()
+      .pipe(
+        filter((result) => result === true),
+        switchMap(() => this.coachApiService.archiveCoach(this.coachId))
+      )
+      .subscribe(() => this.refreshCoachSubject$.next());
+  }
+
+  unarchiveCoach(): void {
+    this.bottomSheet
+      .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
+        data: { message: 'Desarquivar treinador?', buttonLabel: 'Desarquivar' }
+      })
+      .afterDismissed()
+      .pipe(
+        filter((result) => result === true),
+        switchMap(() => this.coachApiService.unarchiveCoach(this.coachId))
+      )
+      .subscribe(() => this.refreshCoachSubject$.next());
   }
 }

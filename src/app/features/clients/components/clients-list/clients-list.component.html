@@ -1,4 +1,13 @@
-<app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
+<div class="filters">
+  <app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
+
+  @if (isAdmin()) {
+    <mat-slide-toggle (change)="showArchivedSubject$.next($event.checked)">
+      Mostrar clientes arquivados
+    </mat-slide-toggle>
+  }
+</div>
+
 @if (isMobile()) {
   @for (client of tableConfig.data$ | async; track client.id) {
     <app-card (click)="onClientClick(client.id)">

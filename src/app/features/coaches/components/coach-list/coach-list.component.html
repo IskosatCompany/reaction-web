@@ -1,4 +1,11 @@
-<app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
+<div class="filters">
+  <app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
+
+  <mat-slide-toggle (change)="showArchivedSubject$.next($event.checked)">
+    Mostrar treinadores arquivados
+  </mat-slide-toggle>
+</div>
+
 @if (isMobile()) {
   @for (coach of tableConfig.data$ | async; track coach.id) {
     <app-card (click)="onCoachClick(coach.id)">
@@ -12,6 +19,7 @@
     <app-table [config]="tableConfig" />
   </section>
 }
+
 <button matFab class="float-button" (click)="createCoach()">
   <mat-icon>add</mat-icon>
 </button>

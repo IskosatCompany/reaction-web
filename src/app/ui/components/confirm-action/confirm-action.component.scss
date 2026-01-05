@@ -1,3 +1,18 @@
-:host {
-  display: block;
+.header {
+  display: flex;
+  align-items: center;
+
+  h4 {
+    margin-bottom: 0;
+  }
+
+  button {
+    margin-left: auto;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
 }

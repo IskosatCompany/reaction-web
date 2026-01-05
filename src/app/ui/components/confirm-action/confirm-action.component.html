@@ -1,5 +1,11 @@
-<span>{{ data.message }}</span>
-<div>
-  <button matButton="tonal" (click)="onCancel()">Cancelar</button>
-  <button matButton="filled" (click)="onConfirm()">{{ data.actionButtonLabel }}</button>
+<div class="header">
+  <h4>{{ data.message }}</h4>
+  <button mat-icon-button matSuffix type="button" (click)="bottomSheetRef.dismiss()">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>
+
+<div class="footer">
+  <button matButton (click)="bottomSheetRef.dismiss()">Cancelar</button>
+  <button matButton="filled" (click)="bottomSheetRef.dismiss(true)">{{ data.buttonLabel }}</button>
 </div>

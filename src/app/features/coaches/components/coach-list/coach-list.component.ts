@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
 import { combineLatest, filter, Observable, startWith, Subject, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
@@ -25,7 +26,8 @@ import { CoachFormComponent } from '../coach-form/coach-form.component';
     SearchComponent,
     AsyncPipe,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatSlideToggleModule
   ],
   templateUrl: './coach-list.component.html',
   styleUrl: './coach-list.component.scss',
@@ -39,6 +41,7 @@ export class CoachListComponent {
   createCoachSubject$ = new Subject<void>();
   refreshSubject$ = new Subject<void>();
   searchSubject$ = new Subject<string>();
+  showArchivedSubject$ = new Subject<boolean>();
 
   tableConfig = new TableBuilder<Coach>()
     .column(
@@ -64,8 +67,13 @@ export class CoachListComponent {
     .fromObservable(
       combineLatest([
         this.searchSubject$.pipe(startWith('')),
-        this.refreshSubject$.pipe(startWith(null))
-      ]).pipe(switchMap(([searchTerm, _]) => this.coachApiService.getCoaches(searchTerm)))
+        this.refreshSubject$.pipe(startWith(null)),
+        this.showArchivedSubject$.pipe(startWith(false))
+      ]).pipe(
+        switchMap(([searchTerm, _, showArchivedCoaches]) =>
+          this.coachApiService.getCoaches(searchTerm, showArchivedCoaches)
+        )
+      )
     )
     .build();
 

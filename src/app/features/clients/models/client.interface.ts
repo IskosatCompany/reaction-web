@@ -8,6 +8,7 @@ export interface Client {
   nif: string;
   clientNumber: number;
   planning?: string;
+  archived: boolean;
 }
 
 export interface ClientForm {

@@ -9,11 +9,13 @@ export class CoachApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getCoaches(searchTerm?: string): Observable<Coach[]> {
-    let params = new HttpParams();
+  getCoaches(searchTerm?: string, showArchived = false): Observable<Coach[]> {
+    // TODO: set to properly query param
+    let params = new HttpParams().set('archived', showArchived);
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
+
     return this.#http.get<Coach[]>(`${this.#apiUrl}/coach`, { params });
   }
 
@@ -35,5 +37,13 @@ export class CoachApiService {
 
   deleteCoach(coachId: string): Observable<void> {
     return this.#http.delete<void>(`${this.#apiUrl}/coach/${coachId}`);
+  }
+
+  archiveCoach(coachId: string): Observable<Coach> {
+    return this.#http.put<Coach>(`${this.#apiUrl}/coach/${coachId}/archive`, { archive: true });
+  }
+
+  unarchiveCoach(coachId: string): Observable<Coach> {
+    return this.#http.put<Coach>(`${this.#apiUrl}/coach/${coachId}/archive`, { archive: false });
   }
 }
