@@ -24,6 +24,39 @@ mat-card {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+
+      h1 {
+        margin-bottom: 0;
+      }
+
+      mat-icon {
+        height: 30px;
+        width: 30px;
+        font-size: 30px;
+        color: #ebbe4d;
+        transform: translateY(2px);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+
+      & > button.archive {
+        @include mat.fab-overrides(
+          (
+            small-container-color: #fff,
+            small-foreground-color: #9c2007
+          )
+        );
+      }
+    }
   }
 }
 
