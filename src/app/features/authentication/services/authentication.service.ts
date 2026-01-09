@@ -24,7 +24,9 @@ export class AuthenticationService {
   // TODO: remove this after implement permissions management
   readonly isAdmin = computed(
     () =>
-      this.userRole() === UserRole.admin || this.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7'
+      this.userRole() === UserRole.admin ||
+      this.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7' ||
+      this.userId() === '530de84d-3eaa-4db6-9d9c-12febf6dd805'
   );
 
   initialize(): Observable<void> {
