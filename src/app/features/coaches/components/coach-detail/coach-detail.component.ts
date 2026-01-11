@@ -14,10 +14,18 @@ import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
+import { CoachInfoComponent } from '../coach-info/coach-info.component';
 
 @Component({
   selector: 'app-coach-detail',
-  imports: [MatButtonModule, MatCard, MatIconModule, MatTooltipModule, MatExpansionModule],
+  imports: [
+    MatButtonModule,
+    MatCard,
+    MatIconModule,
+    MatTooltipModule,
+    MatExpansionModule,
+    CoachInfoComponent
+  ],
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

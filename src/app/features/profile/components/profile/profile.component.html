@@ -1,64 +1,88 @@
-<form [formGroup]="form" (ngSubmit)="submit()">
-  <mat-form-field appearance="fill">
-    <mat-label>Senha atual</mat-label>
+<mat-card>
+  <mat-card-header>
+    <header class="profile-header">
+      <span>Dados</span>
+      <button matMiniFab matTooltip="Editar" (click)="onProfileEdit()">
+        <mat-icon>edit</mat-icon>
+      </button>
+    </header>
+  </mat-card-header>
+  <mat-divider />
+  <mat-card-content>
+    <app-coach-info [coach]="userDetails()" />
+  </mat-card-content>
+</mat-card>
 
-    <input matInput formControlName="currentPassword" [type]="currentPasswordConfig.inputType()" />
-    <button
-      mat-icon-button
-      matSuffix
-      type="button"
-      tabIndex="-1"
-      (click)="currentPasswordConfig.toggleVisibility()"
-    >
-      <mat-icon>{{ currentPasswordConfig.inputIcon() }}</mat-icon>
-    </button>
+<mat-expansion-panel>
+  <mat-expansion-panel-header>
+    <mat-panel-title>Alterar senha</mat-panel-title>
+  </mat-expansion-panel-header>
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <mat-form-field appearance="fill">
+      <mat-label>Senha atual</mat-label>
 
-    @if (form.controls.currentPassword.hasError('required')) {
-      <mat-error>Campo obrigatório</mat-error>
-    }
-  </mat-form-field>
+      <input
+        matInput
+        formControlName="currentPassword"
+        [type]="currentPasswordConfig.inputType()"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        tabIndex="-1"
+        (click)="currentPasswordConfig.toggleVisibility()"
+      >
+        <mat-icon>{{ currentPasswordConfig.inputIcon() }}</mat-icon>
+      </button>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Nova senha</mat-label>
+      @if (form.controls.currentPassword.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
+    </mat-form-field>
 
-    <input matInput formControlName="newPassword" [type]="newPasswordConfig.inputType()" />
-    <button
-      mat-icon-button
-      matSuffix
-      type="button"
-      tabIndex="-1"
-      (click)="newPasswordConfig.toggleVisibility()"
-    >
-      <mat-icon>{{ newPasswordConfig.inputIcon() }}</mat-icon>
-    </button>
+    <mat-form-field appearance="fill">
+      <mat-label>Nova senha</mat-label>
 
-    @if (form.controls.newPassword.hasError('required')) {
-      <mat-error>Campo obrigatório</mat-error>
-    }
-  </mat-form-field>
+      <input matInput formControlName="newPassword" [type]="newPasswordConfig.inputType()" />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        tabIndex="-1"
+        (click)="newPasswordConfig.toggleVisibility()"
+      >
+        <mat-icon>{{ newPasswordConfig.inputIcon() }}</mat-icon>
+      </button>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Confirmar nova senha</mat-label>
+      @if (form.controls.newPassword.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
+    </mat-form-field>
 
-    <input
-      matInput
-      formControlName="confirmNewPassword"
-      [type]="confirmNewPasswordConfig.inputType()"
-    />
-    <button
-      mat-icon-button
-      matSuffix
-      type="button"
-      tabIndex="-1"
-      (click)="confirmNewPasswordConfig.toggleVisibility()"
-    >
-      <mat-icon>{{ confirmNewPasswordConfig.inputIcon() }}</mat-icon>
-    </button>
+    <mat-form-field appearance="fill">
+      <mat-label>Confirmar nova senha</mat-label>
 
-    @if (form.controls.confirmNewPassword.hasError('required')) {
-      <mat-error>Campo obrigatório</mat-error>
-    }
-  </mat-form-field>
+      <input
+        matInput
+        formControlName="confirmNewPassword"
+        [type]="confirmNewPasswordConfig.inputType()"
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        type="button"
+        tabIndex="-1"
+        (click)="confirmNewPasswordConfig.toggleVisibility()"
+      >
+        <mat-icon>{{ confirmNewPasswordConfig.inputIcon() }}</mat-icon>
+      </button>
 
-  <button matButton="filled" type="submit" [disabled]="form.invalid">Atualizar senha</button>
-</form>
+      @if (form.controls.confirmNewPassword.hasError('required')) {
+        <mat-error>Campo obrigatório</mat-error>
+      }
+    </mat-form-field>
+
+    <button matButton="filled" type="submit" [disabled]="form.invalid">Atualizar senha</button>
+  </form>
+</mat-expansion-panel>

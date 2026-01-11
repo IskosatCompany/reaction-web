@@ -1,0 +1,62 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  align-items: start;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+
+    .label {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      @include mat.icon-overrides(
+        (
+          color: var(--dark-blue)
+        )
+      );
+    }
+
+    .value {
+      font-weight: 700;
+    }
+
+    .coach__color {
+      border-radius: 50%;
+      height: 1vw;
+      width: 1vw;
+      border: 1px solid var(--light-blue);
+    }
+
+    @media (max-width: 1366px) {
+      .coach__color {
+        width: 3vw;
+        height: 3vw;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .coach__color {
+        width: 6vw;
+        height: 6vw;
+      }
+    }
+  }
+
+  // Mobile breakpoint
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+
+    > div {
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 8px;
+    }
+  }
+}
