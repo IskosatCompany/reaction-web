@@ -53,7 +53,7 @@ export class SessionOverlayService {
       { label: 'Apagar', action: 'delete', icon: 'delete' },
       { label: 'Cliente', action: 'goToClient', icon: 'group' },
       {
-        label: 'Concluir',
+        label: 'Registo',
         action: 'close',
         icon: 'assignment_turned_in',
         tooltip: this.#getCloseActionTooltip(sessionDto),
