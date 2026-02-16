@@ -1,14 +1,16 @@
 import { Client } from '../../clients/models/client.interface';
 import { Coach } from '../../coaches/models/coach.model';
 
-export type SessionAction = 'duplicate' | 'delete' | 'close' | 'goToClient';
+export type SessionAction = 'duplicate' | 'delete' | 'close' | 'goToClient' | 'absence';
 
 export enum SessionStatus {
-  Pending = 'PENDING',
-  Completed = 'COMPLETED'
+  Absence = 'ABSENCE',
+  Completed = 'COMPLETED',
+  Pending = 'PENDING'
 }
 
 export const SessionStatusLabel: Record<SessionStatus, string> = {
+  [SessionStatus.Absence]: 'Falta',
   [SessionStatus.Completed]: 'Finalizada',
   [SessionStatus.Pending]: 'Pendente'
 };
