@@ -20,7 +20,6 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IS_MOBILE } from '../../../../../core/tokens/mobile.token';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
-import { Authorization } from '../../../models/evaluation/authorization.model';
 import { ClinicalEvaluation } from '../../../models/evaluation/clinical-evaluation.model';
 import { ClinicalHistory } from '../../../models/evaluation/clinical-history.model';
 import { DiagnosisAndTreatment } from '../../../models/evaluation/diagnosis-treatment.model';

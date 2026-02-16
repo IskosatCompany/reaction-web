@@ -31,7 +31,8 @@ import { DuplicateSessionService } from '../../services/sessions-actions/duplica
 import { EditSessionService } from '../../services/sessions-actions/edit-session.service';
 import { SessionsStore } from '../../store/sessions.store';
 import { formatCalendarSessionTitle } from '../../../../ui/helpers/session.helper';
-import { SessionType } from '../../models/session.interface';
+import { SessionStatus, SessionType } from '../../models/session.interface';
+import { AbsenceSessionService } from '../../services/sessions-actions/absence-session.service';
 
 @Component({
   selector: 'app-sessions-calendar',
@@ -50,7 +51,8 @@ import { SessionType } from '../../models/session.interface';
     EditSessionService,
     DuplicateSessionService,
     DeleteSessionService,
-    CloseSessionService
+    CloseSessionService,
+    AbsenceSessionService
   ],
   templateUrl: './sessions-calendar.component.html',
   styleUrl: './sessions-calendar.component.scss',
@@ -63,6 +65,7 @@ export class SessionsCalendarComponent {
   readonly #overlayService = inject(SessionOverlayService);
   readonly #addSessionService = inject(AddSessionService);
   readonly #editSessionService = inject(EditSessionService);
+  readonly #absenceSessionService = inject(AbsenceSessionService);
   readonly #duplicateSessionService = inject(DuplicateSessionService);
   readonly #deleteSessionService = inject(DeleteSessionService);
   readonly #closeSessionService = inject(CloseSessionService);
@@ -113,6 +116,10 @@ export class SessionsCalendarComponent {
               return this.#closeSessionService
                 .close(sessionDto.id)
                 .pipe(tap((result) => this.#completeSessionOnCalendar(result)));
+            case 'absence':
+              return this.#absenceSessionService
+                .registerAbsence(sessionDto.id)
+                .pipe(tap((result) => this.updateSessionOnCalendar(result)));
           }
         })
       )
@@ -135,6 +142,13 @@ export class SessionsCalendarComponent {
       this.#removeSessionFromCalendar(sessionDto.id);
       this.#addSessionToCalendar(sessionDto);
     });
+  }
+
+  updateSessionOnCalendar(sessionDto: SessionDto): void {
+    const event = this.#calendarApi?.getEventById(sessionDto.id);
+    if (event) {
+      event.setExtendedProp('sessionDto', sessionDto);
+    }
   }
 
   #getCalendarOptions(): CalendarOptions {
@@ -171,7 +185,7 @@ export class SessionsCalendarComponent {
                   start: item.startDate,
                   end: item.endDate,
                   editable: false,
-                  backgroundColor: coach.color,
+                  backgroundColor: item.status === SessionStatus.Cancelled ? 'red' : coach.color,
                   borderColor: coach.color,
                   extendedProps: { sessionDto: item }
                 };

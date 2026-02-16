@@ -60,4 +60,10 @@ export class SessionsApiService {
   deleteSession(sessionId: string): Observable<unknown> {
     return this.#http.delete(`${this.#url}/session/${sessionId}`);
   }
+
+  sessionAbsence(sessionId: string): Observable<SessionDto> {
+    return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}/unattended`, {
+      sessionId: sessionId
+    });
+  }
 }

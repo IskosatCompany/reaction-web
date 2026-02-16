@@ -52,6 +52,7 @@ export class SessionOverlayService {
       { label: 'Duplicar', action: 'duplicate', icon: 'file_copy' },
       { label: 'Apagar', action: 'delete', icon: 'delete' },
       { label: 'Cliente', action: 'goToClient', icon: 'group' },
+      { label: 'Faltou', action: 'absence', icon: 'person_off' },
       {
         label: 'Registo',
         action: 'close',

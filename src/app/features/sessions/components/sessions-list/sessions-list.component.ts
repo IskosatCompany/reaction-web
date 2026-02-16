@@ -158,7 +158,7 @@ export class SessionsListComponent {
 
   #getActionsColumn(): TableColumn<Session> {
     const isAbleToCloseSession = (row: Session) =>
-      row.status !== SessionStatus.Completed &&
+      row.status === SessionStatus.Pending &&
       (isSameDay(row.startDate, new Date()) || this.#authService.isAdmin());
 
     const closeSessionAction: TableActionsColumn<Session> = {
