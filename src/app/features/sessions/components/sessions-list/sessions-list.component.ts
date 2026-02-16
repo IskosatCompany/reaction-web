@@ -128,7 +128,7 @@ export class SessionsListComponent {
       )
       .column(
         new ColumnBuilder<Session>('date', 'Data de início')
-          .cellFn((row) => `${format(row.startDate, 'dd-MM-yyyy hh:mm')}`)
+          .cellFn((row) => `${format(row.startDate, 'dd-MM-yyyy HH:mm')}`)
           .build()
       )
       .column(
