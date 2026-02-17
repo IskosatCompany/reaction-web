@@ -44,12 +44,13 @@ export class EditSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()
     };

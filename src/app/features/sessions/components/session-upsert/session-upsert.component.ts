@@ -28,7 +28,7 @@ import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
 import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
-import { Session } from '../../models/session.interface';
+import { Session, SessionType } from '../../models/session.interface';
 import { SessionsStore } from '../../store/sessions.store';
 
 export interface SessionUpsertData {
@@ -42,12 +42,14 @@ export interface SessionUpsertFormResult {
   duration: number;
   clientId: string;
   coachId: string;
+  sessionType: SessionType;
 }
 
 interface SessionUpsertForm {
   startDate: FormControl<Date>;
   startTime: FormControl<Date>;
   duration: FormControl<number>; // 30 minutes or 60 minutes -> default 60 minutes
+  sessionType: FormControl<SessionType>;
   clientId: FormControl<string>;
   coachId: FormControl<string>;
 }
@@ -106,6 +108,7 @@ export class SessionUpsertComponent {
 
   // Clients
   readonly clients = this.#sessionsStore.clients;
+  readonly sessionType = SessionType;
   readonly clientFilterCtrl = new FormControl('');
   readonly clientFilter = toSignal(this.clientFilterCtrl.valueChanges, { initialValue: '' });
   readonly filteredClients = computed(() => {
@@ -151,7 +154,8 @@ export class SessionUpsertComponent {
         startDate && endDate ? differenceInMinutes(endDate, startDate) : 60
       ),
       clientId: this.#formBuilder.control<string>(client?.id ?? ''),
-      coachId: this.#formBuilder.control<string>(coach?.id ?? '')
+      coachId: this.#formBuilder.control<string>(coach?.id ?? ''),
+      sessionType: this.#formBuilder.control<SessionType>(SessionType.Training)
     });
 
     const hasSessionStarted =
@@ -168,13 +172,15 @@ export class SessionUpsertComponent {
   }
 
   confirm(): void {
-    const { clientId, coachId, duration, startDate, startTime } = this.form.getRawValue();
+    const { clientId, coachId, duration, startDate, startTime, sessionType } =
+      this.form.getRawValue();
     const result: SessionUpsertFormResult = {
       clientId,
       coachId,
       duration,
       startDate,
-      startTime
+      startTime,
+      sessionType
     };
 
     this.#bottomSheetRef.dismiss(result);

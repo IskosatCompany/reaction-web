@@ -22,6 +22,14 @@
     <mat-timepicker #timepicker />
   </mat-form-field>
 
+  <mat-form-field appearance="outline">
+    <mat-label>Tipo de sessão</mat-label>
+    <mat-select formControlName="sessionType">
+      <mat-option [value]="sessionType.Training">Treino</mat-option>
+      <mat-option [value]="sessionType.Treatment">Tratamento</mat-option>
+    </mat-select>
+  </mat-form-field>
+
   <div class="duration">
     <mat-label class="title">Duração</mat-label>
     <mat-radio-group formControlName="duration">
