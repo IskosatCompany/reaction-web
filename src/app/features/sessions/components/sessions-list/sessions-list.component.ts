@@ -11,7 +11,7 @@ import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { differenceInMinutes, format, isSameDay } from 'date-fns';
-import { EMPTY, map, switchMap } from 'rxjs';
+import { EMPTY, map, shareReplay, switchMap } from 'rxjs';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { CardComponent } from '../../../../ui/components/card/card.component';
 import { TableActionsColumn } from '../../../../ui/components/table/models/table-action.interface';
@@ -158,7 +158,8 @@ export class SessionsListComponent {
                 coach: this.#sessionsStore.getCoachById(session.coachId)
               })
             )
-          )
+          ),
+          shareReplay(1)
         )
       )
       .build();
