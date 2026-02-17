@@ -16,7 +16,7 @@ export class EditSessionService extends SessionsActions<
   SessionUpsertFormResult,
   SessionUpsertRequest
 > {
-  edit(sessionId: string): Observable<SessionDto> {
+  edit(sessionId: string, sessionTypes: string[]): Observable<SessionDto> {
     return this.apiService.getSessionDetails(sessionId).pipe(
       switchMap((sessionDto) =>
         super.openBottomSheet<SessionUpsertData>(SessionUpsertComponent, {
@@ -26,8 +26,10 @@ export class EditSessionService extends SessionsActions<
             startDate: sessionDto.startDate,
             endDate: sessionDto.endDate,
             client: this.store.getClientById(sessionDto.clientId),
-            coach: this.store.getCoachById(sessionDto.coachId)
-          }
+            coach: this.store.getCoachById(sessionDto.coachId),
+            type: sessionDto.type
+          },
+          sessionTypes
         })
       ),
       switchMap((payload) => this.save(sessionId, payload))
@@ -44,12 +46,13 @@ export class EditSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()
     };

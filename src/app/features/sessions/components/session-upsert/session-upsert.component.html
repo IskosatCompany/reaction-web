@@ -22,6 +22,15 @@
     <mat-timepicker #timepicker />
   </mat-form-field>
 
+  <mat-form-field appearance="outline">
+    <mat-label>Tipo de sessão</mat-label>
+    <mat-select formControlName="sessionType">
+      @for (type of sessionTypes; track type) {
+        <mat-option [value]="type">{{ type }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
   <div class="duration">
     <mat-label class="title">Duração</mat-label>
     <mat-radio-group formControlName="duration">

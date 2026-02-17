@@ -16,7 +16,7 @@ export class DuplicateSessionService extends SessionsActions<
   SessionUpsertFormResult,
   SessionUpsertRequest
 > {
-  duplicate(sessionId: string): Observable<SessionDto> {
+  duplicate(sessionId: string, sessionTypes: string[]): Observable<SessionDto> {
     return this.apiService.getSessionDetails(sessionId).pipe(
       switchMap((sessionDto) => {
         const { startDate, endDate } = this.#getStartAndEndDates(
@@ -30,8 +30,10 @@ export class DuplicateSessionService extends SessionsActions<
             startDate,
             endDate,
             client: this.store.getClientById(sessionDto.clientId),
-            coach: this.store.getCoachById(sessionDto.coachId)
-          }
+            coach: this.store.getCoachById(sessionDto.coachId),
+            type: sessionDto.type
+          },
+          sessionTypes
         });
       }),
       switchMap((result) => this.save(result))
@@ -45,12 +47,13 @@ export class DuplicateSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()
     };

@@ -18,7 +18,6 @@ import { Calendar, CalendarOptions, EventInput, EventMountArg } from '@fullcalen
 import { EMPTY, switchMap, tap } from 'rxjs';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { formatClient } from '../../../../ui/helpers/client.helper';
 import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
@@ -31,6 +30,8 @@ import { DeleteSessionService } from '../../services/sessions-actions/delete-ses
 import { DuplicateSessionService } from '../../services/sessions-actions/duplicate-session.service';
 import { EditSessionService } from '../../services/sessions-actions/edit-session.service';
 import { SessionsStore } from '../../store/sessions.store';
+import { formatCalendarSessionTitle } from '../../../../ui/helpers/session.helper';
+import { SessionType } from '../../models/session.interface';
 
 @Component({
   selector: 'app-sessions-calendar',
@@ -75,6 +76,7 @@ export class SessionsCalendarComponent {
   readonly calendarOptions = this.#getCalendarOptions();
   readonly clients = this.#sessionsStore.clients;
   readonly coaches = this.#sessionsStore.coaches;
+  readonly sessionTypes = this.#sessionsStore.sessionTypes;
   readonly isLoadingCalendarData = this.#sessionsStore.isLoadingData;
 
   constructor() {
@@ -99,7 +101,7 @@ export class SessionsCalendarComponent {
 
             case 'duplicate':
               return this.#duplicateSessionService
-                .duplicate(sessionDto.id)
+                .duplicate(sessionDto.id, this.sessionTypes())
                 .pipe(tap((result) => this.#addSessionToCalendar(result)));
 
             case 'delete':
@@ -124,12 +126,12 @@ export class SessionsCalendarComponent {
         : undefined;
 
     this.#addSessionService
-      .add({ startDate: date?.getTime(), coach })
+      .add({ startDate: date?.getTime(), coach }, this.sessionTypes())
       .subscribe((sessionDto) => this.#addSessionToCalendar(sessionDto));
   }
 
   editSession(sessionId: string): void {
-    this.#editSessionService.edit(sessionId).subscribe((sessionDto) => {
+    this.#editSessionService.edit(sessionId, this.sessionTypes()).subscribe((sessionDto) => {
       this.#removeSessionFromCalendar(sessionDto.id);
       this.#addSessionToCalendar(sessionDto);
     });
@@ -161,7 +163,11 @@ export class SessionsCalendarComponent {
 
                 return {
                   id: item.id,
-                  title: formatClient(client.name, client.clientNumber),
+                  title: formatCalendarSessionTitle(
+                    client.name,
+                    client.clientNumber,
+                    item.type as SessionType
+                  ),
                   start: item.startDate,
                   end: item.endDate,
                   editable: false,
@@ -209,7 +215,11 @@ export class SessionsCalendarComponent {
 
     this.#calendarApi?.addEvent({
       id: sessionDto.id,
-      title: client.name,
+      title: formatCalendarSessionTitle(
+        client.name,
+        client.clientNumber,
+        sessionDto.type as SessionType
+      ),
       start: sessionDto.startDate,
       end: sessionDto.endDate,
       editable: false,

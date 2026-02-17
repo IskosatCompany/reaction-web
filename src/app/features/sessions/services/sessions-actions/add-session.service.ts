@@ -17,11 +17,12 @@ export class AddSessionService extends SessionsActions<
   SessionUpsertFormResult,
   SessionUpsertRequest
 > {
-  add(data: Partial<Session>): Observable<SessionDto> {
+  add(data: Partial<Session>, sessionTypes: string[]): Observable<SessionDto> {
     return super
       .openBottomSheet<SessionUpsertData>(SessionUpsertComponent, {
         action: 'create',
-        session: data
+        session: data,
+        sessionTypes
       })
       .pipe(switchMap((result) => this.save(result)));
   }
@@ -33,12 +34,13 @@ export class AddSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()
     };

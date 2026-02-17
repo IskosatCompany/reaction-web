@@ -14,15 +14,26 @@ export const SessionStatusLabel: Record<SessionStatus, string> = {
 };
 
 export enum SessionType {
-  Training = 'TRAINING',
-  Treatment = 'TREATMENT'
+  Training = 'Treino',
+  PhysicalEvaluation = 'Avaliação Física',
+  Treatment = 'Tratamento',
+  Osteopathy = 'Consulta de Osteopatia',
+  Psychology = 'Consulta de Psicologioa',
+  Nutrition = 'Consulta de Nutrição',
+  Podiatry = 'Consulta de Podologia',
+  Physiotherapy = 'Consulta de Fisioterapia'
 }
 
-export const SessionTypeLabel: Record<SessionType, string> = {
-  [SessionType.Training]: 'Treino',
-  [SessionType.Treatment]: 'Tratamento'
+export const sessionTypeCalendarLabel: Record<SessionType, string> = {
+  [SessionType.Training]: 'T',
+  [SessionType.PhysicalEvaluation]: 'AF',
+  [SessionType.Treatment]: 'TT',
+  [SessionType.Osteopathy]: 'CO',
+  [SessionType.Psychology]: 'CP',
+  [SessionType.Nutrition]: 'CN',
+  [SessionType.Podiatry]: 'CPD',
+  [SessionType.Physiotherapy]: 'CF'
 };
-
 export interface Session {
   id: string;
   client: Client;
@@ -31,5 +42,5 @@ export interface Session {
   endDate: number;
   report?: string;
   status: SessionStatus;
-  type: SessionType;
+  type: string;
 }

@@ -13,31 +13,42 @@ import { ClientsApiService } from '../../clients/api/clients-api.service';
 import { Client } from '../../clients/models/client.interface';
 import { CoachApiService } from '../../coaches/api/coach-api.service';
 import { Coach } from '../../coaches/models/coach.model';
+import { SessionsApiService } from '../api/sessions-api.service';
 
 interface SessionsState {
   clients: Client[];
   _clientsStatus: 'LOADING' | 'LOADED';
   coaches: Coach[];
   _coachesStatus: 'LOADING' | 'LOADED';
+  sessionTypes: string[];
+  _sessionTypesStatus: 'LOADING' | 'LOADED';
 }
 
 const initialState: SessionsState = {
   clients: [],
   _clientsStatus: 'LOADING',
   coaches: [],
-  _coachesStatus: 'LOADING'
+  _coachesStatus: 'LOADING',
+  sessionTypes: [],
+  _sessionTypesStatus: 'LOADING'
 };
 
 export const SessionsStore = signalStore(
   withState(initialState),
-  withComputed(({ _clientsStatus, _coachesStatus }) => ({
-    isLoadingData: computed(() => _clientsStatus() === 'LOADING' || _coachesStatus() === 'LOADING')
+  withComputed(({ _clientsStatus, _coachesStatus, _sessionTypesStatus }) => ({
+    isLoadingData: computed(
+      () =>
+        _clientsStatus() === 'LOADING' ||
+        _coachesStatus() === 'LOADING' ||
+        _sessionTypesStatus() === 'LOADING'
+    )
   })),
   withMethods(
     (
       store,
       clientsApiService = inject(ClientsApiService),
       coachesApiService = inject(CoachApiService),
+      sessionsApiService = inject(SessionsApiService),
       authenticationService = inject(AuthenticationService)
     ) => ({
       _loadClients(): void {
@@ -59,6 +70,13 @@ export const SessionsStore = signalStore(
         coachesRequest$
           .pipe(finalize(() => patchState(store, { _coachesStatus: 'LOADED' })))
           .subscribe((coaches) => patchState(store, { coaches }));
+      },
+      _loadSessionTypes(): void {
+        sessionsApiService
+          .getSessionTypes()
+          .subscribe((sessionTypes) =>
+            patchState(store, { sessionTypes, _sessionTypesStatus: 'LOADED' })
+          );
       },
       getClientById(clientId: string): Client {
         const client = store.clients().find((item) => item.id === clientId);
@@ -82,6 +100,7 @@ export const SessionsStore = signalStore(
     onInit(store) {
       store._loadClients();
       store._loadCoaches();
+      store._loadSessionTypes();
     }
   })
 );

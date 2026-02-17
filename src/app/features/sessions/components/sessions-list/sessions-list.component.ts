@@ -30,12 +30,7 @@ import { UserRole } from '../../../authentication/models/login.interface';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
 import { SessionsRequest } from '../../models/http/sessions-request.interface';
-import {
-  Session,
-  SessionStatus,
-  SessionStatusLabel,
-  SessionTypeLabel
-} from '../../models/session.interface';
+import { Session, SessionStatus, SessionStatusLabel } from '../../models/session.interface';
 import { SessionsListFiltersService } from '../../services/sessions-list-filters.service';
 import { SessionsStore } from '../../store/sessions.store';
 import { AddSessionReportComponent } from '../add-session-report/add-session-report.component';
@@ -136,11 +131,7 @@ export class SessionsListComponent {
           .cellFn((row) => `${differenceInMinutes(row.endDate, row.startDate)}`)
           .build()
       )
-      .column(
-        new ColumnBuilder<Session>('type', 'Tipo')
-          .cellFn((row) => SessionTypeLabel[row.type])
-          .build()
-      )
+      .column(new ColumnBuilder<Session>('type', 'Tipo').cellFn((row) => row.type).build())
       .column(
         new ColumnBuilder<Session>('status', 'Estado')
           .cellFn((row) => SessionStatusLabel[row.status])

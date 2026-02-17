@@ -41,6 +41,10 @@ export class SessionsApiService {
     return this.#http.get<SessionDto>(`${this.#url}/session/${sessionId}`);
   }
 
+  getSessionTypes(): Observable<string[]> {
+    return this.#http.get<string[]>(`${this.#url}/session/type`);
+  }
+
   addSession(payload: SessionUpsertRequest): Observable<SessionDto> {
     return this.#http.post<SessionDto>(`${this.#url}/session`, payload);
   }
