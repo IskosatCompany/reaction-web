@@ -95,16 +95,23 @@ export class SessionsListComponent {
     }
 
     this.#bottomSheet
-      .open<AddSessionReportComponent, unknown, string>(AddSessionReportComponent, {
+      .open<AddSessionReportComponent, unknown, [string, boolean]>(AddSessionReportComponent, {
         restoreFocus: false,
         autoFocus: 'dialog',
         viewContainerRef: this.#viewContainerRef
       })
       .afterDismissed()
       .pipe(
-        switchMap((report) =>
-          report ? this.#sessionsApiService.closeSession(session.id, { report }) : EMPTY
-        )
+        switchMap((result) => {
+          if (!result) {
+            return EMPTY;
+          }
+
+          const [report, saveAsDraft] = result;
+          return saveAsDraft
+            ? this.#sessionsApiService.saveReportDraft(session.id, { report })
+            : this.#sessionsApiService.closeSession(session.id, { report });
+        })
       )
       .subscribe(() => this.#filtersService.reloadSessions());
   }

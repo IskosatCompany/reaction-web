@@ -1,23 +1,29 @@
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { AddSessionReportComponent } from '../../components/add-session-report/add-session-report.component';
-import { CloseSessionRequest } from '../../models/http/close-session-request.interface';
 import { SessionDto } from '../../models/http/session-dto.interface';
 import { SessionsActions } from '../../models/sessions-actions.class';
 
 @Injectable()
-export class CloseSessionService extends SessionsActions<SessionDto, string, CloseSessionRequest> {
+export class CloseSessionService extends SessionsActions<
+  SessionDto,
+  [string, boolean],
+  [string, boolean]
+> {
   close(sessionId: string): Observable<SessionDto> {
     return super
       .openBottomSheet(AddSessionReportComponent)
       .pipe(switchMap((result) => this.save(sessionId, result)));
   }
 
-  protected override save(sessionId: string, request: CloseSessionRequest): Observable<SessionDto> {
-    return this.apiService.closeSession(sessionId, request);
+  protected override save(sessionId: string, result: [string, boolean]): Observable<SessionDto> {
+    const [report, saveAsDraft] = result;
+    return saveAsDraft
+      ? this.apiService.saveReportDraft(sessionId, { report })
+      : this.apiService.closeSession(sessionId, { report });
   }
 
-  protected override mapBottomSheetResultToSave(result: string): CloseSessionRequest {
-    return { report: result };
+  protected override mapBottomSheetResultToSave(result: [string, boolean]): [string, boolean] {
+    return result;
   }
 }

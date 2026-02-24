@@ -57,6 +57,11 @@ export class SessionsApiService {
     return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}/report`, payload);
   }
 
+  // TODO: confirm this endpoint
+  saveReportDraft(sessionId: string, payload: CloseSessionRequest): Observable<SessionDto> {
+    return this.#http.put<SessionDto>(`${this.#url}/session/${sessionId}/draft`, payload);
+  }
+
   deleteSession(sessionId: string): Observable<unknown> {
     return this.#http.delete(`${this.#url}/session/${sessionId}`);
   }

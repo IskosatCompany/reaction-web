@@ -22,7 +22,7 @@ export class AddSessionReportComponent {
     this.#bottomSheetRef.dismiss();
   }
 
-  confirm(): void {
-    this.#bottomSheetRef.dismiss(this.report);
+  confirm(saveAsDraft = false): void {
+    this.#bottomSheetRef.dismiss([this.report, saveAsDraft]);
   }
 }
