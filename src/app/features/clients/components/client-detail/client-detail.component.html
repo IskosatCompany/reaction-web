@@ -1,7 +1,13 @@
 <section class="client-detail-header">
   <mat-card>
     <header class="client">
-      <h1>{{ clientName() }}</h1>
+      <div class="title">
+        <h1>{{ clientName() }}</h1>
+
+        @if (client()?.archived) {
+          <mat-icon matTooltip="Cliente arquivado">warning</mat-icon>
+        }
+      </div>
       @if (canEdit()) {
         <div class="actions">
           <button matMiniFab matTooltip="Editar Cliente" (click)="onClientEdit()">
@@ -13,6 +19,16 @@
           <button matMiniFab matTooltip="Exportar PDF" (click)="exportReport()">
             <mat-icon>download</mat-icon>
           </button>
+
+          @if (client()?.archived) {
+            <button matMiniFab matTooltip="Desarquivar" (click)="unarchiveClient()">
+              <mat-icon>visibility</mat-icon>
+            </button>
+          } @else {
+            <button matMiniFab matTooltip="Arquivar" class="archive" (click)="archiveClient()">
+              <mat-icon>visibility_off</mat-icon>
+            </button>
+          }
         </div>
       }
     </header>
