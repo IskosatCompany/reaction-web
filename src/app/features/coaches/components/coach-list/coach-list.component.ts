@@ -45,7 +45,7 @@ export class CoachListComponent {
 
   tableConfig = new TableBuilder<Coach>()
     .column(
-      new ColumnBuilder<Coach>('coach', 'Treinador')
+      new ColumnBuilder<Coach>('coach', 'Profissional')
         .cellFn((row) => formatCoach(row.name, row.employeeNumber))
         .build()
     )

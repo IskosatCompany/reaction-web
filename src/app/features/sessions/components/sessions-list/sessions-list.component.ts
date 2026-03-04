@@ -117,7 +117,7 @@ export class SessionsListComponent {
           .build()
       )
       .column(
-        new ColumnBuilder<Session>('coach', 'Treinador')
+        new ColumnBuilder<Session>('coach', 'Profissional')
           .cellFn((row) => formatCoach(row.coach.name, row.coach.employeeNumber))
           .build()
       )

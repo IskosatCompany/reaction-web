@@ -37,11 +37,11 @@
 
   @if (isAbleToFilterByCoach()) {
     <mat-form-field appearance="outline" subscriptSizing="dynamic">
-      <mat-label>Treinador</mat-label>
+      <mat-label>Profissional</mat-label>
       <mat-select formControlName="coachId" panelClass="searchable-mat-select">
         <mat-option>
           <ngx-mat-select-search
-            placeholderLabel="Pesquisar treinador"
+            placeholderLabel="Pesquisar Profissional"
             [formControl]="coachFilterCtrl"
           />
         </mat-option>

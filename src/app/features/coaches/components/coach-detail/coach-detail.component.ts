@@ -69,10 +69,10 @@ export class CoachDetailComponent {
       )
       .subscribe((coach: Coach) => {
         if (coach) {
-          this.snackBarService.open('Treinador editado com sucesso', 'Fechar');
+          this.snackBarService.open('Profissional editado com sucesso', 'Fechar');
           this.refreshCoachSubject$.next();
         } else {
-          this.snackBarService.open('Error ao editar treinador', 'Fechar');
+          this.snackBarService.open('Error ao editar Profissional', 'Fechar');
         }
       });
   }
@@ -95,7 +95,7 @@ export class CoachDetailComponent {
   archiveCoach(): void {
     this.bottomSheet
       .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
-        data: { message: 'Arquivar treinador?', buttonLabel: 'Arquivar' }
+        data: { message: 'Arquivar Profissional?', buttonLabel: 'Arquivar' }
       })
       .afterDismissed()
       .pipe(
@@ -108,7 +108,7 @@ export class CoachDetailComponent {
   unarchiveCoach(): void {
     this.bottomSheet
       .open<ConfirmActionComponent, ConfirmAction, boolean>(ConfirmActionComponent, {
-        data: { message: 'Desarquivar treinador?', buttonLabel: 'Desarquivar' }
+        data: { message: 'Desarquivar Profissional?', buttonLabel: 'Desarquivar' }
       })
       .afterDismissed()
       .pipe(

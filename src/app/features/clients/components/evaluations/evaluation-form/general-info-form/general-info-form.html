@@ -1,13 +1,13 @@
 <form [formGroup]="evaluationGeneralInfoForm" class="general-info-form">
   <div class="info" [class.info-mobile]="isMobile()">
     <mat-form-field>
-      <mat-label>Treinador</mat-label>
+      <mat-label>Profissional</mat-label>
       <mat-select formControlName="coachId" panelClass="searchable-mat-select">
         <mat-option>
           <ngx-mat-select-search
             [formControl]="coachFilterCtrl"
-            placeholderLabel="Pesquisar treinador"
-            noEntriesFoundLabel="Nenhum treinador encontrado"
+            placeholderLabel="Pesquisar Profissional"
+            noEntriesFoundLabel="Nenhum Profissional encontrado"
           />
         </mat-option>
         @for (coach of filteredCoaches(); track coach.id) {
@@ -15,7 +15,7 @@
         }
       </mat-select>
       @if (evaluationGeneralInfoForm.get('coachId')?.hasError('required')) {
-        <mat-error>Treinador é obrigatório</mat-error>
+        <mat-error>Profissional é obrigatório</mat-error>
       }
     </mat-form-field>
 

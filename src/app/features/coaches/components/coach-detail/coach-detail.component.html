@@ -4,11 +4,11 @@
       <h1>{{ coachName() }}</h1>
 
       @if (coach()?.archived) {
-        <mat-icon matTooltip="Treinador arquivado">warning</mat-icon>
+        <mat-icon matTooltip="Profissional arquivado">warning</mat-icon>
       }
     </div>
     <div class="actions">
-      <button matMiniFab matTooltip="Editar Treinador" (click)="onCoachEdit()">
+      <button matMiniFab matTooltip="Editar Profissional" (click)="onCoachEdit()">
         <mat-icon>edit</mat-icon>
       </button>
 

@@ -27,7 +27,7 @@ export class CoachFormComponent {
   bottomSheetRef =
     inject<MatBottomSheetRef<CoachBottomSheetData, Partial<CoachForm>>>(MatBottomSheetRef);
   data = inject<CoachBottomSheetData>(MAT_BOTTOM_SHEET_DATA);
-  title = this.data.coach ? 'Editar Treinador' : 'Criar Treinador';
+  title = this.data.coach ? 'Editar Profissional' : 'Criar Profissional';
   confirmBtnText = this.data.coach ? 'Atualizar' : 'Criar';
   form = new FormGroup({
     name: new FormControl<string | null>(null, [Validators.required]),
