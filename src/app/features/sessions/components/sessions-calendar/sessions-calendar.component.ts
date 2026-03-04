@@ -119,7 +119,7 @@ export class SessionsCalendarComponent {
             case 'absence':
               return this.#absenceSessionService
                 .registerAbsence(sessionDto.id)
-                .pipe(tap((result) => this.updateSessionOnCalendar(result)));
+                .pipe(tap(() => this.updateAbsenceSessionOnCalendar(sessionDto)));
           }
         })
       )
@@ -144,10 +144,12 @@ export class SessionsCalendarComponent {
     });
   }
 
-  updateSessionOnCalendar(sessionDto: SessionDto): void {
+  updateAbsenceSessionOnCalendar(sessionDto: SessionDto): void {
     const event = this.#calendarApi?.getEventById(sessionDto.id);
     if (event) {
       event.setExtendedProp('sessionDto', sessionDto);
+      event.setProp('backgroundColor', 'red');
+      event.setProp('borderColor', 'red');
     }
   }
 
