@@ -3,6 +3,7 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { inject, Injectable } from '@angular/core';
 import { isSameDay } from 'date-fns';
 import { Observable, Subject } from 'rxjs';
+import { Permission } from '../../authentication/models/permissions.model';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
 import { SessionActionsComponent } from '../components/session-actions/session-actions.component';
 import { SessionDto } from '../models/http/session-dto.interface';
@@ -60,7 +61,8 @@ export class SessionOverlayService {
         tooltip: this.#getCloseActionTooltip(sessionDto),
         disabled:
           sessionDto.status === SessionStatus.Completed ||
-          (!isSameDay(sessionDto.startDate, new Date()) && !this.#authService.isAdmin())
+          (!isSameDay(sessionDto.startDate, new Date()) &&
+            !this.#authService.userPermissions().includes(Permission.closeLateSessions))
       }
     ];
     menu.instance.actionClicked.subscribe((action) => {
@@ -85,7 +87,10 @@ export class SessionOverlayService {
       return 'Sessão já concluída';
     }
 
-    if (!isSameDay(sessionDto.startDate, new Date()) && !this.#authService.isAdmin()) {
+    if (
+      !isSameDay(sessionDto.startDate, new Date()) &&
+      !this.#authService.userPermissions().includes(Permission.closeLateSessions)
+    ) {
       return 'Sem permissões para concluir a sessão';
     }
 

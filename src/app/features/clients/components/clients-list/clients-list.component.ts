@@ -15,6 +15,8 @@ import { ColumnBuilder } from '../../../../ui/components/table/models/table-colu
 import { TableBuilder } from '../../../../ui/components/table/models/table.builder';
 import { TableComponent } from '../../../../ui/components/table/table.component';
 import { formatClient } from '../../../../ui/helpers/client.helper';
+import { Permission } from '../../../authentication/models/permissions.model';
+import { HasPermissionPipe } from '../../../authentication/pipes/has-permission.pipe';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { ClientsApiService } from '../../api/clients-api.service';
 import { Client, ClientForm } from '../../models/client.interface';
@@ -32,7 +34,8 @@ import { ClientFormComponent } from '../client-form/client-form.component';
     MatIconModule,
     MatButtonModule,
     SearchComponent,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    HasPermissionPipe
   ],
   providers: [ClientsApiService],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -83,7 +86,7 @@ export class ClientsListComponent {
     )
     .build();
 
-  isAdmin = this.authService.isAdmin;
+  permission = Permission;
 
   constructor() {
     this.addClientSubject$

@@ -1,0 +1,60 @@
+@use '@angular/material' as mat;
+
+:host {
+  @include mat.card-overrides(
+    (
+      elevated-container-color: #f7f9fd
+    )
+  );
+}
+
+header {
+  mat-card {
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+    padding: 16px;
+    gap: 16px;
+
+    mat-select {
+      max-width: 304px;
+    }
+  }
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  padding-top: 20px;
+
+  mat-card {
+    padding: 16px;
+    gap: 10px;
+
+    &.no-user-selected {
+      align-items: center;
+      gap: 6px;
+
+      mat-icon {
+        font-size: 40px;
+        height: 40px;
+        width: 40px;
+      }
+
+      h3 {
+        margin: 0;
+      }
+    }
+  }
+}
+
+:host ::ng-deep mat-slide-toggle div {
+  display: flex;
+  justify-content: space-between;
+
+  label {
+    font-size: 18px;
+    margin-left: 0;
+  }
+}

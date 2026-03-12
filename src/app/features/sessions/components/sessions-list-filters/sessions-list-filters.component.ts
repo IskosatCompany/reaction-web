@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { Permission } from '../../../authentication/models/permissions.model';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsRequest } from '../../models/http/sessions-request.interface';
 import { SessionStatus, SessionStatusLabel } from '../../models/session.interface';
 import { SessionsListFiltersService } from '../../services/sessions-list-filters.service';
@@ -42,12 +44,15 @@ export interface SessionsListFiltersData {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SessionsListFiltersComponent {
+  readonly #authService = inject(AuthenticationService);
   readonly #formBuilder = inject(FormBuilder);
   readonly #sessionsStore = inject(SessionsStore);
   readonly #sessionsFiltersService = inject(SessionsListFiltersService);
   readonly #bottomSheetRef = inject(MatBottomSheetRef, { optional: true });
 
-  readonly isAbleToFilterByCoach = this.#sessionsFiltersService.isAdmin;
+  readonly isAbleToFilterByCoach = computed(() =>
+    this.#authService.userPermissions().includes(Permission.filterSessionByCoach)
+  );
   readonly sessionStatus = SessionStatus;
   readonly sessionStatusLabel = SessionStatusLabel;
   readonly withinBottomSheet = signal(!!this.#bottomSheetRef);

@@ -1,0 +1,43 @@
+<header>
+  <mat-card>
+    <mat-select
+      [value]="selectedUserId()"
+      (valueChange)="userChanged($event)"
+      placeholder="Selecionar utilizador"
+      panelClass="searchable-mat-select"
+    >
+      <mat-option>
+        <ngx-mat-select-search
+          placeholderLabel="Pesquisar utilizador"
+          [formControl]="userFilterControl"
+        />
+      </mat-option>
+      @for (user of filteredUsers(); track user.id) {
+        <mat-option [value]="user.id">{{ user.name }}</mat-option>
+      }
+    </mat-select>
+    <button matButton="filled" [disabled]="!selectedUserId()" (click)="save()">Guardar</button>
+  </mat-card>
+</header>
+
+<main>
+  @if (selectedUserId()) {
+    <mat-card>
+      @for (permission of permissionsList(); track permission.value) {
+        <mat-slide-toggle
+          labelPosition="before"
+          [checked]="permission.isActive"
+          (toggleChange)="permission.isActive = !permission.isActive"
+        >
+          <span>{{ permission.value | translatePermission }}</span>
+        </mat-slide-toggle>
+      }
+    </mat-card>
+  } @else {
+    <mat-card class="no-user-selected">
+      <mat-icon>group</mat-icon>
+      <h3>Nenhum utilizador selecionado</h3>
+      <div>Selecione um utilizador para gerir as suas permissões</div>
+    </mat-card>
+  }
+</main>

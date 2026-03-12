@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,30 +13,29 @@ import { MatFabButton } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import { Calendar, CalendarOptions, EventInput, EventMountArg } from '@fullcalendar/core';
+import { addHours } from 'date-fns';
 import { catchError, EMPTY, switchMap, tap } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
-import { UserRole } from '../../../authentication/models/login.interface';
+import { formatCalendarSessionTitle } from '../../../../ui/helpers/session.helper';
+import { Permission } from '../../../authentication/models/permissions.model';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
 import { CALENDAR_DEFAULT_OPTIONS } from '../../constants/calendar-options.constant';
 import { SessionDto } from '../../models/http/session-dto.interface';
+import { SessionLocation, SessionStatus, SessionType } from '../../models/session.interface';
 import { SessionOverlayService } from '../../services/session-overlay.service';
+import { AbsenceSessionService } from '../../services/sessions-actions/absence-session.service';
 import { AddSessionService } from '../../services/sessions-actions/add-session.service';
 import { CloseSessionService } from '../../services/sessions-actions/close-session.service';
 import { DeleteSessionService } from '../../services/sessions-actions/delete-session.service';
 import { DuplicateSessionService } from '../../services/sessions-actions/duplicate-session.service';
 import { EditSessionService } from '../../services/sessions-actions/edit-session.service';
 import { SessionsStore } from '../../store/sessions.store';
-import { formatCalendarSessionTitle } from '../../../../ui/helpers/session.helper';
-import { SessionLocation, SessionStatus, SessionType } from '../../models/session.interface';
-import { AbsenceSessionService } from '../../services/sessions-actions/absence-session.service';
-import { addHours } from 'date-fns';
 
 @Component({
   selector: 'app-sessions-calendar',
@@ -64,7 +64,6 @@ import { addHours } from 'date-fns';
 export class SessionsCalendarComponent {
   readonly #sessionsStore = inject(SessionsStore);
   readonly #sessionsApi = inject(SessionsApiService);
-  readonly #authService = inject(AuthenticationService);
   readonly #overlayService = inject(SessionOverlayService);
   readonly #addSessionService = inject(AddSessionService);
   readonly #editSessionService = inject(EditSessionService);
@@ -74,6 +73,7 @@ export class SessionsCalendarComponent {
   readonly #closeSessionService = inject(CloseSessionService);
   readonly #router = inject(Router);
   readonly #snackBar = inject(MatSnackBar);
+  readonly #authService = inject(AuthenticationService);
 
   #calendarApi?: Calendar;
 
@@ -134,10 +134,9 @@ export class SessionsCalendarComponent {
   }
 
   createSession(date?: Date): void {
-    const coach =
-      this.#authService.userRole() === UserRole.coach
-        ? this.#sessionsStore.getCoachById(this.#authService.userId())
-        : undefined;
+    const coach = !this.#authService.userPermissions().includes(Permission.editSessionsCoach)
+      ? this.#sessionsStore.getCoachById(this.#authService.userId())
+      : undefined;
 
     this.#addSessionService
       .add(

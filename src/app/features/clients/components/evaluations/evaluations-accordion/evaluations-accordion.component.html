@@ -42,7 +42,7 @@
     }
 
     <app-general-info [generalInfo]="generalInfo()" [coaches]="coaches()"></app-general-info>
-    @if (canEdit()) {
+    @if (permission.editEvaluation | hasPermission) {
       <button matMiniFab (click)="onEvaluationEdit()">
         <mat-icon>edit</mat-icon>
       </button>

@@ -1,13 +1,12 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
 import { catchError, EMPTY, finalize, Observable, switchMap, tap, throwError } from 'rxjs';
 import { AuthenticationApiService } from '../api/authentication-api.service';
-import { UserRole } from '../models/login.interface';
+import { Permission } from '../models/permissions.model';
 
 interface JwtPayload {
   account_id: string;
-  exp: number;
-  realm: UserRole;
+  permissions: Permission[];
 }
 
 const TOKEN_KEY = 'auth_token';
@@ -18,16 +17,8 @@ export class AuthenticationService {
   readonly #apiService = inject(AuthenticationApiService);
 
   readonly isAuthenticated = signal(false);
-  readonly userRole = signal<UserRole>(UserRole.admin);
+  readonly userPermissions = signal<Permission[]>([]);
   readonly userId = signal<string>('');
-
-  // TODO: remove this after implement permissions management
-  readonly isAdmin = computed(
-    () =>
-      this.userRole() === UserRole.admin ||
-      this.userId() === '0c2ed097-e49f-4281-a745-670f175c38a7' ||
-      this.userId() === '530de84d-3eaa-4db6-9d9c-12febf6dd805'
-  );
 
   initialize(): Observable<void> {
     const token = this.getAuthToken();
@@ -74,7 +65,7 @@ export class AuthenticationService {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
     this.isAuthenticated.set(false);
-    this.userRole.set(UserRole.admin);
+    this.userPermissions.set([]);
     this.userId.set('');
   }
 
@@ -86,14 +77,14 @@ export class AuthenticationService {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   }
 
-  #getTokenData(): { role: UserRole; id: string } | null {
+  #getTokenData(): { permissions: Permission[]; id: string } | null {
     const token = this.getAuthToken();
     if (!token) {
       return null;
     }
 
-    const { account_id, realm } = jwtDecode<JwtPayload>(token);
-    return { id: account_id, role: realm };
+    const { account_id, permissions } = jwtDecode<JwtPayload>(token);
+    return { id: account_id, permissions };
   }
 
   #setUserData(): void {
@@ -106,6 +97,6 @@ export class AuthenticationService {
 
     this.isAuthenticated.set(true);
     this.userId.set(tokenData.id);
-    this.userRole.set(tokenData.role);
+    this.userPermissions.set(tokenData.permissions);
   }
 }

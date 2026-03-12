@@ -8,18 +8,26 @@
           <mat-icon matTooltip="Cliente arquivado">warning</mat-icon>
         }
       </div>
-      @if (canEdit()) {
-        <div class="actions">
+      <div class="actions">
+        @if (permission.editClient | hasPermission) {
           <button matMiniFab matTooltip="Editar Cliente" (click)="onClientEdit()">
             <mat-icon>edit</mat-icon>
           </button>
+        }
+
+        @if (permission.createEvaluation | hasPermission) {
           <button matMiniFab matTooltip="Adicionar Avaliação" (click)="onEvaluationAdd()">
             <mat-icon>summarize</mat-icon>
           </button>
+        }
+
+        @if (permission.exportClientDetails | hasPermission) {
           <button matMiniFab matTooltip="Exportar PDF" (click)="exportReport()">
             <mat-icon>download</mat-icon>
           </button>
+        }
 
+        @if (permission.archiveClient | hasPermission) {
           @if (client()?.archived) {
             <button matMiniFab matTooltip="Desarquivar" (click)="unarchiveClient()">
               <mat-icon>visibility</mat-icon>
@@ -29,8 +37,8 @@
               <mat-icon>visibility_off</mat-icon>
             </button>
           }
-        </div>
-      }
+        }
+      </div>
     </header>
   </mat-card>
 

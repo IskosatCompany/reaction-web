@@ -35,7 +35,7 @@ import {
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
 import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
-import { UserRole } from '../../../authentication/models/login.interface';
+import { Permission } from '../../../authentication/models/permissions.model';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { Session } from '../../models/session.interface';
 import { SessionsStore } from '../../store/sessions.store';
@@ -184,7 +184,7 @@ export class SessionUpsertComponent {
       this.#data.action === 'edit' && !!id && !!startDate && isBefore(startDate, new Date());
     if (hasSessionStarted) {
       this.form.disable();
-    } else if (this.#authService.userRole() === UserRole.coach) {
+    } else if (!this.#authService.userPermissions().includes(Permission.editSessionsCoach)) {
       this.form.controls.coachId.disable();
     }
 

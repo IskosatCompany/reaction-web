@@ -26,7 +26,7 @@ import { formatClient } from '../../../../ui/helpers/client.helper';
 import { formatCoach } from '../../../../ui/helpers/coach.helper';
 import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
 import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
-import { UserRole } from '../../../authentication/models/login.interface';
+import { Permission } from '../../../authentication/models/permissions.model';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { SessionsApiService } from '../../api/sessions-api.service';
 import { SessionsRequest } from '../../models/http/sessions-request.interface';
@@ -71,7 +71,10 @@ export class SessionsListComponent {
   readonly sessionStatusLabel = SessionStatusLabel;
   readonly isMobile = inject(IS_MOBILE);
   readonly isLoadingClientsAndCoaches = this.#sessionsStore.isLoadingData;
-  readonly isAbleToFilterByCoach = computed(() => this.#authService.userRole() === UserRole.admin);
+
+  readonly isAbleToFilterByCoach = computed(() =>
+    this.#authService.userPermissions().includes(Permission.filterSessionByCoach)
+  );
   readonly tableConfig = this.#getTableConfig();
   readonly sessionsSize$ = this.tableConfig.data$.pipe(map((item) => item.length));
 
@@ -89,7 +92,8 @@ export class SessionsListComponent {
   closeSession(session: Session): void {
     if (
       session.status === SessionStatus.Completed ||
-      (!isSameDay(session.startDate, new Date()) && !this.#authService.isAdmin())
+      (!isSameDay(session.startDate, new Date()) &&
+        !this.#authService.userPermissions().includes(Permission.closeLateSessions))
     ) {
       return;
     }
@@ -167,7 +171,8 @@ export class SessionsListComponent {
   #getActionsColumn(): TableColumn<Session> {
     const isAbleToCloseSession = (row: Session) =>
       row.status === SessionStatus.Pending &&
-      (isSameDay(row.startDate, new Date()) || this.#authService.isAdmin());
+      (isSameDay(row.startDate, new Date()) ||
+        this.#authService.userPermissions().includes(Permission.closeLateSessions));
 
     const closeSessionAction: TableActionsColumn<Session> = {
       icon: 'assignment_turned_in',
@@ -181,7 +186,10 @@ export class SessionsListComponent {
       color: '#ebbe4d',
       isHidden: (row) => row.status === SessionStatus.Completed || isAbleToCloseSession(row),
       tooltip: (row) => {
-        if (!isSameDay(row.startDate, new Date()) && !this.#authService.isAdmin()) {
+        if (
+          !isSameDay(row.startDate, new Date()) &&
+          !this.#authService.userPermissions().includes(Permission.closeLateSessions)
+        ) {
           return 'Sem permissões para concluir a sessão';
         }
 

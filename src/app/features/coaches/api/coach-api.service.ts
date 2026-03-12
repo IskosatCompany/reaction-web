@@ -15,34 +15,34 @@ export class CoachApiService {
       params = params.set('search', searchTerm);
     }
 
-    return this.#http.get<Coach[]>(`${this.#apiUrl}/coach`, { params });
+    return this.#http.get<Coach[]>(`${this.#apiUrl}/employee`, { params });
   }
 
   getCoachDetails(coachId: string): Observable<Coach> {
-    return this.#http.get<Coach>(`${this.#apiUrl}/coach/${coachId}`);
+    return this.#http.get<Coach>(`${this.#apiUrl}/employee/${coachId}`);
   }
 
   addCoach(coach: Partial<CoachForm>): Observable<Coach> {
-    return this.#http.post<Coach>(`${this.#apiUrl}/coach`, coach);
+    return this.#http.post<Coach>(`${this.#apiUrl}/employee`, coach);
   }
 
   editCoach(coachId: string, payload: Partial<CoachForm>): Observable<Coach> {
-    return this.#http.put<Coach>(`${this.#apiUrl}/coach/${coachId}`, payload);
+    return this.#http.put<Coach>(`${this.#apiUrl}/employee/${coachId}`, payload);
   }
 
   getExpertises(): Observable<string[]> {
-    return this.#http.get<string[]>(`${this.#apiUrl}/coach/expertise`);
+    return this.#http.get<string[]>(`${this.#apiUrl}/employee/expertise`);
   }
 
   deleteCoach(coachId: string): Observable<void> {
-    return this.#http.delete<void>(`${this.#apiUrl}/coach/${coachId}`);
+    return this.#http.delete<void>(`${this.#apiUrl}/employee/${coachId}`);
   }
 
   archiveCoach(coachId: string): Observable<Coach> {
-    return this.#http.put<Coach>(`${this.#apiUrl}/coach/${coachId}/archive`, { archive: true });
+    return this.#http.put<Coach>(`${this.#apiUrl}/employee/${coachId}/archive`, { archive: true });
   }
 
   unarchiveCoach(coachId: string): Observable<Coach> {
-    return this.#http.put<Coach>(`${this.#apiUrl}/coach/${coachId}/archive`, { archive: false });
+    return this.#http.put<Coach>(`${this.#apiUrl}/employee/${coachId}/archive`, { archive: false });
   }
 }

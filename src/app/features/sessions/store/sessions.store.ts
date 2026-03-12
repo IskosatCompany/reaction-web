@@ -7,8 +7,7 @@ import {
   withMethods,
   withState
 } from '@ngrx/signals';
-import { delay, finalize, map } from 'rxjs';
-import { AuthenticationService } from '../../authentication/services/authentication.service';
+import { delay, finalize } from 'rxjs';
 import { ClientsApiService } from '../../clients/api/clients-api.service';
 import { Client } from '../../clients/models/client.interface';
 import { CoachApiService } from '../../coaches/api/coach-api.service';
@@ -48,8 +47,7 @@ export const SessionsStore = signalStore(
       store,
       clientsApiService = inject(ClientsApiService),
       coachesApiService = inject(CoachApiService),
-      sessionsApiService = inject(SessionsApiService),
-      authenticationService = inject(AuthenticationService)
+      sessionsApiService = inject(SessionsApiService)
     ) => ({
       _loadClients(): void {
         clientsApiService
@@ -61,13 +59,8 @@ export const SessionsStore = signalStore(
           .subscribe((clients) => patchState(store, { clients }));
       },
       _loadCoaches(): void {
-        const coachesRequest$ = authenticationService.isAdmin()
-          ? coachesApiService.getCoaches()
-          : coachesApiService
-              .getCoachDetails(authenticationService.userId())
-              .pipe(map((item) => [item]));
-
-        coachesRequest$
+        coachesApiService
+          .getCoaches()
           .pipe(finalize(() => patchState(store, { _coachesStatus: 'LOADED' })))
           .subscribe((coaches) => patchState(store, { coaches }));
       },

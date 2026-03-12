@@ -6,14 +6,15 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IS_MOBILE } from '../../../core/tokens/mobile.token';
-import { UserRole } from '../../../features/authentication/models/login.interface';
+import { Permission } from '../../../features/authentication/models/permissions.model';
+import { HasPermissionPipe } from '../../../features/authentication/pipes/has-permission.pipe';
 import { AuthenticationService } from '../../../features/authentication/services/authentication.service';
 
 export interface SideMenuItem {
   label: string;
   route: string;
   icon: string;
-  role?: UserRole;
+  permission?: Permission;
 }
 
 @Component({
@@ -25,7 +26,8 @@ export interface SideMenuItem {
     MatToolbarModule,
     MatIconModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    HasPermissionPipe
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
@@ -38,8 +40,6 @@ export class SideMenuComponent {
 
   isMobile = inject(IS_MOBILE);
   isMenuOpen = signal(false);
-  isAdmin = this.#authService.isAdmin;
-  userRole = this.#authService.userRole;
   userId = this.#authService.userId;
 
   constructor() {

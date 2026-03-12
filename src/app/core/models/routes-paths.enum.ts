@@ -7,5 +7,6 @@ export enum RoutesPaths {
   calendar = 'calendar',
   clients = 'clients',
   team = 'team',
-  profile = 'profile'
+  profile = 'profile',
+  permissions = 'permissions'
 }

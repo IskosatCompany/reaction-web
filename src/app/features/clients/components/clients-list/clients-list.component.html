@@ -1,7 +1,7 @@
 <div class="filters">
   <app-search [class.search-mobile]="isMobile()" (searchTerm)="searchSubject$.next($event)" />
 
-  @if (isAdmin()) {
+  @if (permission.archiveClient | hasPermission) {
     <mat-slide-toggle (change)="showArchivedSubject$.next($event.checked)">
       Arquivados
     </mat-slide-toggle>
@@ -20,7 +20,7 @@
   <app-table [config]="tableConfig" />
 }
 
-@if (isAdmin()) {
+@if (permission.createClient | hasPermission) {
   <button matFab class="float-button" (click)="addClient()">
     <mat-icon>add</mat-icon>
   </button>

@@ -27,6 +27,8 @@ import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { ConfirmActionComponent } from '../../../../ui/components/confirm-action/confirm-action.component';
 import { ConfirmAction } from '../../../../ui/components/confirm-action/confirm-action.model';
 import { formatClient } from '../../../../ui/helpers/client.helper';
+import { Permission } from '../../../authentication/models/permissions.model';
+import { HasPermissionPipe } from '../../../authentication/pipes/has-permission.pipe';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
 import { SessionsApiService } from '../../../sessions/api/sessions-api.service';
@@ -68,7 +70,8 @@ interface SessionFilterDate {
     EvaluationsAccordionComponent,
     SessionsAccordion,
     ClientPlanningComponent,
-    DatePipe
+    DatePipe,
+    HasPermissionPipe
   ],
   templateUrl: './client-detail.component.html',
   styleUrl: './client-detail.component.scss',
@@ -154,7 +157,7 @@ export class ClientDetailComponent {
     formatClient(this.client()?.name ?? '', this.client()?.clientNumber ?? 0)
   );
 
-  canEdit = this.authService.isAdmin;
+  permission = Permission;
 
   constructor() {
     this.editClientSubject$
