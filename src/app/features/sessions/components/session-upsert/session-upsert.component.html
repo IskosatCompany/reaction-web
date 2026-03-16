@@ -31,6 +31,15 @@
     </mat-select>
   </mat-form-field>
 
+  <mat-form-field appearance="outline">
+    <mat-label>Localização</mat-label>
+    <mat-select formControlName="location">
+      @for (location of possibleLocations(); track location) {
+        <mat-option [value]="location">{{ location }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
   <div class="duration">
     <mat-label class="title">Duração</mat-label>
     <mat-radio-group formControlName="duration">

@@ -9,4 +9,5 @@ export interface SessionDto {
   report?: string;
   status: SessionStatus;
   type: string;
+  location?: string;
 }

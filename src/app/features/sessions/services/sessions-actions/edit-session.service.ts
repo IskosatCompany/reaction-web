@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addMinutes } from 'date-fns';
-import { Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import {
   SessionUpsertComponent,
   SessionUpsertData,
@@ -19,6 +19,11 @@ export class EditSessionService extends SessionsActions<
   edit(sessionId: string, sessionTypes: string[]): Observable<SessionDto> {
     return this.apiService.getSessionDetails(sessionId).pipe(
       switchMap((sessionDto) =>
+        this.apiService
+          .getSessionLocations(sessionDto.startDate, sessionDto.endDate)
+          .pipe(map((possibleLocations) => ({ sessionDto, possibleLocations })))
+      ),
+      switchMap(({ sessionDto, possibleLocations }) =>
         super.openBottomSheet<SessionUpsertData>(SessionUpsertComponent, {
           action: 'edit',
           session: {
@@ -27,9 +32,12 @@ export class EditSessionService extends SessionsActions<
             endDate: sessionDto.endDate,
             client: this.store.getClientById(sessionDto.clientId),
             coach: this.store.getCoachById(sessionDto.coachId),
-            type: sessionDto.type
+            type: sessionDto.type,
+            location: sessionDto.location
           },
-          sessionTypes
+          sessionTypes,
+          possibleLocations,
+          fetchLocations: (start, end) => this.apiService.getSessionLocations(start, end)
         })
       ),
       switchMap((payload) => this.save(sessionId, payload))
@@ -54,7 +62,8 @@ export class EditSessionService extends SessionsActions<
       coachId,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),
-      endDate: addMinutes(sessionStartDateTime, duration).getTime()
+      endDate: addMinutes(sessionStartDateTime, duration).getTime(),
+      location: result.location
     };
   }
 }

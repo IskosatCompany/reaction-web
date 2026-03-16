@@ -15,7 +15,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import { Calendar, CalendarOptions, EventInput, EventMountArg } from '@fullcalendar/core';
-import { EMPTY, switchMap, tap } from 'rxjs';
+import { catchError, EMPTY, switchMap, tap } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
 import { UserRole } from '../../../authentication/models/login.interface';
@@ -31,8 +33,9 @@ import { DuplicateSessionService } from '../../services/sessions-actions/duplica
 import { EditSessionService } from '../../services/sessions-actions/edit-session.service';
 import { SessionsStore } from '../../store/sessions.store';
 import { formatCalendarSessionTitle } from '../../../../ui/helpers/session.helper';
-import { SessionStatus, SessionType } from '../../models/session.interface';
+import { SessionLocation, SessionStatus, SessionType } from '../../models/session.interface';
 import { AbsenceSessionService } from '../../services/sessions-actions/absence-session.service';
+import { addHours } from 'date-fns';
 
 @Component({
   selector: 'app-sessions-calendar',
@@ -70,6 +73,7 @@ export class SessionsCalendarComponent {
   readonly #deleteSessionService = inject(DeleteSessionService);
   readonly #closeSessionService = inject(CloseSessionService);
   readonly #router = inject(Router);
+  readonly #snackBar = inject(MatSnackBar);
 
   #calendarApi?: Calendar;
 
@@ -105,7 +109,10 @@ export class SessionsCalendarComponent {
             case 'duplicate':
               return this.#duplicateSessionService
                 .duplicate(sessionDto.id, this.sessionTypes())
-                .pipe(tap((result) => this.#addSessionToCalendar(result)));
+                .pipe(
+                  tap((result) => this.#addSessionToCalendar(result)),
+                  catchError((err) => this.#handleSaveError(err))
+                );
 
             case 'delete':
               return this.#deleteSessionService
@@ -133,15 +140,22 @@ export class SessionsCalendarComponent {
         : undefined;
 
     this.#addSessionService
-      .add({ startDate: date?.getTime(), coach }, this.sessionTypes())
+      .add(
+        { startDate: date?.getTime(), endDate: addHours(date ?? new Date(), 1)?.getTime(), coach },
+        this.sessionTypes()
+      )
+      .pipe(catchError((err) => this.#handleSaveError(err)))
       .subscribe((sessionDto) => this.#addSessionToCalendar(sessionDto));
   }
 
   editSession(sessionId: string): void {
-    this.#editSessionService.edit(sessionId, this.sessionTypes()).subscribe((sessionDto) => {
-      this.#removeSessionFromCalendar(sessionDto.id);
-      this.#addSessionToCalendar(sessionDto);
-    });
+    this.#editSessionService
+      .edit(sessionId, this.sessionTypes())
+      .pipe(catchError((err) => this.#handleSaveError(err)))
+      .subscribe((sessionDto) => {
+        this.#removeSessionFromCalendar(sessionDto.id);
+        this.#addSessionToCalendar(sessionDto);
+      });
   }
 
   updateAbsenceSessionOnCalendar(sessionDto: SessionDto): void {
@@ -151,6 +165,14 @@ export class SessionsCalendarComponent {
       event.setProp('backgroundColor', 'red');
       event.setProp('borderColor', 'red');
     }
+  }
+
+  #handleSaveError(error: HttpErrorResponse): typeof EMPTY {
+    const details = error.error?.details;
+    if (details) {
+      this.#snackBar.open(details, undefined, { duration: 5000 });
+    }
+    return EMPTY;
   }
 
   #getCalendarOptions(): CalendarOptions {
@@ -182,7 +204,8 @@ export class SessionsCalendarComponent {
                   title: formatCalendarSessionTitle(
                     client.name,
                     client.clientNumber,
-                    item.type as SessionType
+                    item.type as SessionType,
+                    item.location as SessionLocation
                   ),
                   start: item.startDate,
                   end: item.endDate,
@@ -234,7 +257,8 @@ export class SessionsCalendarComponent {
       title: formatCalendarSessionTitle(
         client.name,
         client.clientNumber,
-        sessionDto.type as SessionType
+        sessionDto.type as SessionType,
+        sessionDto.location as SessionLocation
       ),
       start: sessionDto.startDate,
       end: sessionDto.endDate,

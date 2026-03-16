@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { addMinutes } from 'date-fns';
-import { Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap } from 'rxjs';
 import {
   SessionUpsertComponent,
   SessionUpsertData,
@@ -18,7 +18,12 @@ export class DuplicateSessionService extends SessionsActions<
 > {
   duplicate(sessionId: string, sessionTypes: string[]): Observable<SessionDto> {
     return this.apiService.getSessionDetails(sessionId).pipe(
-      switchMap((sessionDto) => {
+      switchMap((sessionDto) =>
+        this.apiService
+          .getSessionLocations(sessionDto.startDate, sessionDto.endDate)
+          .pipe(map((possibleLocations) => ({ sessionDto, possibleLocations })))
+      ),
+      switchMap(({ sessionDto, possibleLocations }) => {
         const { startDate, endDate } = this.#getStartAndEndDates(
           sessionDto.startDate,
           sessionDto.endDate
@@ -31,9 +36,12 @@ export class DuplicateSessionService extends SessionsActions<
             endDate,
             client: this.store.getClientById(sessionDto.clientId),
             coach: this.store.getCoachById(sessionDto.coachId),
-            type: sessionDto.type
+            type: sessionDto.type,
+            location: sessionDto.location
           },
-          sessionTypes
+          sessionTypes,
+          possibleLocations,
+          fetchLocations: (start, end) => this.apiService.getSessionLocations(start, end)
         });
       }),
       switchMap((result) => this.save(result))
@@ -47,12 +55,13 @@ export class DuplicateSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType, location } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      location,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()

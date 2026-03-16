@@ -36,6 +36,18 @@ export const sessionTypeCalendarLabel: Record<SessionType, string> = {
   [SessionType.Podiatry]: 'CPD',
   [SessionType.Physiotherapy]: 'CF'
 };
+
+export enum SessionLocation {
+  Gym = 'Ginásio',
+  Office1 = 'Gabinete 1',
+  Office2 = 'Gabinete 2'
+}
+
+export const sessionLocationLabel: Record<SessionLocation, string> = {
+  [SessionLocation.Gym]: 'Gym',
+  [SessionLocation.Office1]: 'Gab 1',
+  [SessionLocation.Office2]: 'Gab 2'
+};
 export interface Session {
   id: string;
   client: Client;
@@ -45,4 +57,5 @@ export interface Session {
   report?: string;
   status: SessionStatus;
   type: string;
+  location?: string;
 }

@@ -45,6 +45,12 @@ export class SessionsApiService {
     return this.#http.get<string[]>(`${this.#url}/session/type`);
   }
 
+  getSessionLocations(startDate: number, endDate: number): Observable<string[]> {
+    const params = new HttpParams().append('startDate', startDate).append('endDate', endDate);
+
+    return this.#http.get<string[]>(`${this.#url}/session/location`, { params });
+  }
+
   addSession(payload: SessionUpsertRequest): Observable<SessionDto> {
     return this.#http.post<SessionDto>(`${this.#url}/session`, payload);
   }

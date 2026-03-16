@@ -4,4 +4,5 @@ export interface SessionUpsertRequest {
   startDate: number;
   endDate: number;
   type: string;
+  location: string;
 }

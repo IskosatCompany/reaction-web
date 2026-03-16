@@ -1,11 +1,20 @@
-import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  signal
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
   NonNullableFormBuilder,
-  ReactiveFormsModule
+  ReactiveFormsModule,
+  Validators
 } from '@angular/forms';
+import { merge, Observable, switchMap } from 'rxjs';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -35,6 +44,8 @@ export interface SessionUpsertData {
   action: Action;
   session: Partial<Session>;
   sessionTypes: string[];
+  possibleLocations?: string[];
+  fetchLocations: (startDate: number, endDate: number) => Observable<string[]>;
 }
 
 export interface SessionUpsertFormResult {
@@ -44,6 +55,7 @@ export interface SessionUpsertFormResult {
   clientId: string;
   coachId: string;
   sessionType: string;
+  location: string;
 }
 
 interface SessionUpsertForm {
@@ -53,6 +65,7 @@ interface SessionUpsertForm {
   sessionType: FormControl<string>;
   clientId: FormControl<string>;
   coachId: FormControl<string>;
+  location: FormControl<string>;
 }
 
 type Action = 'create' | 'edit' | 'duplicate';
@@ -84,8 +97,15 @@ export class SessionUpsertComponent {
   readonly #sessionsStore = inject(SessionsStore);
   readonly #authService = inject(AuthenticationService);
   readonly #bottomSheetRef = inject(MatBottomSheetRef);
+  readonly #destroyRef = inject(DestroyRef);
 
   sessionTypes = this.#data.sessionTypes ?? [];
+  possibleLocations = signal<string[]>(
+    this.#data.session.location
+      ? [...(this.#data.possibleLocations ?? []), this.#data.session.location]
+      : (this.#data.possibleLocations ?? [])
+  );
+  currentLocation = signal(this.#data.session.location);
   form: FormGroup<SessionUpsertForm>;
 
   get title(): string {
@@ -142,7 +162,7 @@ export class SessionUpsertComponent {
 
   constructor() {
     const defaultStartDateTime = this.#getDefaultStartDateTime();
-    const { id, client, coach, startDate, endDate, type } = this.#data.session;
+    const { id, client, coach, startDate, endDate, type, location } = this.#data.session;
 
     this.form = this.#formBuilder.group<SessionUpsertForm>({
       startDate: this.#formBuilder.control<Date>(
@@ -156,7 +176,8 @@ export class SessionUpsertComponent {
       ),
       clientId: this.#formBuilder.control<string>(client?.id ?? ''),
       coachId: this.#formBuilder.control<string>(coach?.id ?? ''),
-      sessionType: this.#formBuilder.control<string>(type ?? '')
+      sessionType: this.#formBuilder.control<string>(type ?? ''),
+      location: this.#formBuilder.control<string>(location ?? '', Validators.required)
     });
 
     const hasSessionStarted =
@@ -166,6 +187,45 @@ export class SessionUpsertComponent {
     } else if (this.#authService.userRole() === UserRole.coach) {
       this.form.controls.coachId.disable();
     }
+
+    this.form.controls.location.valueChanges
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((value) => this.currentLocation.set(value));
+
+    merge(
+      this.form.controls.startDate.valueChanges,
+      this.form.controls.startTime.valueChanges,
+      this.form.controls.duration.valueChanges
+    )
+      .pipe(
+        switchMap(() => {
+          const {
+            startDate: formStartDate,
+            startTime: formStartTime,
+            duration: formDuration
+          } = this.form.getRawValue();
+          const start = new Date(formStartDate);
+          start.setHours(formStartTime.getHours(), formStartTime.getMinutes(), 0, 0);
+          const end = addMinutes(start, formDuration);
+          return this.#data.fetchLocations(start.getTime(), end.getTime());
+        }),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe((locations) => {
+        const locationsList =
+          this.#data.action !== 'create' &&
+          this.#data.session.location &&
+          !locations.includes(this.#data.session.location)
+            ? [...locations, this.#data.session.location]
+            : locations;
+
+        this.possibleLocations.set(locationsList);
+
+        const currentLocation = this.form.controls.location.value;
+        if (currentLocation && !locationsList.includes(currentLocation)) {
+          this.form.controls.location.setValue('');
+        }
+      });
   }
 
   close(): void {
@@ -173,7 +233,7 @@ export class SessionUpsertComponent {
   }
 
   confirm(): void {
-    const { clientId, coachId, duration, startDate, startTime, sessionType } =
+    const { clientId, coachId, duration, startDate, startTime, sessionType, location } =
       this.form.getRawValue();
     const result: SessionUpsertFormResult = {
       clientId,
@@ -181,7 +241,8 @@ export class SessionUpsertComponent {
       duration,
       startDate,
       startTime,
-      sessionType
+      sessionType,
+      location
     };
 
     this.#bottomSheetRef.dismiss(result);

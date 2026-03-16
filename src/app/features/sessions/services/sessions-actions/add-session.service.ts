@@ -18,13 +18,21 @@ export class AddSessionService extends SessionsActions<
   SessionUpsertRequest
 > {
   add(data: Partial<Session>, sessionTypes: string[]): Observable<SessionDto> {
-    return super
-      .openBottomSheet<SessionUpsertData>(SessionUpsertComponent, {
-        action: 'create',
-        session: data,
-        sessionTypes
-      })
-      .pipe(switchMap((result) => this.save(result)));
+    if (!data.startDate || !data.endDate) {
+      throw new Error('Start date and end date must be provided to add a session');
+    }
+    return this.apiService.getSessionLocations(data.startDate, data.endDate).pipe(
+      switchMap((possibleLocations) =>
+        super.openBottomSheet<SessionUpsertData>(SessionUpsertComponent, {
+          action: 'create',
+          session: data,
+          sessionTypes,
+          possibleLocations,
+          fetchLocations: (start, end) => this.apiService.getSessionLocations(start, end)
+        })
+      ),
+      switchMap((result) => this.save(result))
+    );
   }
 
   protected override save(request: SessionUpsertRequest): Observable<SessionDto> {
@@ -34,12 +42,13 @@ export class AddSessionService extends SessionsActions<
   protected override mapBottomSheetResultToSave(
     result: SessionUpsertFormResult
   ): SessionUpsertRequest {
-    const { clientId, coachId, duration, startDate, startTime, sessionType } = result;
+    const { clientId, coachId, duration, startDate, startTime, sessionType, location } = result;
     const sessionStartDateTime = this.getSessionStartDateTime(startDate, startTime);
 
     return {
       clientId,
       coachId,
+      location,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime()
