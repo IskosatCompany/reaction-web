@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
+import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,14 +15,15 @@ import { MatInputModule } from '@angular/material/input';
 })
 export class AddSessionReportComponent {
   readonly #bottomSheetRef = inject(MatBottomSheetRef);
+  readonly #data = inject<string | undefined>(MAT_BOTTOM_SHEET_DATA);
 
-  report?: string;
+  report = this.#data;
 
   close(): void {
     this.#bottomSheetRef.dismiss();
   }
 
-  confirm(): void {
-    this.#bottomSheetRef.dismiss(this.report);
+  confirm(saveAsDraft = false): void {
+    this.#bottomSheetRef.dismiss([this.report, saveAsDraft]);
   }
 }
