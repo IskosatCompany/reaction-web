@@ -1,17 +1,19 @@
-<mat-card>
-  <mat-card-header>
-    <header class="profile-header">
-      <span>Dados</span>
-      <button matMiniFab matTooltip="Editar" (click)="onProfileEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-    </header>
-  </mat-card-header>
-  <mat-divider />
-  <mat-card-content>
-    <app-coach-info [coach]="userDetails()" />
-  </mat-card-content>
-</mat-card>
+@if (userDetails()) {
+  <mat-card>
+    <mat-card-header>
+      <header class="profile-header">
+        <span>Dados</span>
+        <button matMiniFab matTooltip="Editar" (click)="onProfileEdit()">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </header>
+    </mat-card-header>
+    <mat-divider />
+    <mat-card-content>
+      <app-coach-info [coach]="userDetails()" />
+    </mat-card-content>
+  </mat-card>
+}
 
 <mat-expansion-panel>
   <mat-expansion-panel-header>

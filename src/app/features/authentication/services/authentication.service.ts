@@ -1,12 +1,13 @@
 import { inject, Injectable, signal } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
-import { catchError, EMPTY, finalize, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, EMPTY, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { PermissionsApiService } from '../../permissions/api/permissions-api.service';
 import { AuthenticationApiService } from '../api/authentication-api.service';
 import { Permission } from '../models/permissions.model';
 
 interface JwtPayload {
   account_id: string;
-  permissions: Permission[];
+  employee_id: string;
 }
 
 const TOKEN_KEY = 'auth_token';
@@ -15,12 +16,14 @@ const REFRESH_TOKEN_KEY = 'refresh_token';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   readonly #apiService = inject(AuthenticationApiService);
+  readonly #permissionsApiService = inject(PermissionsApiService);
 
   readonly isAuthenticated = signal(false);
   readonly userPermissions = signal<Permission[]>([]);
   readonly userId = signal<string>('');
+  readonly employeeId = signal<string>('');
 
-  initialize(): Observable<void> {
+  initialize(): Observable<unknown> {
     const token = this.getAuthToken();
     if (!token) {
       return EMPTY;
@@ -35,29 +38,31 @@ export class AuthenticationService {
 
         this.#setUserData();
       }),
-      switchMap(() => EMPTY)
+      switchMap(() => this.updateUserPermissions())
     );
   }
 
   login(email: string, password: string): Observable<unknown> {
     return this.#apiService.login({ email, password }).pipe(
       catchError((error) => throwError(() => error)),
-      finalize(() => this.#setUserData()),
       tap(({ authToken, refreshToken }) => {
         localStorage.setItem(TOKEN_KEY, authToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-      })
+        this.#setUserData();
+      }),
+      switchMap(() => this.updateUserPermissions())
     );
   }
 
   refresh(): Observable<unknown> {
     return this.#apiService.refresh().pipe(
       catchError((error) => throwError(() => error)),
-      finalize(() => this.#setUserData()),
       tap(({ authToken, refreshToken }) => {
         localStorage.setItem(TOKEN_KEY, authToken);
         localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
-      })
+        this.#setUserData();
+      }),
+      switchMap(() => this.updateUserPermissions())
     );
   }
 
@@ -77,14 +82,21 @@ export class AuthenticationService {
     return localStorage.getItem(REFRESH_TOKEN_KEY);
   }
 
-  #getTokenData(): { permissions: Permission[]; id: string } | null {
+  updateUserPermissions(): Observable<unknown> {
+    return this.#permissionsApiService.getUserPermissions(this.userId()).pipe(
+      tap((permissions) => this.userPermissions.set(permissions)),
+      switchMap(() => of({}))
+    );
+  }
+
+  #getTokenData(): { id: string; employeeId: string } | null {
     const token = this.getAuthToken();
     if (!token) {
       return null;
     }
 
-    const { account_id, permissions } = jwtDecode<JwtPayload>(token);
-    return { id: account_id, permissions };
+    const { account_id, employee_id } = jwtDecode<JwtPayload>(token);
+    return { id: account_id, employeeId: employee_id };
   }
 
   #setUserData(): void {
@@ -97,6 +109,6 @@ export class AuthenticationService {
 
     this.isAuthenticated.set(true);
     this.userId.set(tokenData.id);
-    this.userPermissions.set(tokenData.permissions);
+    this.employeeId.set(tokenData.employeeId);
   }
 }

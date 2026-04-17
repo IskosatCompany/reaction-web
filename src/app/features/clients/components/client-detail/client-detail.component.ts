@@ -135,9 +135,9 @@ export class ClientDetailComponent {
     combineLatest([this.sessionsDto$, this.coaches$]).pipe(
       map(([sessionsDto, coaches]) =>
         sessionsDto.map((sessionDto) => {
-          const coach = coaches.find((c) => c.id === sessionDto.coachId);
+          const coach = coaches.find((c) => c.id === sessionDto.employeeId);
           if (!coach) {
-            throw new Error(`Coach with id ${sessionDto.coachId} not found`);
+            throw new Error(`Coach with id ${sessionDto.employeeId} not found`);
           }
           return {
             id: sessionDto.id,

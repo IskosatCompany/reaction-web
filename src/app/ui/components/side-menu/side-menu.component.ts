@@ -6,15 +6,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { IS_MOBILE } from '../../../core/tokens/mobile.token';
-import { Permission } from '../../../features/authentication/models/permissions.model';
-import { HasPermissionPipe } from '../../../features/authentication/pipes/has-permission.pipe';
-import { AuthenticationService } from '../../../features/authentication/services/authentication.service';
 
 export interface SideMenuItem {
   label: string;
   route: string;
   icon: string;
-  permission?: Permission;
+  visible: boolean;
 }
 
 @Component({
@@ -26,21 +23,17 @@ export interface SideMenuItem {
     MatToolbarModule,
     MatIconModule,
     MatListModule,
-    MatButtonModule,
-    HasPermissionPipe
+    MatButtonModule
   ],
   templateUrl: './side-menu.component.html',
   styleUrl: './side-menu.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideMenuComponent {
-  readonly #authService = inject(AuthenticationService);
-
   menuItems = input.required<SideMenuItem[]>();
 
   isMobile = inject(IS_MOBILE);
   isMenuOpen = signal(false);
-  userId = this.#authService.userId;
 
   constructor() {
     effect(() => {

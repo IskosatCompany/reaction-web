@@ -1,11 +1,16 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDivider } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -14,16 +19,11 @@ import { catchError, EMPTY, filter, Observable, startWith, Subject, switchMap } 
 import { PasswordInput } from '../../../../ui/models/password-input.class';
 import { PasswordApiService } from '../../../authentication/api/password-api.service';
 import { AuthenticationService } from '../../../authentication/services/authentication.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { CoachApiService } from '../../../coaches/api/coach-api.service';
-import { CoachInfoComponent } from '../../../coaches/components/coach-info/coach-info.component';
-import { MatCardModule } from '@angular/material/card';
-import { MatDivider } from '@angular/material/divider';
-import { Coach, CoachForm } from '../../../coaches/models/coach.model';
-import { CoachBottomSheetData } from '../../../coaches/models/coach-bottom-sheet-data.model';
 import { CoachFormComponent } from '../../../coaches/components/coach-form/coach-form.component';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { CoachInfoComponent } from '../../../coaches/components/coach-info/coach-info.component';
+import { CoachBottomSheetData } from '../../../coaches/models/coach-bottom-sheet-data.model';
+import { Coach, CoachForm } from '../../../coaches/models/coach.model';
 
 interface UpdatePasswordForm {
   currentPassword: FormControl<string>;
@@ -65,9 +65,11 @@ export class ProfileComponent {
   readonly editProfileSubject$ = new Subject<void>();
 
   readonly userDetails = toSignal<Coach>(
-    this.refreshSubject$
-      .pipe(startWith(undefined))
-      .pipe(switchMap(() => this.coachApiService.getCoachDetails(this.authService.userId())))
+    this.refreshSubject$.pipe(
+      startWith(undefined),
+      filter(() => !!this.authService.employeeId()),
+      switchMap(() => this.coachApiService.getCoachDetails(this.authService.employeeId()))
+    )
   );
 
   form = this.#formBuilder.group<UpdatePasswordForm>({
@@ -81,7 +83,7 @@ export class ProfileComponent {
       .pipe(
         switchMap(() => this.openEditBottomSheet()),
         filter((coach) => !!coach),
-        switchMap((coach) => this.coachApiService.editCoach(this.authService.userId(), coach)),
+        switchMap((coach) => this.coachApiService.editCoach(this.authService.employeeId(), coach)),
         takeUntilDestroyed()
       )
       .subscribe((coach: Coach) => {

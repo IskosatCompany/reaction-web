@@ -1,7 +1,7 @@
 @if (!isAuthenticated()) {
   <router-outlet />
 } @else {
-  <app-side-menu [menuItems]="menuItems">
+  <app-side-menu [menuItems]="menuItems()">
     <router-outlet />
   </app-side-menu>
 }

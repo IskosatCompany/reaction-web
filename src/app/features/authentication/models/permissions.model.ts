@@ -1,9 +1,9 @@
 export enum Permission {
   viewAllSessions = 'VIEW_ALL_SESSIONS',
   editSessionsCoach = 'EDIT_SESSION_COACH',
-  closeAllSessions = 'CLOSE_ALL_SESSIONS',
+  closeAllSessions = 'CLOSE_ALL_SESSIONS', // --
   closeLateSessions = 'CLOSE_LATE_SESSIONS',
-  registerAllSessionAbsence = 'REGISTER_ALL_SESSION_ABSENCE',
+  registerAllSessionAbsence = 'REGISTER_ALL_SESSION_ABSENCE', // --
   createClient = 'CREATE_CLIENT',
   editClient = 'EDIT_CLIENT',
   archiveClient = 'ARCHIVE_CLIENT',

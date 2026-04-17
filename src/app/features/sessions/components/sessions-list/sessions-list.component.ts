@@ -158,7 +158,7 @@ export class SessionsListComponent {
               (session): Session => ({
                 ...session,
                 client: this.#sessionsStore.getClientById(session.clientId),
-                coach: this.#sessionsStore.getCoachById(session.coachId)
+                coach: this.#sessionsStore.getCoachById(session.employeeId)
               })
             )
           ),

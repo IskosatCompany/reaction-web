@@ -1,6 +1,6 @@
 export interface SessionUpsertRequest {
   clientId: string;
-  coachId: string;
+  employeeId: string;
   startDate: number;
   endDate: number;
   type: string;

@@ -133,9 +133,9 @@ export class SessionsCalendarComponent {
       .subscribe();
   }
 
-  createSession(date?: Date): void {
+  createSession(date: Date = new Date()): void {
     const coach = !this.#authService.userPermissions().includes(Permission.editSessionsCoach)
-      ? this.#sessionsStore.getCoachById(this.#authService.userId())
+      ? this.#sessionsStore.getCoachById(this.#authService.employeeId())
       : undefined;
 
     this.#addSessionService
@@ -196,7 +196,7 @@ export class SessionsCalendarComponent {
             next: (sessions) => {
               const events = sessions.map((item): EventInput => {
                 const client = this.#sessionsStore.getClientById(item.clientId);
-                const coach = this.#sessionsStore.getCoachById(item.coachId);
+                const coach = this.#sessionsStore.getCoachById(item.employeeId);
 
                 return {
                   id: item.id,
@@ -249,7 +249,7 @@ export class SessionsCalendarComponent {
 
   #addSessionToCalendar(sessionDto: SessionDto): void {
     const client = this.#sessionsStore.getClientById(sessionDto.clientId);
-    const coach = this.#sessionsStore.getCoachById(sessionDto.coachId);
+    const coach = this.#sessionsStore.getCoachById(sessionDto.employeeId);
 
     this.#calendarApi?.addEvent({
       id: sessionDto.id,

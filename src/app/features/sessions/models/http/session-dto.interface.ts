@@ -3,7 +3,7 @@ import { SessionStatus } from '../session.interface';
 export interface SessionDto {
   id: string;
   clientId: string;
-  coachId: string;
+  employeeId: string;
   startDate: number;
   endDate: number;
   report?: string;

@@ -12,7 +12,7 @@
 
     <mat-nav-list>
       @for (item of menuItems(); track $index) {
-        @if (!item.permission || (item.permission | hasPermission)) {
+        @if (item.visible) {
           <a
             mat-list-item
             [routerLink]="item.route"

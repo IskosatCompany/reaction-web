@@ -16,7 +16,9 @@ import { MatOption, MatSelect } from '@angular/material/select';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSelectSearchComponent } from 'ngx-mat-select-search';
+import { switchMap } from 'rxjs';
 import { Permission } from '../../../authentication/models/permissions.model';
+import { AuthenticationService } from '../../../authentication/services/authentication.service';
 import { PermissionsApiService } from '../../api/permissions-api.service';
 import { PermissionsLabels, PermissionToggle } from '../../models/permissions.model';
 
@@ -45,6 +47,7 @@ export class TranslatePermissionPipe implements PipeTransform {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PermissionsComponent {
+  private readonly authService = inject(AuthenticationService);
   private readonly permissionsService = inject(PermissionsApiService);
   private readonly snackbarService = inject(MatSnackBar);
 
@@ -75,6 +78,7 @@ export class PermissionsComponent {
 
     this.permissionsService
       .updateUserPermissions(this.selectedUserId(), selectedPermissions)
+      .pipe(switchMap(() => this.authService.updateUserPermissions()))
       .subscribe(() => this.snackbarService.open('Permissões atualizadas com sucesso'));
   }
 

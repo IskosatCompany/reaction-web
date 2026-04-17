@@ -47,7 +47,7 @@ export class AddSessionService extends SessionsActions<
 
     return {
       clientId,
-      coachId,
+      employeeId: coachId,
       location,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),

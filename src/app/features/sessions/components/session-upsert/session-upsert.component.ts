@@ -14,7 +14,6 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
-import { merge, Observable, switchMap } from 'rxjs';
 import { MAT_BOTTOM_SHEET_DATA, MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -33,6 +32,7 @@ import {
   roundToNearestMinutes
 } from 'date-fns';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { merge, Observable, switchMap } from 'rxjs';
 import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
 import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
 import { Permission } from '../../../authentication/models/permissions.model';
@@ -166,17 +166,20 @@ export class SessionUpsertComponent {
 
     this.form = this.#formBuilder.group<SessionUpsertForm>({
       startDate: this.#formBuilder.control<Date>(
-        startDate ? new Date(startDate) : defaultStartDateTime
+        startDate ? new Date(startDate) : defaultStartDateTime,
+        Validators.required
       ),
       startTime: this.#formBuilder.control<Date>(
-        startDate ? new Date(startDate) : defaultStartDateTime
+        startDate ? new Date(startDate) : defaultStartDateTime,
+        Validators.required
       ),
       duration: this.#formBuilder.control<number>(
-        startDate && endDate ? differenceInMinutes(endDate, startDate) : 60
+        startDate && endDate ? differenceInMinutes(endDate, startDate) : 60,
+        Validators.required
       ),
-      clientId: this.#formBuilder.control<string>(client?.id ?? ''),
-      coachId: this.#formBuilder.control<string>(coach?.id ?? ''),
-      sessionType: this.#formBuilder.control<string>(type ?? ''),
+      clientId: this.#formBuilder.control<string>(client?.id ?? '', Validators.required),
+      coachId: this.#formBuilder.control<string>(coach?.id ?? '', Validators.required),
+      sessionType: this.#formBuilder.control<string>(type ?? '', Validators.required),
       location: this.#formBuilder.control<string>(location ?? '', Validators.required)
     });
 

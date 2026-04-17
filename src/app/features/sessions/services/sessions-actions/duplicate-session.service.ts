@@ -35,7 +35,7 @@ export class DuplicateSessionService extends SessionsActions<
             startDate,
             endDate,
             client: this.store.getClientById(sessionDto.clientId),
-            coach: this.store.getCoachById(sessionDto.coachId),
+            coach: this.store.getCoachById(sessionDto.employeeId),
             type: sessionDto.type,
             location: sessionDto.location
           },
@@ -60,7 +60,7 @@ export class DuplicateSessionService extends SessionsActions<
 
     return {
       clientId,
-      coachId,
+      employeeId: coachId,
       location,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),

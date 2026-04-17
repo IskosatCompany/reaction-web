@@ -31,7 +31,7 @@ export class EditSessionService extends SessionsActions<
             startDate: sessionDto.startDate,
             endDate: sessionDto.endDate,
             client: this.store.getClientById(sessionDto.clientId),
-            coach: this.store.getCoachById(sessionDto.coachId),
+            coach: this.store.getCoachById(sessionDto.employeeId),
             type: sessionDto.type,
             location: sessionDto.location
           },
@@ -59,7 +59,7 @@ export class EditSessionService extends SessionsActions<
 
     return {
       clientId,
-      coachId,
+      employeeId: coachId,
       type: sessionType,
       startDate: sessionStartDateTime.getTime(),
       endDate: addMinutes(sessionStartDateTime, duration).getTime(),
