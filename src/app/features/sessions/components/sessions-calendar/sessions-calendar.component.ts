@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { FullCalendarComponent, FullCalendarModule } from '@fullcalendar/angular';
 import { Calendar, CalendarOptions, EventInput, EventMountArg } from '@fullcalendar/core';
-import { addHours } from 'date-fns';
+import { addHours, roundToNearestMinutes } from 'date-fns';
 import { catchError, EMPTY, switchMap, tap } from 'rxjs';
 import { RoutesPaths } from '../../../../core/models/routes-paths.enum';
 import { IS_MOBILE } from '../../../../core/tokens/mobile.token';
@@ -133,14 +133,23 @@ export class SessionsCalendarComponent {
       .subscribe();
   }
 
-  createSession(date: Date = new Date()): void {
+  createSession(date?: Date): void {
+    const dateRounded = roundToNearestMinutes(date ?? new Date(), {
+      roundingMethod: 'ceil',
+      nearestTo: 30
+    });
+
     const coach = !this.#authService.userPermissions().includes(Permission.editSessionsCoach)
       ? this.#sessionsStore.getCoachById(this.#authService.employeeId())
       : undefined;
 
     this.#addSessionService
       .add(
-        { startDate: date?.getTime(), endDate: addHours(date ?? new Date(), 1)?.getTime(), coach },
+        {
+          startDate: dateRounded.getTime(),
+          endDate: addHours(dateRounded, 1)?.getTime(),
+          coach
+        },
         this.sessionTypes()
       )
       .pipe(catchError((err) => this.#handleSaveError(err)))

@@ -100,11 +100,7 @@ export class SessionUpsertComponent {
   readonly #destroyRef = inject(DestroyRef);
 
   sessionTypes = this.#data.sessionTypes ?? [];
-  possibleLocations = signal<string[]>(
-    this.#data.session.location
-      ? [...(this.#data.possibleLocations ?? []), this.#data.session.location]
-      : (this.#data.possibleLocations ?? [])
-  );
+  possibleLocations = signal<string[]>([]);
   currentLocation = signal(this.#data.session.location);
   form: FormGroup<SessionUpsertForm>;
 
