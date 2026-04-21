@@ -36,8 +36,7 @@ export class DuplicateSessionService extends SessionsActions<
             endDate,
             client: this.store.getClientById(sessionDto.clientId),
             coach: this.store.getCoachById(sessionDto.employeeId),
-            type: sessionDto.type,
-            location: sessionDto.location
+            type: sessionDto.type
           },
           sessionTypes,
           possibleLocations,

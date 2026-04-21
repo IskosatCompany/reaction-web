@@ -64,7 +64,7 @@ export class EvaluationsAccordionComponent {
     }
 
     return {
-      coachId: this.evaluation().coachId,
+      coachId: this.evaluation().employeeId,
       date: this.evaluation().date,
       notes: this.evaluation().notes
     };

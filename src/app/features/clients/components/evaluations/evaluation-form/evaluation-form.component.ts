@@ -99,7 +99,7 @@ export class EvaluationFormComponent {
     return {
       notes: model.notes,
       date: model.date,
-      coachId: model.coachId ?? '',
+      coachId: model.employeeId ?? '',
       clientId: model.clientId ?? ''
     };
   });
@@ -129,7 +129,7 @@ export class EvaluationFormComponent {
       ...this.evaluation,
       notes: data.notes,
       date: data.date,
-      coachId: data.coachId,
+      employeeId: data.coachId,
       clientId: this.route.snapshot.params['id']
     };
   }

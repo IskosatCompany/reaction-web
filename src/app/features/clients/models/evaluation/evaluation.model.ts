@@ -9,7 +9,7 @@ import { WellBeing } from './well-being.model';
 
 export interface Evaluation {
   id?: string;
-  coachId: string;
+  employeeId: string;
   clientId: string;
   date: number;
   notes?: string;

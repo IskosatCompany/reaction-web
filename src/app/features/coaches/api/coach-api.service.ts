@@ -9,8 +9,12 @@ export class CoachApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getCoaches(searchTerm?: string, showArchived = false): Observable<Coach[]> {
-    let params = new HttpParams().set('archived', showArchived);
+  getCoaches(searchTerm?: string, showArchived?: boolean): Observable<Coach[]> {
+    let params = new HttpParams();
+    if (showArchived !== undefined && showArchived !== null) {
+      params = params.set('archived', showArchived);
+    }
+
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }
