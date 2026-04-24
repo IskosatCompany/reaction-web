@@ -32,7 +32,7 @@ import {
   roundToNearestMinutes
 } from 'date-fns';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { merge, Observable, switchMap } from 'rxjs';
+import { merge, Observable, switchMap, take } from 'rxjs';
 import { FormatClientPipe } from '../../../../ui/pipes/format-client.pipe';
 import { FormatCoachPipe } from '../../../../ui/pipes/format-coach.pipe';
 import { Permission } from '../../../authentication/models/permissions.model';
@@ -191,40 +191,7 @@ export class SessionUpsertComponent {
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe((value) => this.currentLocation.set(value));
 
-    merge(
-      this.form.controls.startDate.valueChanges,
-      this.form.controls.startTime.valueChanges,
-      this.form.controls.duration.valueChanges
-    )
-      .pipe(
-        switchMap(() => {
-          const {
-            startDate: formStartDate,
-            startTime: formStartTime,
-            duration: formDuration
-          } = this.form.getRawValue();
-          const start = new Date(formStartDate);
-          start.setHours(formStartTime.getHours(), formStartTime.getMinutes(), 0, 0);
-          const end = addMinutes(start, formDuration);
-          return this.#data.fetchLocations(start.getTime(), end.getTime());
-        }),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe((locations) => {
-        const locationsList =
-          this.#data.action !== 'create' &&
-          this.#data.session.location &&
-          !locations.includes(this.#data.session.location)
-            ? [...locations, this.#data.session.location]
-            : locations;
-
-        this.possibleLocations.set(locationsList);
-
-        const currentLocation = this.form.controls.location.value;
-        if (currentLocation && !locationsList.includes(currentLocation)) {
-          this.form.controls.location.setValue('');
-        }
-      });
+    this.#loadLocations();
   }
 
   close(): void {
@@ -252,5 +219,53 @@ export class SessionUpsertComponent {
     const rounded = roundToNearestMinutes(now, { nearestTo: 30 });
 
     return getMinutes(rounded) < getMinutes(now) ? addMinutes(rounded, 30) : rounded;
+  }
+
+  #loadLocations(): void {
+    const { startDate, endDate } = this.#data.session;
+    if (!startDate || !endDate) {
+      throw new Error('Invalid start/end date');
+    }
+    this.#data
+      .fetchLocations(startDate, endDate)
+      .pipe(take(1))
+      .subscribe((locations) => this.#handleLocations(locations));
+
+    merge(
+      this.form.controls.startDate.valueChanges,
+      this.form.controls.startTime.valueChanges,
+      this.form.controls.duration.valueChanges
+    )
+      .pipe(
+        switchMap(() => {
+          const {
+            startDate: formStartDate,
+            startTime: formStartTime,
+            duration: formDuration
+          } = this.form.getRawValue();
+          const start = new Date(formStartDate);
+          start.setHours(formStartTime.getHours(), formStartTime.getMinutes(), 0, 0);
+          const end = addMinutes(start, formDuration);
+          return this.#data.fetchLocations(start.getTime(), end.getTime());
+        }),
+        takeUntilDestroyed(this.#destroyRef)
+      )
+      .subscribe((locations) => this.#handleLocations(locations));
+  }
+
+  #handleLocations(locations: string[]): void {
+    const locationsList =
+      this.#data.action !== 'create' &&
+      this.#data.session.location &&
+      !locations.includes(this.#data.session.location)
+        ? [...locations, this.#data.session.location]
+        : locations;
+
+    this.possibleLocations.set(locationsList);
+
+    const currentLocation = this.form.controls.location.value;
+    if (currentLocation && !locationsList.includes(currentLocation)) {
+      this.form.controls.location.setValue('');
+    }
   }
 }
