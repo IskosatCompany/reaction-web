@@ -16,7 +16,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { IS_MOBILE } from '../../../../../core/tokens/mobile.token';
 import { CoachApiService } from '../../../../coaches/api/coach-api.service';
@@ -58,7 +58,6 @@ import { PhysicalTests } from './physical-tests-form/physical-tests-form.model';
     GeneralInfoFormComponent,
     ClinicalEvaluationFormComponent,
     PhysicalTestsFormComponent,
-    RouterLink,
     MatIconModule
   ],
   templateUrl: './evaluation-form.component.html',
@@ -69,6 +68,7 @@ export class EvaluationFormComponent {
   isMobile = inject(IS_MOBILE);
   coachApiService = inject(CoachApiService);
   route = inject(ActivatedRoute);
+  router = inject(Router);
   model = input<Evaluation>();
 
   evaluationCreate = output<Partial<Evaluation>>();
@@ -150,5 +150,9 @@ export class EvaluationFormComponent {
     if (this.evaluation) {
       this.evaluationCreate.emit(this.evaluation);
     }
+  }
+
+  onClientNavigation(): void {
+    this.router.navigate(['/clients', this.route.snapshot.params['id']]);
   }
 }

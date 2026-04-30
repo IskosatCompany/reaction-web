@@ -10,7 +10,7 @@ export const PermissionsLabels: Record<Permission, string> = {
   [Permission.editSessionsCoach]: 'Editar treinador das sessões',
   [Permission.closeAllSessions]: 'Fechar todas as sessões',
   [Permission.closeLateSessions]: 'Fechar sessões após a hora',
-  [Permission.registerAllSessionAbsence]: 'Registar faltas',
+  [Permission.registerAllSessionAbsence]: 'Registar faltas em todos os colaboradores',
   [Permission.createClient]: 'Criar cliente',
   [Permission.editClient]: 'Editar cliente',
   [Permission.archiveClient]: 'Arquivar cliente',

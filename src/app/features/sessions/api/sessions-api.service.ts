@@ -27,7 +27,7 @@ export class SessionsApiService {
     }
 
     if (request.coachId) {
-      params = params.append('coachId', request.coachId);
+      params = params.append('employeeId', request.coachId);
     }
 
     if (request.status) {

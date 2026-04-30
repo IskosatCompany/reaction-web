@@ -53,7 +53,17 @@ export class SessionOverlayService {
       { label: 'Duplicar', action: 'duplicate', icon: 'file_copy' },
       { label: 'Apagar', action: 'delete', icon: 'delete' },
       { label: 'Cliente', action: 'goToClient', icon: 'group' },
-      { label: 'Faltou', action: 'absence', icon: 'person_off' },
+      {
+        label: 'Faltou',
+        action: 'absence',
+        icon: 'person_off',
+        tooltip: !this.#authService.userPermissions().includes(Permission.registerAllSessionAbsence)
+          ? 'Sem permissões para registar falta'
+          : undefined,
+        disabled:
+          !this.#authService.userPermissions().includes(Permission.registerAllSessionAbsence) &&
+          sessionDto.employeeId !== this.#authService.employeeId()
+      },
       {
         label: 'Registo',
         action: 'close',

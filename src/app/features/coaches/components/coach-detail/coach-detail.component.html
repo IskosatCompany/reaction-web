@@ -8,18 +8,21 @@
       }
     </div>
     <div class="actions">
-      <button matMiniFab matTooltip="Editar Profissional" (click)="onCoachEdit()">
-        <mat-icon>edit</mat-icon>
-      </button>
-
-      @if (coach()?.archived) {
-        <button matMiniFab matTooltip="Desarquivar" (click)="unarchiveCoach()">
-          <mat-icon>visibility</mat-icon>
+      @if (permission.createEmployee | hasPermission) {
+        <button matMiniFab matTooltip="Editar Profissional" (click)="onCoachEdit()">
+          <mat-icon>edit</mat-icon>
         </button>
-      } @else {
-        <button matMiniFab matTooltip="Arquivar" class="archive" (click)="archiveCoach()">
-          <mat-icon>visibility_off</mat-icon>
-        </button>
+      }
+      @if (permission.archiveEmployee | hasPermission) {
+        @if (coach()?.archived) {
+          <button matMiniFab matTooltip="Desarquivar" (click)="unarchiveCoach()">
+            <mat-icon>visibility</mat-icon>
+          </button>
+        } @else {
+          <button matMiniFab matTooltip="Arquivar" class="archive" (click)="archiveCoach()">
+            <mat-icon>visibility_off</mat-icon>
+          </button>
+        }
       }
     </div>
   </header>

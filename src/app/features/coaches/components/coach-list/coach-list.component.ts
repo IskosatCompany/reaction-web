@@ -17,6 +17,8 @@ import { CoachApiService } from '../../api/coach-api.service';
 import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model';
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
+import { Permission } from '../../../authentication/models/permissions.model';
+import { HasPermissionPipe } from '../../../authentication/pipes/has-permission.pipe';
 
 @Component({
   selector: 'app-coach-list',
@@ -27,7 +29,8 @@ import { CoachFormComponent } from '../coach-form/coach-form.component';
     AsyncPipe,
     MatButtonModule,
     MatIconModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    HasPermissionPipe
   ],
   templateUrl: './coach-list.component.html',
   styleUrl: './coach-list.component.scss',
@@ -42,6 +45,7 @@ export class CoachListComponent {
   refreshSubject$ = new Subject<void>();
   searchSubject$ = new Subject<string>();
   showArchivedSubject$ = new Subject<boolean>();
+  permission = Permission;
 
   tableConfig = new TableBuilder<Coach>()
     .column(

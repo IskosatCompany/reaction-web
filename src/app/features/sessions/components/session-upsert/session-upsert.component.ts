@@ -147,12 +147,14 @@ export class SessionUpsertComponent {
   readonly filteredCoaches = computed(() => {
     const search = this.coachFilter()?.toLowerCase();
     if (!search?.trim()) {
-      return this.coaches();
+      return this.coaches().filter((item) => !item.archived);
     }
 
     return this.coaches().filter(
       (item) =>
-        item.name.toLowerCase().includes(search) || item.employeeNumber.toString().includes(search)
+        (item.name.toLowerCase().includes(search) ||
+          item.employeeNumber.toString().includes(search)) &&
+        !item.archived
     );
   });
 

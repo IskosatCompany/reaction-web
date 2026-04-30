@@ -9,8 +9,11 @@ export class ClientsApiService {
   readonly #http = inject(HttpClient);
   readonly #apiUrl = inject(API_URL);
 
-  getClients(searchTerm?: string, showArchivedClients = false): Observable<Client[]> {
-    let params = new HttpParams().set('archived', showArchivedClients);
+  getClients(searchTerm?: string, showArchivedClients?: boolean): Observable<Client[]> {
+    let params = new HttpParams();
+    if (showArchivedClients !== undefined && showArchivedClients !== null) {
+      params = params.set('archived', showArchivedClients);
+    }
     if (searchTerm) {
       params = params.set('search', searchTerm);
     }

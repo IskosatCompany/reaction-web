@@ -20,6 +20,8 @@
   </section>
 }
 
-<button matFab class="float-button" (click)="createCoach()">
-  <mat-icon>add</mat-icon>
-</button>
+@if (permission.createEmployee | hasPermission) {
+  <button matFab class="float-button" (click)="createCoach()">
+    <mat-icon>add</mat-icon>
+  </button>
+}

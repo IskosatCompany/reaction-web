@@ -18,6 +18,8 @@ import { CoachBottomSheetData } from '../../models/coach-bottom-sheet-data.model
 import { Coach, CoachForm } from '../../models/coach.model';
 import { CoachFormComponent } from '../coach-form/coach-form.component';
 import { CoachInfoComponent } from '../coach-info/coach-info.component';
+import { HasPermissionPipe } from '../../../authentication/pipes/has-permission.pipe';
+import { Permission } from '../../../authentication/models/permissions.model';
 
 @Component({
   selector: 'app-coach-detail',
@@ -27,7 +29,8 @@ import { CoachInfoComponent } from '../coach-info/coach-info.component';
     MatIconModule,
     MatTooltipModule,
     MatExpansionModule,
-    CoachInfoComponent
+    CoachInfoComponent,
+    HasPermissionPipe
   ],
   templateUrl: './coach-detail.component.html',
   styleUrl: './coach-detail.component.scss',
@@ -47,6 +50,7 @@ export class CoachDetailComponent {
   editCoachSubject$ = new Subject<void>();
   formValue?: Partial<CoachForm>;
   refreshCoachSubject$ = new Subject<void>();
+  permission = Permission;
 
   coach = toSignal<Coach>(
     this.refreshCoachSubject$.pipe(
