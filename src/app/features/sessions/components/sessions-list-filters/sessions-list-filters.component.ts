@@ -14,6 +14,7 @@ import { SessionsRequest } from '../../models/http/sessions-request.interface';
 import { SessionStatus, SessionStatusLabel } from '../../models/session.interface';
 import { SessionsListFiltersService } from '../../services/sessions-list-filters.service';
 import { SessionsStore } from '../../store/sessions.store';
+import { toTimestamp } from '../../../../ui/helpers/date.helper';
 
 interface SessionsListFiltersForm {
   startDate: FormControl<Date | null>;
@@ -134,8 +135,8 @@ export class SessionsListFiltersComponent {
     return {
       clientId: clientId ?? undefined,
       coachId: coachId ?? undefined,
-      startDate: startDate?.getTime(),
-      endDate: endDate?.getTime(),
+      startDate: toTimestamp(startDate),
+      endDate: toTimestamp(endDate, true),
       status: status ?? undefined
     };
   }
